@@ -11,7 +11,7 @@ int main() {
     for (int i = 0; i < 15000; i++) dummies->push_back(new Player(i, localPlayer));
     Sense* sense = new Sense(level, localPlayer, players, dummies);
     NoRecoil* norecoil = new NoRecoil(localPlayer);
-    TriggerBot* triggerBot = new TriggerBot(localPlayer, players, dummies);
+    TriggerBot* triggerBot = new TriggerBot(level, localPlayer, players, dummies);
 
     printf("Starting the main loop... \n");
     int counter = 0;
@@ -49,7 +49,7 @@ int main() {
         std::this_thread::sleep_for(std::chrono::milliseconds(timeLeftToSleep));
         if (counter < 1000) counter++;
         else counter = 0;
-        printf("| LOOP[%04d] OK | Processing time: %02dms | Time left to sleep: %02dms |\n", counter, processingTime, timeLeftToSleep);
+        // printf("| LOOP[%04d] OK | Processing time: %02dms | Time left to sleep: %02dms |\n", counter, processingTime, timeLeftToSleep);
     }
 }
 
