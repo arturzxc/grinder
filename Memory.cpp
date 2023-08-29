@@ -63,21 +63,21 @@ namespace mem {
         return false;
     }
 
-    ByteVector3D ReadByteVector3D(long address) {
-        int size = sizeof(ByteVector3D);
-        ByteVector3D buffer;
+    GlowMode ReadGlowMode(long address) {
+        int size = sizeof(GlowMode);
+        GlowMode buffer;
         bool success = Read(address, &buffer, size);
         if (!success)
-            throw new std::invalid_argument("Failed to read ByteVector3D at address: " + address);
+            throw new std::invalid_argument("Failed to read GlowMode at address: " + address);
         return buffer;
     }
 
-    void WriteByteVector3D(long address, ByteVector3D vec) {
-        int size = sizeof(ByteVector3D);
-        ByteVector3D buffer = vec;
+    void WriteGlowMode(long address, GlowMode vec) {
+        int size = sizeof(GlowMode);
+        GlowMode buffer = vec;
         bool success = Write(address, &buffer, size);
         if (!success)
-            throw new std::invalid_argument("Failed to write ByteVector3D at address: " + address);
+            throw new std::invalid_argument("Failed to write GlowMode at address: " + address);
     }
 
     FloatVector3D ReadFloatVector3D(long address) {

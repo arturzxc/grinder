@@ -37,11 +37,12 @@ struct FloatVector2D {
         return x == 0 && y == 0;
     }
 
+    std::string toString() const {
+        return "(" + std::to_string(x) + ", " + std::to_string(y) + ")";
+    }
+
     void print() {
-        std::cout
-            << "X:" << x
-            << " Y:" << y
-            << "\n";
+        std::cout << toString() << "\n";
     }
 
     bool operator==(const FloatVector2D& other) const {

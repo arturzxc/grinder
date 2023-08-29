@@ -40,11 +40,11 @@ struct TriggerBot {
 
         if (level->trainingArea)
             for (int i = 0; i < dummies->size(); i++) {
-                Player* player = dummies->at(i);
-                if (!player->isCombatReady()) continue;
-                if (!player->enemy) continue;
-                if (!player->aimedAt) continue;
-                if (player->distanceToLocalPlayer < RANGE_MAX) {
+                Player* dummy = dummies->at(i);
+                if (!dummy->isCombatReady()) continue;
+                if (!dummy->isDummie()) continue;
+                if (!dummy->aimedAt) continue;
+                if (dummy->distance3DToLocalPlayer < RANGE_MAX) {
                     shoot();
                     break;
                 }
@@ -55,7 +55,7 @@ struct TriggerBot {
                 if (!player->isCombatReady()) continue;
                 if (!player->enemy) continue;
                 if (!player->aimedAt) continue;
-                if (player->distanceToLocalPlayer < RANGE_MAX) {
+                if (player->distance3DToLocalPlayer < RANGE_MAX) {
                     shoot();
                     break;
                 }

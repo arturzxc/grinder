@@ -1,7 +1,7 @@
 #pragma once
 struct NoRecoil {
-    const float NR_PITCH_STRENGTH = 0.5;        //suggested 0.5
-    const float NR_YAW_STRENGTH = 0.5;          //suggested 0.5
+    const float NR_PITCH_STRENGTH = 0.5;        //suggested max is 0.5
+    const float NR_YAW_STRENGTH = 0.5;          //suggested max is 0.5
     const float NR_PITCH_STRENGTH_RAND = std::min(1.0f, util::randomFloat(0.0f, 0.05f) + NR_PITCH_STRENGTH);    //add a bit of random
     const float NR_YAW_STRENGTH_RAND = std::min(1.0f, util::randomFloat(0.0f, 0.05) + NR_YAW_STRENGTH);         //add a bit of random
 
@@ -12,9 +12,9 @@ struct NoRecoil {
 
     void update() {
         if (!localPlayer->isCombatReady()
-            || !localPlayer->inZoom
+            || !localPlayer->inZoom                                                     //no need for this in hip fire really so don't do it.
             || localPlayer->weaponSemiAuto) {
-            previousPunchAngles = { 0,0 };
+            previousPunchAngles = { 0,0 };                                              //reset the previous punch so that we start fresh next time we start shooting
             return;
         }
 

@@ -31,15 +31,15 @@ struct FloatVector3D {
         return x == 0 && y == 0 && z == 0;
     }
 
-    void print() {
-        std::cout
-            << "X:" << x
-            << " Y:" << y
-            << " Z:" << z
-            << "\n";
+    std::string toString() const {
+        return "(" + std::to_string(x) + ", " + std::to_string(y) + ", " + std::to_string(z) + ")";
     }
 
-    FloatVector2D to2D() {
+    void print() {
+        std::cout << toString() << "\n";
+    }
+
+    FloatVector2D to2D() const {
         return FloatVector2D(x, y);
     }
 

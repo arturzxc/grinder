@@ -11,9 +11,24 @@ struct LocalPlayer {
     int weaponIndex;
     bool weaponSemiAuto;
 
+    void reset() {
+        base = 0;
+        dead = true;
+        knocked = true;
+        teamNumber = -1;
+        inAttack = false;
+        inZoom = false;
+        localOrigin = FloatVector3D();
+        viewAngles = FloatVector2D();
+        punchAngles = FloatVector2D();
+        weaponIndex = -1;
+        weaponSemiAuto = false;
+    }
+
     void update() {
+        reset();
         base = mem::ReadLong(off::REGION + off::LOCAL_PLAYER);
-        if (base == 0) return;
+        if (base == 0) { reset();return; }
         dead = mem::ReadShort(base + off::LIFE_STATE) > 0;
         knocked = mem::ReadShort(base + off::BLEEDOUT_STATE) > 0;
         inAttack = mem::ReadShort(off::REGION + off::IN_ATTACK) > 0;
@@ -21,13 +36,15 @@ struct LocalPlayer {
         teamNumber = mem::ReadInt(base + off::TEAM_NUMBER);
         localOrigin = mem::ReadFloatVector3D(base + off::LOCAL_ORIGIN);
         viewAngles = mem::ReadFloatVector2D(base + off::VIEW_ANGLES);
-        punchAngles = mem::ReadFloatVector2D(base + off::VEC_PUNCH_WEAPON_ANGLE);
-        //find weapon & weapon index
-        long weaponHandle = mem::ReadLong(base + off::WEAPON_HANDLE);
-        long weaponHandleMasked = weaponHandle & 0xffff;
-        long weaponEntity = mem::ReadLong(off::REGION + off::ENTITY_LIST + (weaponHandleMasked << 5));
-        weaponIndex = mem::ReadInt(weaponEntity + off::WEAPON_INDEX);
-        weaponSemiAuto = mem::ReadShort(weaponEntity + off::WEAPON_SEMIAUTO) > 0;
+        punchAngles = mem::ReadFloatVector2D(base + off::PUNCH_ANGLES);
+        if (!dead && !knocked) {
+            //find weapon & weapon index
+            long weaponHandle = mem::ReadLong(base + off::WEAPON_HANDLE);
+            long weaponHandleMasked = weaponHandle & 0xffff;
+            long weaponEntity = mem::ReadLong(off::REGION + off::ENTITY_LIST + (weaponHandleMasked << 5));
+            weaponIndex = mem::ReadInt(weaponEntity + off::WEAPON_INDEX);
+            weaponSemiAuto = mem::ReadShort(weaponEntity + off::WEAPON_SEMIAUTO) > 0;
+        }
     }
 
     bool isValid() {

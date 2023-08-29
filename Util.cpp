@@ -17,4 +17,5 @@ namespace util {
         std::uniform_real_distribution<float> dis(min, max);
         return dis(gen);
     }
+
 };

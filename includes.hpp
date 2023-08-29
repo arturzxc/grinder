@@ -14,7 +14,7 @@
 #include "Util.cpp"
 #include "FloatVector2D.cpp"
 #include "FloatVector3D.cpp"
-#include "ByteVector3D.cpp"
+#include "GlowMode.cpp"
 #include "Memory.cpp" 
 #include "Offsets.cpp"
 #include "Level.cpp"
@@ -23,3 +23,4 @@
 #include "Sense.cpp"
 #include "NoRecoil.cpp"
 #include "TriggerBot.cpp"
+#include "AimBot.cpp"
