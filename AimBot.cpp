@@ -1,3 +1,4 @@
+#pragma once
 struct AimBot {
     Level* level;
     LocalPlayer* localPlayer;
@@ -13,25 +14,28 @@ struct AimBot {
     }
 
     void update() {
-        // if (!localPlayer->isCombatReady()) return;
-        //only these weapons will work with trigger bot
-        // int weaponId = localPlayer->weaponIndex;
-        // if (weaponId != 0 &&  //R301
-        //     weaponId != 99 && //R99
-        //     weaponId != 104)//Volt
-        //     return;
-        // printf("Aimbot working\n");
+        if (!localPlayer->isCombatReady()) return;
+        if (!localPlayer->inAttack) return;
 
         Player* bestTargetSoFar = findBestTarget();
         if (bestTargetSoFar == 0) return;
+        if (bestTargetSoFar->aimedAt) return;
 
-        printf("\n");
-        printf("LP_ANG:%s T_DES_ANGLS[%d]:%s T_DIS_CROSS:%04f \n",
-            localPlayer->viewAngles.toString().c_str(),
-            bestTargetSoFar->index,
-            bestTargetSoFar->desiredViewAngles.toString().c_str(),
-            bestTargetSoFar->distanceToCrosshairs);
-        printf("\n");
+        float smooth = 50;
+        float distanceAbs = bestTargetSoFar->distanceToCrosshairs;
+
+        //pitch increment
+        float pitchRotationDirection = calcPitchRotationDirection(localPlayer->viewAngles.x, bestTargetSoFar->desiredViewAngles.x);
+        float pitchIncrement = (distanceAbs / smooth) * pitchRotationDirection;
+
+        //yaw increment
+        float yawRotationDirection = calcYawRotationDirection(localPlayer->viewAngles.y, bestTargetSoFar->desiredViewAngles.y);
+        float yawIncrement = (distanceAbs / smooth) * yawRotationDirection;
+
+
+        //finally add increments to the current angles, clump and write
+        FloatVector2D newViewAngles = localPlayer->viewAngles.add(FloatVector2D(pitchIncrement, yawIncrement)).clamp();
+        mem::WriteFloatVector2D(localPlayer->base + off::VIEW_ANGLES, newViewAngles);
     }
 
     Player* findBestTarget() {
@@ -44,20 +48,29 @@ struct AimBot {
                 if (!dummy->isCombatReady()) continue;
                 if (dummy->localPlayer) continue;
                 if (!dummy->visible) continue;
+                if (dummy->distanceToCrosshairs > 10) continue;
                 if (dummy->distanceToCrosshairs < bestDistanceToCrosshairsSoFar) {
                     bestTargetSoFar = dummy;
                     bestDistanceToCrosshairsSoFar = dummy->distanceToCrosshairs;
                 }
-
-                printf("LP_ANG: %s DUMMY_ANG[%d] %s DIST_CROSSHRS:%04f DUMMY_AMDAT %d DUMM_VIS:%d\n",
-                    localPlayer->viewAngles.toString().c_str(),
-                    dummy->index,
-                    dummy->desiredViewAngles.toString().c_str(),
-                    dummy->distanceToCrosshairs,
-                    dummy->aimedAt,
-                    dummy->visible);
             }
 
         return bestTargetSoFar;
+    }
+
+    int calcYawRotationDirection(int currentYaw, int targetYaw) {
+        int clockwiseDistance = (targetYaw - currentYaw + 360) % 360;
+        int counterclockwiseDistance = (currentYaw - targetYaw + 360) % 360;
+        if (clockwiseDistance <= counterclockwiseDistance)
+            return 1;  // Clockwise rotation                
+        return -1; // Counterclockwise rotation        
+    }
+
+    int calcPitchRotationDirection(int currentPitch, int targetPitch) {
+        int clockwiseDistance = (targetPitch - currentPitch + 180) % 180;
+        int counterclockwiseDistance = (currentPitch - targetPitch + 180) % 180;
+        if (clockwiseDistance <= counterclockwiseDistance)
+            return 1;  // upwards    
+        return -1; // downwards
     }
 };

@@ -22,7 +22,7 @@ int main() {
         try {
             level->update();
             if (level->playable) {
-                localPlayer->update();              
+                localPlayer->update();
                 if (level->trainingArea)
                     for (int i = 0; i < dummies->size(); i++)
                         dummies->at(i)->update();
@@ -32,7 +32,7 @@ int main() {
                 //features
                 triggerBot->update();
                 norecoil->update();
-                // aimBot->update();
+                aimBot->update();
                 sense->update(counter);
             }
             else {

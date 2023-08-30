@@ -1,11 +1,5 @@
 #pragma once
 struct Sense {
-    const GlowMode visibleEnemyGlowMode = { 124, 107, 60, 100 };
-    const GlowMode invisibleEnemyGlowMode = { 126, 107, 60, 100 };
-
-    const GlowMode visibleFriendlyGlowMode = { 124, 4, 60, 100 };
-    const GlowMode invisibleFriendlyGlowMode = { 126, 4, 60, 100 };
-
     Level* level;
     LocalPlayer* localPlayer;
     std::vector<Player*>* players;
@@ -24,10 +18,7 @@ struct Sense {
                 Player* dummy = dummies->at(i);
                 if (!dummy->isValid()) continue;
                 if (!dummy->isDummie()) continue;
-                if (dummy->visible)
-                    glow(dummy, 0, 2, 0, visibleEnemyGlowMode);
-                else
-                    glow(dummy, 2, 0, 0, invisibleEnemyGlowMode);
+                glow(dummy, 100, 100, 100, GlowMode{ 2, (dummy->aimedAt) ? 108 : 6, (dummy->aimedAt) ? 120 : 40, 100 });
             }
         else //glow players
             for (int i = 0; i < players->size(); i++) {
@@ -35,11 +26,24 @@ struct Sense {
                 if (!player->isValid()) continue;
                 if (!player->isPlayer()) continue;
                 if (player->enemy) {
-                    if (player->visible) glow(player, 0, 2, 0, visibleEnemyGlowMode);
-                    else glow(player, 2, 0, 0, invisibleEnemyGlowMode);
-                }if (player->friendly)
-                    if (player->visible) glow(player, 0, 2, 0, visibleFriendlyGlowMode);
-                    else glow(player, 2, 0, 0, invisibleFriendlyGlowMode);
+                    //makes it change color to match shield
+                    int shield = player->currentShields;
+                    int R, G, B;
+                    if (shield > 75) {                      //if above 75% shield
+                        R = 1; G = 0; B = 2;                //make purple
+                    }
+                    else if (shield < 76 && shield > 50) {  //if between 75% and 50% shield
+                        R = 0; G = 1; B = 2;                //make blue
+                    }
+                    else if (shield < 51 && shield > 0) { //if between 50% and 0% shield
+                        R = 1.5; G = 1.5; B = 1.5;                //make white
+                    }
+                    else {                                //if 0% shield
+                        R = 0; G = 3; B = 0;                //make green
+                    }
+                    glow(player, R, G, B, GlowMode{ 2, (player->aimedAt) ? 108 : 6, (player->aimedAt) ? 120 : 40, 100 });
+                }
+                if (player->friendly) glow(player, 0, 2, 0, GlowMode{ 75, 0, 0, 0 });
             }
     }
 
