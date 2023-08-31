@@ -15,13 +15,13 @@ struct AimBot {
 
     void update() {
         if (!localPlayer->isCombatReady()) return;
-        if (!localPlayer->inAttack) return;
+        if (!localPlayer->inAttack && !localPlayer->inZoom) return;
 
         Player* bestTargetSoFar = findBestTarget();
         if (bestTargetSoFar == 0) return;
         if (bestTargetSoFar->aimedAt) return;
 
-        float smooth = 50;
+        float smooth = 30;
         float distanceAbs = bestTargetSoFar->distanceToCrosshairs;
 
         //pitch increment
@@ -52,6 +52,19 @@ struct AimBot {
                 if (dummy->distanceToCrosshairs < bestDistanceToCrosshairsSoFar) {
                     bestTargetSoFar = dummy;
                     bestDistanceToCrosshairsSoFar = dummy->distanceToCrosshairs;
+                }
+            }
+        if (!level->trainingArea)
+            for (int i = 0; i < players->size(); i++) {
+                Player* player = players->at(i);
+                if (!player->isCombatReady()) continue;
+		if (player->friendly) continue;
+                if (player->localPlayer) continue;
+                if (!player->visible) continue;
+                if (player->distanceToCrosshairs > 10) continue;
+                if (player->distanceToCrosshairs < bestDistanceToCrosshairsSoFar) {
+                    bestTargetSoFar = player;
+                    bestDistanceToCrosshairsSoFar = player->distanceToCrosshairs;
                 }
             }
 

@@ -47,7 +47,7 @@ int main() {
 
         //check how fast we completed all the processing and if we still have time left to sleep
         int processingTime = static_cast<int>(util::currentEpochMillis() - startTime);
-        int goalSleepTime = 16; // 16.67ms=60HZ | 6.97ms=144HZ
+        int goalSleepTime = 6; // 16.67ms=60HZ | 6.97ms=144HZ
         int timeLeftToSleep = std::max(0, goalSleepTime - processingTime);
         std::this_thread::sleep_for(std::chrono::milliseconds(timeLeftToSleep));
         if (counter < 3000) counter++;
