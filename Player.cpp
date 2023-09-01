@@ -92,8 +92,8 @@ struct Player {
             if (visible) { //only calculate for visible targets
                 distance3DToLocalPlayer = myLocalPlayer->localOrigin.distance(localOrigin);
                 distance2DToLocalPlayer = myLocalPlayer->localOrigin.to2D().distance(localOrigin.to2D());
-                desiredViewAngles = FloatVector2D(calcDesiredPitch(), calcDesiredYaw());
-                distanceToCrosshairs = myLocalPlayer->viewAngles.distance(desiredViewAngles);
+    //            desiredViewAngles = FloatVector2D(calcDesiredPitch(), calcDesiredYaw());
+      //          distanceToCrosshairs = myLocalPlayer->viewAngles.distance(desiredViewAngles);
             }
         }
     }

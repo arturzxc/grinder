@@ -41,9 +41,12 @@ struct Sense {
                     else {                                //if 0% shield
                         R = 0; G = 3; B = 0;                //make green
                     }
-                    glow(player, R, G, B, GlowMode{ 2, (player->aimedAt) ? 108 : 6, (player->aimedAt) ? 120 : 40, 100 });
+                    // if (player->visible)
+                    //     glow(player, 0, 5, 0, GlowMode{ 124, 0, 0, 100 });
+                    // else
+                    glow(player, R*5, G*5, B*5, GlowMode{12, 6, 35, 100 });
                 }
-                if (player->friendly) glow(player, 0, 2, 0, GlowMode{ 75, 0, 0, 0 });
+                if (player->friendly) glow(player, 0, 0, 0, GlowMode{75, 7, 60, 100 });
             }
     }
 
@@ -65,3 +68,47 @@ struct Sense {
         if (player->glowMode != newGlowMode) mem::WriteGlowMode(player->base + off::GLOW_MODE, newGlowMode);
     }
 };
+
+//BODY STYLE VALUES
+// NONE(0),
+// NOT_SURE_1(-124), //spotty sort of meshy of my color. not through walls
+// NOT_SURE_2(-123),
+// NOT_SURE_3(-122), //spotty sort of meshy when visible and solid when invisible. not through walls. my color
+// NOT_SURE_4(-120), //glass like looking. not through walls. my color
+// NOT_SURE_5(-119), //glass like looking. through walls. my color
+// NOT_SURE_6(-85), //seems not working
+// NOT_SURE_7_NOT_THROUGH_WALLS(112), //solid color. not through walls. my color
+// NOT_SURE_8(114), //sort of like caustic. through walls. my color
+// NOT_SURE_9(117), //flashing
+// PINK(1),
+// PINK_NOT_THROUGH_WALLS(110),
+// MY_COLOR_ONLY_THROUGH_WALLS(2),
+// RED_VISIBLE_GREEN_INVISIBLE_FLASHING(3),
+// PULSING_LINE_GLOW(12),
+// PULSING_LINE(13),
+// BLACK(75),
+// WAVE(103),
+// MY_COLOR_BRIGHT(109),
+// MY_COLOR_2_BRIGHT(118),
+// SHARP_PULSING(124),
+// SHARP_PULSING_THROUGH_WALLS(126);
+
+
+
+//BORDER STYLES
+// NONE(0),
+// MY_COLOR_BRIGHT(6),
+// MY_COLOR_BRIGHT_FADES(102),
+// MY_COLOR_DARK(101),
+// MY_COLOR_FADES(104),
+// PINK(1),
+// BLUE(4),
+// GOLD_FLASHING(5),
+// GOLD(7),
+// BROWN(8),
+// GOLD_SINGLE_PIXEL(9),
+// WAVE_EFFECT(103),
+// RED(107),
+// RED_BRIGHT(108),
+// BREATHING_EFFECT(110),
+// HEARTBEAT_EFFECT(110);

@@ -14,6 +14,7 @@ struct AimBot {
     }
 
     void update() {
+	if(true)return;
         if (!localPlayer->isCombatReady()) return;
         if (!localPlayer->inAttack && !localPlayer->inZoom) return;
 
@@ -21,7 +22,7 @@ struct AimBot {
         if (bestTargetSoFar == 0) return;
         if (bestTargetSoFar->aimedAt) return;
 
-        float smooth = 30;
+        float smooth = 1000;
         float distanceAbs = bestTargetSoFar->distanceToCrosshairs;
 
         //pitch increment
