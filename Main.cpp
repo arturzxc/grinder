@@ -31,8 +31,10 @@ int main() {
                         players->at(i)->update();
                 //features
                 triggerBot->update();
+                
                 norecoil->update();
                 aimBot->update();
+                
                 sense->update(counter);
             }
             else {
@@ -52,9 +54,9 @@ int main() {
         std::this_thread::sleep_for(std::chrono::milliseconds(timeLeftToSleep));
         if (counter < 3000) counter++;
         else counter = 0;
-        if (counter % 100 == 0)
-            printf("| LOOP[%04d] OK | Processing time: %02dms | Time left to sleep: %02dms |\n",
-                counter, processingTime, timeLeftToSleep);
+        // if (counter % 100 == 0)
+        //     printf("| LOOP[%04d] OK | Processing time: %02dms | Time left to sleep: %02dms |\n",
+        //         counter, processingTime, timeLeftToSleep);
     }
 }
 

@@ -15,19 +15,20 @@ struct Sense {
     void update(int counter) {
         if (level->trainingArea)//glow dummies
             for (int i = 0; i < dummies->size(); i++) {
-                Player* dummy = dummies->at(i);
-                if (!dummy->isValid()) continue;
-                if (!dummy->isDummie()) continue;
-                glow(dummy, 100, 100, 100, GlowMode{ 2, (dummy->aimedAt) ? 108 : 6, (dummy->aimedAt) ? 120 : 40, 100 });
+                Player* p = dummies->at(i);
+                if (!p->isValid()) continue;
+                if (!p->isDummie()) continue;
+                // if (dummy->index != 8516) continue;
+                glow(p, 100, 0, 0, GlowMode{ 2, 6, (p->targetLocked) ? 120 : 40, 100 });
             }
         else //glow players
             for (int i = 0; i < players->size(); i++) {
-                Player* player = players->at(i);
-                if (!player->isValid()) continue;
-                if (!player->isPlayer()) continue;
-                if (player->enemy) {
+                Player* p = players->at(i);
+                if (!p->isValid()) continue;
+                if (!p->isPlayer()) continue;
+                if (p->enemy) {
                     //makes it change color to match shield
-                    int shield = player->currentShields;
+                    int shield = p->currentShields;
                     int R, G, B;
                     if (shield > 75) {                      //if above 75% shield
                         R = 1; G = 0; B = 2;                //make purple
@@ -44,9 +45,9 @@ struct Sense {
                     // if (player->visible)
                     //     glow(player, 0, 5, 0, GlowMode{ 124, 0, 0, 100 });
                     // else
-                    glow(player, R*5, G*5, B*5, GlowMode{12, 6, 35, 100 });
+                    glow(p, R * 5, G * 5, B * 5, GlowMode{ 12, 6, 35, 100 });
                 }
-                if (player->friendly) glow(player, 0, 0, 0, GlowMode{75, 7, 60, 100 });
+                if (p->friendly) glow(p, 0, 0, 0, GlowMode{ 75, 7, 60, 100 });
             }
     }
 

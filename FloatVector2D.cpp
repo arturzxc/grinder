@@ -2,7 +2,7 @@
 struct FloatVector2D {
     float x, y;
 
-    FloatVector2D() {}
+    FloatVector2D() : x(0), y(0) {}
 
     FloatVector2D(float x_val, float y_val) : x(x_val), y(y_val) {}
 
@@ -28,9 +28,19 @@ struct FloatVector2D {
     }
 
     FloatVector2D clamp() const {
-        float clampedX = std::max(-89.0f, std::min(x, 89.0f));
-        float clampedY = std::max(-180.0f, std::min(y, 180.0f));
+        float clampedX = x;
+        if (clampedX < -90) clampedX = 89;
+        if (clampedX > 90) clampedX = -89;
+
+        float clampedY = y;
+        if (clampedY < -180) clampedY = 179;
+        if (clampedY > 180) clampedY = -179;
+
         return FloatVector2D(clampedX, clampedY);
+
+        // float clampedX = std::max(-89.0f, std::min(x, 89.0f));
+        // float clampedY = std::max(-180.0f, std::min(y, 180.0f));
+        // return FloatVector2D(clampedX, clampedY);
     }
 
     bool isZeroVector() {

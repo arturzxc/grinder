@@ -2,7 +2,7 @@
 struct FloatVector3D {
     float x, y, z;
 
-    FloatVector3D() {}
+    FloatVector3D() : x(0), y(0), z(0) {}
 
     FloatVector3D(float x_val, float y_val, float z_val) : x(x_val), y(y_val), z(z_val) {}
 
