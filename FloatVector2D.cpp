@@ -28,19 +28,18 @@ struct FloatVector2D {
     }
 
     FloatVector2D clamp() const {
+        //pitch doesnt have a full rotation so just set it to max value if its more than that
         float clampedX = x;
-        if (clampedX < -90) clampedX = 89;
-        if (clampedX > 90) clampedX = -89;
-
+        if (clampedX < -89) clampedX = 89;
+        if (clampedX > 89) clampedX = -89;
+        //yaw has a full rotation so we might want to move it to the oposite side from negative to positive or vice versa
         float clampedY = y;
-        if (clampedY < -180) clampedY = 179;
-        if (clampedY > 180) clampedY = -179;
-
+        if (clampedY < -180) clampedY = clampedY + 360;
+        if (clampedY > 180) clampedY = clampedY - 360;
+        //create the vector
+        if (clampedX > 89 || clampedX < -89) throw std::invalid_argument("SHIT CLAMPING OF PITCH. CHECK YOUR CODE");
+        if (clampedY > 180 || clampedY < -180) throw std::invalid_argument("SHIT CLAMPING OF YAW. CHECK YOUR CODE");
         return FloatVector2D(clampedX, clampedY);
-
-        // float clampedX = std::max(-89.0f, std::min(x, 89.0f));
-        // float clampedY = std::max(-180.0f, std::min(y, 180.0f));
-        // return FloatVector2D(clampedX, clampedY);
     }
 
     bool isZeroVector() {

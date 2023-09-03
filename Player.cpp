@@ -26,11 +26,9 @@ struct Player {
     float distance2DToLocalPlayer;
     FloatVector2D desiredViewAngles;
     float distanceToCrosshairs;
-
     float deltaPitch;
     float deltaYaw;
     bool targetLocked;
-
 
     Player(int index, LocalPlayer* in_localPlayer) {
         this->index = index;
@@ -49,22 +47,16 @@ struct Player {
         localOrigin = FloatVector3D();
         glowColor = FloatVector3D();
         glowMode = GlowMode();
-        // lastTimeVisible = 0;
-        // lastTimeVisiblePrev = 0;
         visible = false;
         localPlayer = false;
         friendly = false;
         enemy = false;
-        // lastTimeAimedAt = 0;
-        // lastTimeAimedAtPrev = 0;
         aimedAt = false;
         distance3DToLocalPlayer = 999999999;
         distance2DToLocalPlayer = 999999999;
         desiredViewAngles = FloatVector2D();
-        distanceToCrosshairs = 999999999;
-
-        deltaYaw = 999999999;
-        deltaPitch = 999999999;
+        deltaYaw = 0;
+        deltaPitch = 0;
         targetLocked = false;
     }
 
@@ -74,10 +66,8 @@ struct Player {
         if (base == 0) { reset();return; }
         name = mem::ReadString(base + off::NAME);
         if (name != "player" && name != "dynamic_dummie") return;
-        if (isPlayer()) { //only for non characters
-            dead = mem::ReadShort(base + off::LIFE_STATE) > 0;
-            knocked = mem::ReadShort(base + off::BLEEDOUT_STATE) > 0;
-        }
+        dead = (isDummie()) ? false : mem::ReadShort(base + off::LIFE_STATE) > 0; //dummies dont dies, they just disappear
+        knocked = (isDummie()) ? false : mem::ReadShort(base + off::BLEEDOUT_STATE) > 0;//dummies dont get knocked, they just disappear
         teamNumber = mem::ReadInt(base + off::TEAM_NUMBER);
         currentShields = mem::ReadInt(base + off::CURRENT_SHIELDS);
         localOrigin = mem::ReadFloatVector3D(base + off::LOCAL_ORIGIN);
@@ -85,29 +75,21 @@ struct Player {
         glowThroughWall = mem::ReadInt(base + off::GLOW_THROUGH_WALL);
         glowColor = mem::ReadFloatVector3D(base + off::GLOW_COLOR);
         glowMode = mem::ReadGlowMode(base + off::GLOW_MODE);
-
         lastTimeVisiblePrev = lastTimeVisible;
         lastTimeVisible = mem::ReadInt(base + off::LAST_VISIBLE_TIME);
-        visible = isDummie() || lastTimeVisiblePrev < lastTimeVisible; //dummies are always set to visible=true because vist check if fucked in the game for them
-
+        visible = isDummie() || lastTimeVisiblePrev < lastTimeVisible; //dummies are always set to visible=true because vis check if fucked in-game for dummies for some reason
         lastTimeAimedAtPrev = lastTimeAimedAt;
         lastTimeAimedAt = mem::ReadInt(base + off::LAST_AIMEDAT_TIME);
         aimedAt = lastTimeAimedAtPrev < lastTimeAimedAt;
-
         if (myLocalPlayer->isValid()) {//only calculate if localPlayer is valid
             localPlayer = myLocalPlayer->base == base;
             friendly = myLocalPlayer->teamNumber == teamNumber;
             enemy = !friendly;
-            if (visible) { //only calculate for visible targets
-                distance3DToLocalPlayer = myLocalPlayer->localOrigin.distance(localOrigin);
-                distance2DToLocalPlayer = myLocalPlayer->localOrigin.to2D().distance(localOrigin.to2D());
-                desiredViewAngles = FloatVector2D(calcDesiredPitch(), calcDesiredYaw());
-                distanceToCrosshairs = myLocalPlayer->viewAngles.distance(desiredViewAngles);
-
-
-                deltaPitch = CalculatePitchDistance(myLocalPlayer->viewAngles.x, desiredViewAngles.x);
-                deltaYaw = CalculateYawDistance(myLocalPlayer->viewAngles.y, desiredViewAngles.y);
-            }
+            distance3DToLocalPlayer = myLocalPlayer->localOrigin.distance(localOrigin);
+            distance2DToLocalPlayer = myLocalPlayer->localOrigin.to2D().distance(localOrigin.to2D());
+            desiredViewAngles = FloatVector2D(calcDesiredPitch(), calcDesiredYaw());
+            deltaPitch = CalculatePitchDistance(myLocalPlayer->viewAngles.x, desiredViewAngles.x);
+            deltaYaw = CalculateYawDistance(myLocalPlayer->viewAngles.y, desiredViewAngles.y);
         }
     }
 
@@ -166,22 +148,6 @@ struct Player {
         return degrees;
     }
 
-    int calcYawRotationDirection(int currentYaw, int targetYaw) {
-        int clockwiseDistance = (targetYaw - currentYaw + 360) % 360;
-        int counterclockwiseDistance = (currentYaw - targetYaw + 360) % 360;
-        if (clockwiseDistance <= counterclockwiseDistance)
-            return 1;  // Clockwise rotation                
-        return -1; // Counterclockwise rotation        
-    }
-
-    int calcPitchRotationDirection(int currentPitch, int targetPitch) {
-        int clockwiseDistance = (targetPitch - currentPitch + 180) % 180;
-        int counterclockwiseDistance = (currentPitch - targetPitch + 180) % 180;
-        if (clockwiseDistance <= counterclockwiseDistance)
-            return 1;  // upwards    
-        return -1; // downwards
-    }
-
     // Calculate the shortest angular distance between two yaw angles
     float CalculateYawDistance(float currentYaw, float desiredYaw) {
         // Ensure both angles are within the range [-180, 180]
@@ -200,7 +166,7 @@ struct Player {
         }
 
         // Return the absolute value of the angular difference
-        return angularDifference;
+        return fabs(angularDifference);
     }
 
     // Calculate the shortest angular distance between two pitch angles
@@ -213,7 +179,7 @@ struct Player {
         float angularDifference = desiredPitch - currentPitch;
 
         // Return the absolute value of the angular difference
-        return angularDifference;
+        return fabs(angularDifference);
     }
 
 };

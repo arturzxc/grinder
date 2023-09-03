@@ -20,7 +20,7 @@ struct AimBot {
 
 
 
-        if (target == 0 || !target->isCombatReady()) {
+        if (target == 0 || !target->isCombatReady() || !target->visible) {
             target = findBestTarget();
             // target->targetLocked = true;
         }
@@ -38,10 +38,11 @@ struct AimBot {
         // printf("P[%d] pitchDeadzone: %.6f", target->index, pitchDeadzone);
         float  pitchIncrement = 0;
         // if (target->pitchDelta > pitchDeadzone && target->pitchDelta < pitchMaxDistance) { //if we are not yeat in the deadzone
-            // float pitchRotationDirection = calcPitchRotationDirection(localPlayer->viewAngles.x, target->desiredViewAngles.x);
-        float deltaPitch = target->deltaPitch;
+        float pitchRotationDirection = calcPitchRotationDirection(localPlayer->viewAngles.x, target->desiredViewAngles.x);
+        float deltaPitch = target->deltaPitch * pitchRotationDirection;
         pitchIncrement = deltaPitch / smooth;
-        // }
+        printf(" INC_PITCH: %.4f \n", pitchIncrement);
+        //  }
 
         //yaw increment
         float yawMaxDistance = 15;
@@ -49,22 +50,17 @@ struct AimBot {
         // printf(" yawDeadzone: %.6f   ", yawDeadzone);
         float yawIncrement = 0;
         // if (target->yawDelta > yawDeadzone && target->yawDelta < yawMaxDistance) {//if we are not yeat in the deadzone
-        // float yawRotationDirection = calcYawRotationDirection(localPlayer->viewAngles.y, target->desiredViewAngles.y);
-
-        float deltaYaw = target->deltaYaw;
-
+        float yawRotationDirection = calcYawRotationDirection(localPlayer->viewAngles.y, target->desiredViewAngles.y);
+        float deltaYaw = target->deltaYaw * yawRotationDirection;
         yawIncrement = (deltaYaw / smooth);
-        printf(" INCREMENT: %.4f \n", yawIncrement);
+        printf(" INC_YAW: %.4f \n", yawIncrement);
         // }
 
         //finally add increments to the current angles, clump and write
         FloatVector2D incrementVector = FloatVector2D(pitchIncrement, yawIncrement);
         if (incrementVector.isZeroVector())return;
+        if (yawIncrement > 50 || pitchIncrement > 50)return;
         FloatVector2D newViewAngles = localPlayer->viewAngles.add(incrementVector);
-
-        // 'push' the bot base the point where the sign changes from + to - or vice versa.
-        // if (newViewAngles.y < -180) newViewAngles.y = 179;
-        // if (newViewAngles.y > 180) newViewAngles.y = -179;
 
         mem::WriteFloatVector2D(localPlayer->base + off::VIEW_ANGLES, newViewAngles.clamp());
 
@@ -78,13 +74,12 @@ struct AimBot {
         if (level->trainingArea)
             for (int i = 0; i < dummies->size(); i++) {
                 Player* p = dummies->at(i);
-                // if (p->index == 2735) return p;
 
                 if (!p->isCombatReady()) continue;
                 if (!p->enemy) continue;
 
-                float deltaPitch = std::abs(p->deltaPitch);
-                float deltaYaw = std::abs(p->deltaYaw);
+                float deltaPitch = p->deltaPitch;
+                float deltaYaw = p->deltaYaw;
 
 
                 float myScore = (deltaPitch * deltaPitch) + (deltaYaw * deltaYaw);
@@ -99,14 +94,33 @@ struct AimBot {
                 if (!p->isCombatReady()) continue;
                 if (!p->enemy) continue;
                 if (!p->visible) continue;
-                float myScore = p->deltaYaw + p->deltaPitch;
+                float deltaPitch = p->deltaPitch;
+                float deltaYaw = p->deltaYaw;
+                float myScore = (deltaPitch * deltaPitch) + (deltaYaw * deltaYaw);
                 if (myScore < bestScoreSoFar) {
                     bestTargetSoFar = p;
                     bestScoreSoFar = myScore;
                 }
+
             }
 
         return bestTargetSoFar;
+    }
+
+    int calcYawRotationDirection(int currentYaw, int targetYaw) {
+        int clockwiseDistance = (targetYaw - currentYaw + 360) % 360;
+        int counterclockwiseDistance = (currentYaw - targetYaw + 360) % 360;
+        if (clockwiseDistance <= counterclockwiseDistance)
+            return 1;  // Clockwise rotation                
+        return -1; // Counterclockwise rotation        
+    }
+
+    int calcPitchRotationDirection(int currentPitch, int targetPitch) {
+        int clockwiseDistance = (targetPitch - currentPitch + 180) % 180;
+        int counterclockwiseDistance = (currentPitch - targetPitch + 180) % 180;
+        if (clockwiseDistance <= counterclockwiseDistance)
+            return 1;  // upwards    
+        return -1; // downwards
     }
 
 
