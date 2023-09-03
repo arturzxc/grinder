@@ -4,6 +4,7 @@ struct Sense {
     LocalPlayer* localPlayer;
     std::vector<Player*>* players;
     std::vector<Player*>* dummies;
+    std::vector<Player*>* myPlayers;
 
     Sense(Level* level, LocalPlayer* localPlayer, std::vector<Player*>* players, std::vector<Player*>* dummies) {
         this->level = level;
@@ -13,42 +14,33 @@ struct Sense {
     }
 
     void update(int counter) {
-        if (level->trainingArea)//glow dummies
-            for (int i = 0; i < dummies->size(); i++) {
-                Player* p = dummies->at(i);
-                if (!p->isValid()) continue;
-                if (!p->isDummie()) continue;
-                // if (dummy->index != 8516) continue;
-                glow(p, 100, 0, 0, GlowMode{ 2, 6, (p->targetLocked) ? 120 : 40, 100 });
-            }
-        else //glow players
-            for (int i = 0; i < players->size(); i++) {
-                Player* p = players->at(i);
-                if (!p->isValid()) continue;
-                if (!p->isPlayer()) continue;
-                if (p->enemy) {
-                    //makes it change color to match shield
-                    int shield = p->currentShields;
-                    int R, G, B;
-                    if (shield > 75) {                      //if above 75% shield
-                        R = 1; G = 0; B = 2;                //make purple
-                    }
-                    else if (shield < 76 && shield > 50) {  //if between 75% and 50% shield
-                        R = 0; G = 1; B = 2;                //make blue
-                    }
-                    else if (shield < 51 && shield > 0) { //if between 50% and 0% shield
-                        R = 1.5; G = 1.5; B = 1.5;                //make white
-                    }
-                    else {                                //if 0% shield
-                        R = 0; G = 3; B = 0;                //make green
-                    }
-                    // if (player->visible)
-                    //     glow(player, 0, 5, 0, GlowMode{ 124, 0, 0, 100 });
-                    // else
-                    glow(p, R * 5, G * 5, B * 5, GlowMode{ 12, 6, 35, 100 });
+        myPlayers = (level->trainingArea) ? dummies : players;
+        for (int i = 0; i < myPlayers->size(); i++) {
+            Player* p = myPlayers->at(i);
+            if (!p->isValid()) continue;
+            if (p->enemy) {
+                //makes it change color to match shield
+                int shield = p->currentShields;
+                int R, G, B;
+                if (shield > 75) {                      //if above 75% shield
+                    R = 1; G = 0; B = 2;                //make purple
                 }
-                if (p->friendly) glow(p, 0, 0, 0, GlowMode{ 75, 7, 60, 100 });
+                else if (shield < 76 && shield > 50) {  //if between 75% and 50% shield
+                    R = 0; G = 1; B = 2;                //make blue
+                }
+                else if (shield < 51 && shield > 0) {   //if between 50% and 0% shield
+                    R = 1.5; G = 1.5; B = 1.5;          //make white
+                }
+                else {                                  //if 0% shield
+                    R = 0; G = 3; B = 0;                //make green
+                }
+                // if (player->visible)
+                //     glow(player, 0, 5, 0, GlowMode{ 124, 0, 0, 100 });
+                // else
+                glow(p, R * 5, G * 5, B * 5, GlowMode{ 12, p->targetLocked ? 107 : 6, 35, 100 });
             }
+            if (p->friendly) glow(p, 0, 0, 0, GlowMode{ 75, 7, 60, 100 });
+        }
     }
 
     void glow(Player* player, float red, float green, float blue, GlowMode gm) {

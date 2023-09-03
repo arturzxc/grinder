@@ -30,11 +30,11 @@ int main() {
                     for (int i = 0; i < players->size(); i++)
                         players->at(i)->update();
                 //features
-                // triggerBot->update();
-                
-                // norecoil->update();
+                triggerBot->update();
+// norecoil->update()
+
                 aimBot->update();
-                
+
                 sense->update(counter);
             }
             else {
