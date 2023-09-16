@@ -30,8 +30,8 @@ struct FloatVector2D {
     FloatVector2D clamp() const {
         //pitch doesnt have a full rotation so just set it to max value if its more than that
         float clampedX = x;
-        if (clampedX < -89) clampedX = 89;
-        if (clampedX > 89) clampedX = -89;
+        if (clampedX < -89) clampedX = -89;
+        if (clampedX > 89) clampedX = 89;
         //yaw has a full rotation so we might want to move it to the oposite side from negative to positive or vice versa
         float clampedY = y;
         if (clampedY < -180) clampedY = clampedY + 360;

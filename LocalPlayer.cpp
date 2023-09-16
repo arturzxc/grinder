@@ -25,7 +25,7 @@ struct LocalPlayer {
         weaponSemiAuto = false;
     }
 
-    void update() {
+    void readMemory() {
         reset();
         base = mem::ReadLong(off::REGION + off::LOCAL_PLAYER);
         if (base == 0) { reset();return; }
