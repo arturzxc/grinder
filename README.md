@@ -1,6 +1,6 @@
 # 1. Download:
 ```
-git clone git clone https://github.com/arturzxc/grinder.git
+git clone https://github.com/arturzxc/grinder.git
 ```
 
 # 2. Get inside the folder
