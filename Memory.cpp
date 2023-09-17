@@ -114,8 +114,16 @@ namespace mem {
             throw new std::invalid_argument("Failed to write FloatVector2D at address: " + address);
     }
 
+    std::string ReadString(long address, int size) {
+        char buffer[size] = { 0 };
+        bool success = Read(address, &buffer, size);
+        if (!success)
+            throw new std::invalid_argument("Failed to read String at address: " + address);
+        return std::string(buffer);
+    }
+
     std::string ReadString(long address) {
-        int size = sizeof(std::string);
+        int size = 1000;
         char buffer[size] = { 0 };
         bool success = Read(address, &buffer, size);
         if (!success)

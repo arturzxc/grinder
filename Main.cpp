@@ -7,6 +7,7 @@
 #include <string>
 #include <unistd.h>
 #include <vector>
+#include <unordered_map>
 #include <chrono>
 #include <thread>
 #include <X11/Xlib.h>
@@ -23,6 +24,7 @@
 #include "Level.cpp"
 #include "LocalPlayer.cpp"
 #include "Player.cpp"
+#include "Item.cpp"
 #include "Sense.cpp"
 #include "NoRecoil.cpp"
 #include "TriggerBot.cpp"
@@ -38,9 +40,11 @@ int main() {
     LocalPlayer localPlayer;
     std::vector<Player*> humanPlayers;
     std::vector<Player*> dummyPlayers;
+    std::vector<Item*> items;
     //fill players & dummies lists
     for (int i = 0; i < 70; i++) humanPlayers.push_back(new Player(i, &localPlayer));
     for (int i = 0; i < 15000; i++) dummyPlayers.push_back(new Player(i, &localPlayer));
+    for (int i = 0; i < 50000; i++) items.push_back(new Item(i));
     //start main loop
     int counter = 0;
     while (1) {
@@ -51,9 +55,29 @@ int main() {
                 localPlayer.readMemory();
                 std::vector<Player*>* players = (level.trainingArea) ? &dummyPlayers : &humanPlayers;
                 for (int i = 0; i < players->size(); i++) players->at(i)->readMemory();
+
+                // if (counter % 100 == 0) {
+                //     sigNames.clear();
+
+                //     for (int i = 0; i < items.size(); i++) items.at(i)->readMemory();
+
+                //     std::string mostFreq = findMostFrequentString(sigNames);
+
+                //     printf("mostFreq:%s   size:%ld\n ", mostFreq.c_str(), sigNames.size());
+
+                //     for (int i = 0; i < items.size(); i++)
+                //         if (items.at(i)->sigName == mostFreq)
+                //             items.at(i)->isProp = true;
+
+                //     // printf("\n\n####################################################\n");
+                //     // for (int i = 0; i < sigNames.size();i++)
+                //     //     printf("SIG_NAME[%s]\n", sigNames.at(i)->c_str());
+
+
+                //     glowItemsUpdate(&items);
+                // }
+
                 triggerBotUpdate(&display, &level, &localPlayer, players);
-//                noRecoilUpdate(counter, &display, &localPlayer);
-//                aimbotUpdate(counter, &display, &localPlayer, players);
                 glowUpdate(players);
             }
             else {
@@ -72,9 +96,11 @@ int main() {
         std::this_thread::sleep_for(std::chrono::milliseconds(timeLeftToSleep));
         if (counter < 1000) counter++;
         else counter = 0;
-        printf("| LOOP[%04d] OK | Processing time: %02dms | Time left to sleep: %02dms |\n",
-            counter, processingTime, timeLeftToSleep);
+        // printf("| LOOP[%04d] OK | Processing time: %02dms | Time left to sleep: %02dms |\n",
+        //     counter, processingTime, timeLeftToSleep);
     }
+
+
 }
 
 

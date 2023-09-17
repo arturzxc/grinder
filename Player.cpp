@@ -65,10 +65,10 @@ struct Player {
         base = mem::ReadLong(off::REGION + off::ENTITY_LIST + ((index + 1) << 5));
         if (base == 0) { reset();return; }
         name = mem::ReadString(base + off::NAME);
-        if (name != "player" && name != "dynamic_dummie") return;
+        teamNumber = mem::ReadInt(base + off::TEAM_NUMBER);
+        if (!isPlayer() && !isDummie()) return;
         dead = (isDummie()) ? false : mem::ReadShort(base + off::LIFE_STATE) > 0;
         knocked = (isDummie()) ? false : mem::ReadShort(base + off::BLEEDOUT_STATE) > 0;
-        teamNumber = mem::ReadInt(base + off::TEAM_NUMBER);
         currentShields = mem::ReadInt(base + off::CURRENT_SHIELDS);
         localOrigin = mem::ReadFloatVector3D(base + off::LOCAL_ORIGIN);
         glowEnable = mem::ReadInt(base + off::GLOW_ENABLE);
@@ -110,7 +110,7 @@ struct Player {
     }
 
     bool isDummie() {
-        return name == "dynamic_dummie";
+        return teamNumber == 97;
     }
 
     float calcDesiredPitch() {

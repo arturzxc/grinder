@@ -14,6 +14,22 @@ void glowPlayer(Player* player, float red, float green, float blue, GlowMode gm)
     if (player->glowMode != newGlowMode) mem::WriteGlowMode(player->base + off::GLOW_MODE, newGlowMode);
 }
 
+void glowItem(Item* item, float red, float green, float blue, GlowMode gm) {
+    //glow enable through walls
+    mem::WriteInt(item->base + off::GLOW_ENABLE, 1);
+    mem::WriteInt(item->base + off::GLOW_THROUGH_WALL, 1);
+    //glow color
+    FloatVector3D newColor(red, green, blue);
+    mem::WriteFloatVector3D(item->base + off::GLOW_COLOR, newColor);
+    //glow mode
+    GlowMode newGlowMode(
+        static_cast<std::byte>(gm.bodyStyle),
+        static_cast<std::byte>(gm.borderStyle),
+        static_cast<std::byte>(gm.borderWidth),
+        static_cast<std::byte>(gm.transparency));
+    mem::WriteGlowMode(item->base + off::GLOW_MODE, newGlowMode);
+}
+
 void glowUpdate(std::vector<Player*>* players) {
     for (int i = 0; i < players->size(); i++) {
         Player* p = players->at(i);
@@ -23,6 +39,19 @@ void glowUpdate(std::vector<Player*>* players) {
             else glowPlayer(p, 10, 0, 0, GlowMode{ 2, 6, 35, 127 });
         }
         if (p->friendly) glowPlayer(p, 0, 0, 0, GlowMode{ 2, 6, 35, 127 });
+    }
+}
+
+void glowItemsUpdate(std::vector<Item*>* items) {
+    for (int i = 0; i < items->size(); i++) {
+        Item* p = items->at(i);
+        if (!p->isValid()) continue;
+
+        if (p->searchedFor())
+            glowItem(p, 0, 1, 1, GlowMode{ 118, 6, 35, 127 });
+        else
+            glowItem(p, 0, 0, 0, GlowMode{ 0, 0, 0, 127 });
+
     }
 }
 
