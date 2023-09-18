@@ -57,7 +57,7 @@ void glowItemsUpdate(std::vector<Item*>* items) {
     for (int i = 0; i < items->size(); i++) {
         Item* p = items->at(i);
         if (!p->isValid()) continue;
-
+        if (!p->isItem()) continue;
 
         if (p->customScript == 23)  //tripple take
             glowItem(p, S_COLOR_RED, GlowMode{ 118, 0, 35, 127 });
