@@ -56,14 +56,12 @@ int main() {
                 localPlayer.readMemory();
                 std::vector<Player*>* players = (level.trainingArea) ? &dummyPlayers : &humanPlayers;
                 for (int i = 0; i < players->size(); i++) players->at(i)->readMemory();
-
-                if (counter % 10 == 0) {
-                    for (int i = 0; i < items.size(); i++) items.at(i)->readMemory();
-                    glowItemsUpdate(&items);
-                }
-
                 triggerBotUpdate(&display, &level, &localPlayer, players);
-                glowUpdate(players);
+                glowPlayers(players);
+                if (display.keyDown(XK_R)) {
+                    for (int i = 0; i < items.size(); i++) items.at(i)->readMemory();
+                    glowItems(&items);
+                }
             }
             else {
                 printf("Waiting for a playable level! Sleeping 10 seconds... \n");

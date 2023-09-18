@@ -5,7 +5,7 @@ const Color S_COLOR_WHITE = { 1,1,1 };
 const Color S_COLOR_GREEN = { 0,1,0 };
 const Color S_COLOR_BLACK = { 0,0,0 };
 
-const int strongMulti = 40;
+const int strongMulti = 1;
 const Color S_COLOR_STRONG_RED = { 1 * strongMulti,0,0 };
 const Color S_COLOR_STRONG_PURPLE = { 1 * strongMulti,0,2 * strongMulti };
 const Color S_COLOR_STRONG_LIGHT_BLUE = { 0,1,2 };
@@ -30,7 +30,7 @@ void glowPlayer(Player* player, Color color, GlowMode gm) {
     if (player->glowMode != newGlowMode) mem::WriteGlowMode(player->base + off::GLOW_MODE, newGlowMode);
 }
 
-void glowUpdate(std::vector<Player*>* players) {
+void glowPlayers(std::vector<Player*>* players) {
     for (int i = 0; i < players->size(); i++) {
         Player* p = players->at(i);
         if (!p->isValid()) continue;
@@ -47,13 +47,10 @@ void glowUpdate(std::vector<Player*>* players) {
 }
 
 void glowItem(Item* item, Color color, GlowMode gm) {
-    //glow enable through walls
     mem::WriteInt(item->base + off::GLOW_ENABLE, 1);
     mem::WriteInt(item->base + off::GLOW_THROUGH_WALL, 1);
-    //glow color
     FloatVector3D newColor(color.red, color.green, color.blue);
     mem::WriteFloatVector3D(item->base + off::GLOW_COLOR, newColor);
-    //glow mode
     GlowMode newGlowMode(
         static_cast<std::byte>(gm.bodyStyle),
         static_cast<std::byte>(gm.borderStyle),
@@ -62,22 +59,29 @@ void glowItem(Item* item, Color color, GlowMode gm) {
     mem::WriteGlowMode(item->base + off::GLOW_MODE, newGlowMode);
 }
 
-void glowItemsUpdate(std::vector<Item*>* items) {
+void glowItems(std::vector<Item*>* items) {
     for (int i = 0; i < items->size(); i++) {
         Item* p = items->at(i);
         if (!p->isValid()) continue;
         if (!p->isItem()) continue;
 
+
+        //weapons
+        GlowMode weapGlowMode = GlowMode{ 0, 5, 35, 127 };
         if (p->customScript == 23)  //tripple take
-            glowItem(p, S_COLOR_STRONG_WHITE, GlowMode{ 118, 6, 100, 127 });
+            glowItem(p, S_COLOR_STRONG_WHITE, weapGlowMode);
         else if (p->customScript == 90)  //PK
-            glowItem(p, S_COLOR_STRONG_WHITE, GlowMode{ 118, 6, 100, 127 });
-        else if (p->customScript == 193 || p->customScript == 198)  //BLUE SHIELD
-            glowItem(p, S_COLOR_STRONG_LIGHT_BLUE, GlowMode{ 118, 6, 100, 127 });
+            glowItem(p, S_COLOR_STRONG_WHITE, weapGlowMode);
+
+
+        //shields            
+        GlowMode shieldsGlowMode = GlowMode{ 118, 5, 35, 127 };
+        if (p->customScript == 193 || p->customScript == 198)  //BLUE SHIELD
+            glowItem(p, S_COLOR_STRONG_LIGHT_BLUE, shieldsGlowMode);
         else if (p->customScript == 194 || p->customScript == 199)  //PURPLE SHIELD
-            glowItem(p, S_COLOR_STRONG_PURPLE, GlowMode{ 118, 6, 100, 127 });
+            glowItem(p, S_COLOR_STRONG_PURPLE, shieldsGlowMode);
         else if (p->customScript == 195 || p->customScript == 200)  //RED SHIELD
-            glowItem(p, S_COLOR_STRONG_RED, GlowMode{ 118, 6, 100, 127 });
+            glowItem(p, S_COLOR_STRONG_RED, shieldsGlowMode);
     }
 }
 
