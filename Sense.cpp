@@ -67,15 +67,15 @@ void glowItems(std::vector<Item*>* items) {
 
 
         //weapons
-        GlowMode weapGlowMode = GlowMode{ 0, 5, 35, 127 };
+        GlowMode weapGlowMode = GlowMode{ 118, 5, 100, 127 };
         if (p->customScript == 23)  //tripple take
-            glowItem(p, S_COLOR_STRONG_WHITE, weapGlowMode);
+            glowItem(p, S_COLOR_STRONG_PURPLE, weapGlowMode);
         else if (p->customScript == 90)  //PK
-            glowItem(p, S_COLOR_STRONG_WHITE, weapGlowMode);
+            glowItem(p, S_COLOR_STRONG_PURPLE, weapGlowMode);
 
 
         //shields            
-        GlowMode shieldsGlowMode = GlowMode{ 118, 5, 35, 127 };
+        GlowMode shieldsGlowMode = GlowMode{ 118, 5, 100, 127 };
         if (p->customScript == 193 || p->customScript == 198)  //BLUE SHIELD
             glowItem(p, S_COLOR_STRONG_LIGHT_BLUE, shieldsGlowMode);
         else if (p->customScript == 194 || p->customScript == 199)  //PURPLE SHIELD
