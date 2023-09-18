@@ -5,6 +5,14 @@ const Color S_COLOR_WHITE = { 1,1,1 };
 const Color S_COLOR_GREEN = { 0,1,0 };
 const Color S_COLOR_BLACK = { 0,0,0 };
 
+const int strongMulti = 40;
+const Color S_COLOR_STRONG_RED = { 1 * strongMulti,0,0 };
+const Color S_COLOR_STRONG_PURPLE = { 1 * strongMulti,0,2 * strongMulti };
+const Color S_COLOR_STRONG_LIGHT_BLUE = { 0,1,2 };
+const Color S_COLOR_STRONG_WHITE = { 1 * strongMulti,1 * strongMulti,1 * strongMulti };
+const Color S_COLOR_STRONG_GREEN = { 0,1 * strongMulti,0 };
+const Color S_COLOR_STRONG_BLACK = { 0,0,0 };
+
 
 void glowPlayer(Player* player, Color color, GlowMode gm) {
     //glow enable through walls
@@ -61,24 +69,15 @@ void glowItemsUpdate(std::vector<Item*>* items) {
         if (!p->isItem()) continue;
 
         if (p->customScript == 23)  //tripple take
-            glowItem(p, S_COLOR_RED, GlowMode{ 118, 0, 35, 127 });
+            glowItem(p, S_COLOR_STRONG_WHITE, GlowMode{ 118, 6, 100, 127 });
         else if (p->customScript == 90)  //PK
-            glowItem(p, S_COLOR_RED, GlowMode{ 118, 0, 35, 127 });
-        else if (p->customScript == 193)  //BLUE SHIELD
-            glowItem(p, S_COLOR_LIGHT_BLUE, GlowMode{ 118, 0, 35, 127 });
-        else if (p->customScript == 194)  //PURPLE SHIELD
-            glowItem(p, S_COLOR_PURPLE, GlowMode{ 118, 0, 35, 127 });
-        else if (p->customScript == 195)  //RED SHIELD
-            glowItem(p, S_COLOR_RED, GlowMode{ 118, 0, 35, 127 });
-
-
-
-        // { 192, { "Body Armor Level 1", Rarity::Armor }},
-        // { 193, { "Body Armor Level 2", Rarity::Armor }},
-        // { 194, { "Body Armor Level 3", Rarity::Armor }},
-        // { 195, { "Body Armor Level 4", Rarity::Armor }},
-
-
+            glowItem(p, S_COLOR_STRONG_WHITE, GlowMode{ 118, 6, 100, 127 });
+        else if (p->customScript == 193 || p->customScript == 198)  //BLUE SHIELD
+            glowItem(p, S_COLOR_STRONG_LIGHT_BLUE, GlowMode{ 118, 6, 100, 127 });
+        else if (p->customScript == 194 || p->customScript == 199)  //PURPLE SHIELD
+            glowItem(p, S_COLOR_STRONG_PURPLE, GlowMode{ 118, 6, 100, 127 });
+        else if (p->customScript == 195 || p->customScript == 200)  //RED SHIELD
+            glowItem(p, S_COLOR_STRONG_RED, GlowMode{ 118, 6, 100, 127 });
     }
 }
 

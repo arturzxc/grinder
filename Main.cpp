@@ -57,7 +57,7 @@ int main() {
                 std::vector<Player*>* players = (level.trainingArea) ? &dummyPlayers : &humanPlayers;
                 for (int i = 0; i < players->size(); i++) players->at(i)->readMemory();
 
-                if (counter % 1000 == 0) {
+                if (counter % 10 == 0) {
                     for (int i = 0; i < items.size(); i++) items.at(i)->readMemory();
                     glowItemsUpdate(&items);
                 }
