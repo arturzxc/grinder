@@ -25,8 +25,6 @@ struct Item {
             sigName = mem::ReadString(sigNamePointer);
             if (isItem()) {
                 customScript = mem::ReadInt(base + 0x1668);
-                if (customScript != 0)
-                    printf("customScript: %d\n", customScript);
             }
         }
 

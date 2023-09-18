@@ -26,6 +26,7 @@ void glowUpdate(std::vector<Player*>* players) {
     for (int i = 0; i < players->size(); i++) {
         Player* p = players->at(i);
         if (!p->isValid()) continue;
+        if (!p->isCombatReady()) continue;
         if (p->enemy) {
             if (p->visible)
                 glowPlayer(p, S_COLOR_GREEN, GlowMode{ 2, 6, 35, 127 });
