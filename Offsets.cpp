@@ -35,8 +35,9 @@ namespace off {
 
     //prop survival
     const long m_ModelName = 0x0030; //int
+    const long m_nModelIndex = 0x166c;//int
 
     const long m_scriptNameIndex = 0x06c8; //int
     const long m_grade = 0x0490; //int
-    const long m_pressUsePrompt=0x0758;//string
+    const long m_pressUsePrompt = 0x0758;//string
 }

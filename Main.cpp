@@ -20,6 +20,7 @@
 #include "FloatVector2D.cpp"
 #include "FloatVector3D.cpp"
 #include "GlowMode.cpp"
+#include "Color.cpp"
 #include "Memory.cpp" 
 #include "Level.cpp"
 #include "LocalPlayer.cpp"
@@ -56,26 +57,10 @@ int main() {
                 std::vector<Player*>* players = (level.trainingArea) ? &dummyPlayers : &humanPlayers;
                 for (int i = 0; i < players->size(); i++) players->at(i)->readMemory();
 
-                // if (counter % 100 == 0) {
-                //     sigNames.clear();
-
-                //     for (int i = 0; i < items.size(); i++) items.at(i)->readMemory();
-
-                //     std::string mostFreq = findMostFrequentString(sigNames);
-
-                //     printf("mostFreq:%s   size:%ld\n ", mostFreq.c_str(), sigNames.size());
-
-                //     for (int i = 0; i < items.size(); i++)
-                //         if (items.at(i)->sigName == mostFreq)
-                //             items.at(i)->isProp = true;
-
-                //     // printf("\n\n####################################################\n");
-                //     // for (int i = 0; i < sigNames.size();i++)
-                //     //     printf("SIG_NAME[%s]\n", sigNames.at(i)->c_str());
-
-
-                //     glowItemsUpdate(&items);
-                // }
+                if (counter % 1000 == 0) {
+                    for (int i = 0; i < items.size(); i++) items.at(i)->readMemory();
+                    glowItemsUpdate(&items);
+                }
 
                 triggerBotUpdate(&display, &level, &localPlayer, players);
                 glowUpdate(players);
@@ -85,8 +70,8 @@ int main() {
                 std::this_thread::sleep_for(std::chrono::milliseconds(10000));
             }
         }
-        catch (...) {
-            printf("Error. Sleeping 30 seconds... \n");
+        catch (const std::exception& e) {
+            std::cerr << "Error. Sleeping 30 seconds. Error msg: " << e.what() << std::endl;
             std::this_thread::sleep_for(std::chrono::milliseconds(30000));
         }
         //check how fast we completed all the processing and if we still have time left to sleep
