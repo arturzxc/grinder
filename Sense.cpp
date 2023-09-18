@@ -67,7 +67,7 @@ void glowItems(std::vector<Item*>* items) {
 
 
         //weapons
-        GlowMode weapGlowMode = GlowMode{ 118, 5, 100, 127 };
+        GlowMode weapGlowMode = GlowMode{ 0, 5, 100, 127 };
         if (p->customScript == 23)  //tripple take
             glowItem(p, S_COLOR_STRONG_LIGHT_BLUE, weapGlowMode);
         else if (p->customScript == 90)  //PK
