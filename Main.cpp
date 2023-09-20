@@ -57,10 +57,10 @@ int main() {
                 std::vector<Player*>* players = (level.trainingArea) ? &dummyPlayers : &humanPlayers;
                 for (int i = 0; i < players->size(); i++) players->at(i)->readMemory();
                 triggerBotUpdate(&display, &level, &localPlayer, players);
-                glowPlayers(players);
+                // glowPlayers(players);
                 if (display.keyDown(XK_R)) {
                     for (int i = 0; i < items.size(); i++) items.at(i)->readMemory();
-                    glowItems(&items);
+                    // glowItems(&items);
                 }
             }
             else {
@@ -79,8 +79,8 @@ int main() {
         std::this_thread::sleep_for(std::chrono::milliseconds(timeLeftToSleep));
         if (counter < 1000) counter++;
         else counter = 0;
-        // printf("| LOOP[%04d] OK | Processing time: %02dms | Time left to sleep: %02dms |\n",
-        //     counter, processingTime, timeLeftToSleep);
+        printf("| LOOP[%04d] OK | Processing time: %02dms | Time left to sleep: %02dms |\n",
+            counter, processingTime, timeLeftToSleep);
     }
 
 

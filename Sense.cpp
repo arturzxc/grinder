@@ -19,8 +19,8 @@ void glowPlayer(Player* player, Color color, GlowMode gm) {
     if (player->glowEnable != 1) mem::WriteInt(player->base + off::GLOW_ENABLE, 1);
     if (player->glowThroughWall != 1) mem::WriteInt(player->base + off::GLOW_THROUGH_WALL, 1);
     //glow color
-    FloatVector3D newColor(color.red, color.green, color.blue);
-    if (player->glowColor != newColor) mem::WriteFloatVector3D(player->base + off::GLOW_COLOR, newColor);
+    // FloatVector3D newColor(color.red, color.green, color.blue);
+    // if (player->glowColor != newColor) mem::WriteFloatVector3D(player->base + off::GLOW_COLOR, newColor);
     //glow mode
     GlowMode newGlowMode(
         static_cast<std::byte>(gm.bodyStyle),
@@ -49,8 +49,8 @@ void glowPlayers(std::vector<Player*>* players) {
 void glowItem(Item* item, Color color, GlowMode gm) {
     mem::WriteInt(item->base + off::GLOW_ENABLE, 1);
     mem::WriteInt(item->base + off::GLOW_THROUGH_WALL, 1);
-    FloatVector3D newColor(color.red, color.green, color.blue);
-    mem::WriteFloatVector3D(item->base + off::GLOW_COLOR, newColor);
+    // FloatVector3D newColor(color.red, color.green, color.blue);
+    // mem::WriteFloatVector3D(item->base + off::GLOW_COLOR, newColor);
     GlowMode newGlowMode(
         static_cast<std::byte>(gm.bodyStyle),
         static_cast<std::byte>(gm.borderStyle),
