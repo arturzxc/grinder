@@ -22,8 +22,8 @@ namespace off {
     const long LAST_VISIBLE_TIME = 0x19ad + 0x3;                                            //[RecvTable.DT_BaseCombatCharacter]->m_hudInfo_visibilityTestAlwaysPasses + 0x3
     const long LAST_AIMEDAT_TIME = 0x19ad + 0x3 + 0x8;                                      //[RecvTable.DT_BaseCombatCharacter]->m_hudInfo_visibilityTestAlwaysPasses + 0x3 +0x8
     //glow
-    const long GLOW_ENABLE = 0x294;                                                         //[?]->?
-    const long GLOW_THROUGH_WALL = 0x278;                                                   //[?]->?
+    const long GLOW_ENABLE = 0x0298;                                                        //[RecvTable.DT_HighlightSettings]->m_highlightServerActiveStates
+    const long GLOW_THROUGH_WALL = 0x0298 + 0x2;                                            //[RecvTable.DT_HighlightSettings]-m_highlightServerActiveStates+0x2
     const long GLOW_MODE = 0x29c;                                                           //[?]->?
     const long GLOW_COLOR = 0x200;                                                          //[?]->?    
     //weapon

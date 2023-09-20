@@ -16,10 +16,10 @@ const Color S_COLOR_STRONG_BLACK = { 0,0,0 };
 
 void glowPlayer(Player* player, Color color, GlowMode gm) {
     //glow enable through walls
-    if (player->glowEnable != 1) mem::WriteInt(player->base + off::GLOW_ENABLE, 1);
+    if (player->glowEnable != 10) mem::WriteInt(player->base + off::GLOW_ENABLE, 10);
     if (player->glowThroughWall != 1) mem::WriteInt(player->base + off::GLOW_THROUGH_WALL, 1);
     //glow color
-    // FloatVector3D newColor(color.red, color.green, color.blue);
+    FloatVector3D newColor(color.red, color.green, color.blue);
     // if (player->glowColor != newColor) mem::WriteFloatVector3D(player->base + off::GLOW_COLOR, newColor);
     //glow mode
     GlowMode newGlowMode(
@@ -27,7 +27,7 @@ void glowPlayer(Player* player, Color color, GlowMode gm) {
         static_cast<std::byte>(gm.borderStyle),
         static_cast<std::byte>(gm.borderWidth),
         static_cast<std::byte>(gm.transparency));
-    if (player->glowMode != newGlowMode) mem::WriteGlowMode(player->base + off::GLOW_MODE, newGlowMode);
+    // if (player->glowMode != newGlowMode) mem::WriteGlowMode(player->base + off::GLOW_MODE, newGlowMode);
 }
 
 void glowPlayers(std::vector<Player*>* players) {
@@ -41,22 +41,20 @@ void glowPlayers(std::vector<Player*>* players) {
             else
                 glowPlayer(p, S_COLOR_RED, GlowMode{ 2, 6, 35, 127 });
         }
-        else
-            glowPlayer(p, S_COLOR_BLACK, GlowMode{ 2, 6, 35, 127 });
     }
 }
 
 void glowItem(Item* item, Color color, GlowMode gm) {
-    mem::WriteInt(item->base + off::GLOW_ENABLE, 1);
-    mem::WriteInt(item->base + off::GLOW_THROUGH_WALL, 1);
-    // FloatVector3D newColor(color.red, color.green, color.blue);
+    // mem::WriteInt(item->base + off::GLOW_ENABLE, 1);
+    // mem::WriteInt(item->base + off::GLOW_THROUGH_WALL, 1);
+    FloatVector3D newColor(color.red, color.green, color.blue);
     // mem::WriteFloatVector3D(item->base + off::GLOW_COLOR, newColor);
     GlowMode newGlowMode(
         static_cast<std::byte>(gm.bodyStyle),
         static_cast<std::byte>(gm.borderStyle),
         static_cast<std::byte>(gm.borderWidth),
         static_cast<std::byte>(gm.transparency));
-    mem::WriteGlowMode(item->base + off::GLOW_MODE, newGlowMode);
+    // mem::WriteGlowMode(item->base + off::GLOW_MODE, newGlowMode);
 }
 
 void glowItems(std::vector<Item*>* items) {

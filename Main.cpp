@@ -57,7 +57,7 @@ int main() {
                 std::vector<Player*>* players = (level.trainingArea) ? &dummyPlayers : &humanPlayers;
                 for (int i = 0; i < players->size(); i++) players->at(i)->readMemory();
                 triggerBotUpdate(&display, &level, &localPlayer, players);
-                // glowPlayers(players);
+                glowPlayers(players);
                 if (display.keyDown(XK_R)) {
                     for (int i = 0; i < items.size(); i++) items.at(i)->readMemory();
                     // glowItems(&items);
