@@ -24,8 +24,8 @@ namespace off {
     //glow
     const long GLOW_ENABLE = 0x294;                                                         //[?]->?
     const long GLOW_THROUGH_WALL = 0x278;                                                   //[?]->?
-    const long GLOW_COLOR = 0x200;                                                          //[?]->?
     const long GLOW_MODE = 0x29c;                                                           //[?]->?
+    const long GLOW_COLOR = 0x200;                                                          //[?]->?    
     //weapon
     const long WEAPON_HANDLE = 0x1954;                                                      //[RecvTable.DT_Player]->m_latestPrimaryWeapons
     const long WEAPON_INDEX = 0x1798;                                                       //[RecvTable.DT_WeaponX]->m_weaponNameIndex
