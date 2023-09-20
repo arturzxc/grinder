@@ -26,7 +26,7 @@ namespace off {
     const long GLOW_THROUGH_WALL = 0x0298 + 0x2;                                            //[RecvTable.DT_HighlightSettings]-m_highlightServerActiveStates+0x2
     const long GLOW_MODE = 0x29c;                                                           //[?]->?
     const long GLOW_COLOR = 0x200;                                                          //[?]->?    
-    //weapon
+    //weapon 
     const long WEAPON_HANDLE = 0x1954;                                                      //[RecvTable.DT_Player]->m_latestPrimaryWeapons
     const long WEAPON_INDEX = 0x1798;                                                       //[RecvTable.DT_WeaponX]->m_weaponNameIndex
     const long WEAPON_SEMIAUTO = 0x19ad + 0x3 + 0x018c;                                     //[RecvTable.DT_BaseCombatCharacter]->m_hudInfo_visibilityTestAlwaysPasses + 0x3 + 0x018c
