@@ -22,10 +22,10 @@ namespace off {
     const long LAST_VISIBLE_TIME = 0x19ad + 0x3;                                            //[RecvTable.DT_BaseCombatCharacter]->m_hudInfo_visibilityTestAlwaysPasses + 0x3
     const long LAST_AIMEDAT_TIME = 0x19ad + 0x3 + 0x8;                                      //[RecvTable.DT_BaseCombatCharacter]->m_hudInfo_visibilityTestAlwaysPasses + 0x3 +0x8
     //glow
-    const long GLOW_ENABLE = 0x0298;                                                        //[RecvTable.DT_HighlightSettings]->m_highlightServerActiveStates
-    const long GLOW_THROUGH_WALL = 0x0298 + 0x2;                                            //[RecvTable.DT_HighlightSettings]-m_highlightServerActiveStates+0x2
-    const long GLOW_MODE = 0x29c;                                                           //[?]->?
-    const long GLOW_COLOR = 0x200;                                                          //[?]->?    
+    const long GLOW_ENABLE = 0x294;                                                         // DT_HighlightSettings.?
+    const long GLOW_THROUGH_WALL = 0x278;                                                   // DT_HighlightSettings.?
+    const long GLOW_ACTIVE_STATES = 0x298;                                                  // DT_HighlightSettings.m_highlightServerActiveStates    
+    const long GLOW_SETTINGS = 0xb5f9620;                                                   // Miscellaneous.? THIS SHIT IS GLOBAL
     //weapon 
     const long WEAPON_HANDLE = 0x1954;                                                      //[RecvTable.DT_Player]->m_latestPrimaryWeapons
     const long WEAPON_INDEX = 0x1798;                                                       //[RecvTable.DT_WeaponX]->m_weaponNameIndex

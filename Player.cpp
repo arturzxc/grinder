@@ -11,8 +11,6 @@ struct Player {
     int glowEnable;
     int glowThroughWall;
     FloatVector3D localOrigin;
-    FloatVector3D glowColor;
-    GlowMode glowMode;
     int lastTimeVisible;
     int lastTimeVisiblePrev;
     bool visible;
@@ -45,8 +43,6 @@ struct Player {
         glowEnable = 5;
         glowThroughWall = 2;
         localOrigin = FloatVector3D();
-        glowColor = FloatVector3D();
-        glowMode = GlowMode();
         visible = false;
         localPlayer = false;
         friendly = false;
@@ -73,14 +69,12 @@ struct Player {
         localOrigin = mem::ReadFloatVector3D(base + off::LOCAL_ORIGIN);
         glowEnable = mem::ReadInt(base + off::GLOW_ENABLE);
         glowThroughWall = mem::ReadInt(base + off::GLOW_THROUGH_WALL);
-        glowColor = mem::ReadFloatVector3D(base + off::GLOW_COLOR);
-        glowMode = mem::ReadGlowMode(base + off::GLOW_MODE);
-        lastTimeVisiblePrev = lastTimeVisible;
         lastTimeVisible = mem::ReadInt(base + off::LAST_VISIBLE_TIME);
-        visible = isDummie() || lastTimeVisiblePrev < lastTimeVisible; //make dummies always visible cause vis check for them is fucked up.
-        lastTimeAimedAtPrev = lastTimeAimedAt;
+        visible = lastTimeVisiblePrev < lastTimeVisible; //make dummies always visible cause vis check for them is fucked up.
+        lastTimeVisiblePrev = lastTimeVisible;
         lastTimeAimedAt = mem::ReadInt(base + off::LAST_AIMEDAT_TIME);
         aimedAt = lastTimeAimedAtPrev < lastTimeAimedAt;
+        lastTimeAimedAtPrev = lastTimeAimedAt;
         if (myLocalPlayer->isValid()) {
             localPlayer = myLocalPlayer->base == base;
             friendly = myLocalPlayer->teamNumber == teamNumber;

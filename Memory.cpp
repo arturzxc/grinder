@@ -63,6 +63,28 @@ namespace mem {
         return false;
     }
 
+    template <class T>
+    T Read(long address) {
+        T buffer;
+        bool success = Read(address, &buffer, sizeof(T));
+        if (!success) {
+            m_pid = 0;
+            throw std::invalid_argument(
+                "Failed to get " + std::to_string(sizeof(T)) + "at: " + std::to_string(address));
+        }
+        return buffer;
+    }
+
+    template <class T>
+    void Write(long address, T value) {
+        bool success = Write(address, &value, sizeof(T));
+        if (!success) {
+            m_pid = 0;
+            throw std::invalid_argument(
+                "Failed to set " + std::to_string(sizeof(T)) + " at: " + std::to_string(address));
+        }
+    }
+
     GlowMode ReadGlowMode(long address) {
         int size = sizeof(GlowMode);
         GlowMode buffer;
