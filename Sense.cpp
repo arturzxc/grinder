@@ -32,7 +32,7 @@ void glowPlayers(std::vector<Player*>* players) {
         gm.borderWidth = static_cast<std::byte>(40);
         gm.transparency = static_cast<std::byte>(64);
         mem::Write<GlowMode>(highlightSettingsPtr + (HIGHLIGHT_CONTEXT_SIZE * i) + 4, gm);
-        mem::Write<Color>(highlightSettingsPtr + (HIGHLIGHT_CONTEXT_SIZE * i) + 8, { 100,100,100 });
+        mem::Write<Color>(highlightSettingsPtr + (HIGHLIGHT_CONTEXT_SIZE * i) + 8, { 0,100,0 });
     }
 
     //manupulate player contextIds as needed
