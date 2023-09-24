@@ -25,7 +25,7 @@ void glowPlayers(std::vector<Player*>* players) {
 
     //Setting #1: For visible enemies
 
-    for (int i = 0;i < 10;i++) {
+    for (int i = 0;i < 8;i++) {
         GlowMode gm = mem::Read<GlowMode>(highlightSettingsPtr + (HIGHLIGHT_CONTEXT_SIZE * i) + 4);
         gm.bodyStyle = static_cast<std::byte>(112);
         gm.borderStyle = static_cast<std::byte>(108);
