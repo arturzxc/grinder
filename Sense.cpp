@@ -39,6 +39,7 @@ void glowPlayers(std::vector<Player*>* players) {
     for (int i = 0; i < players->size(); i++) {
         Player* p = players->at(i);
         if (!p->isValid()) continue;
+	if (!p->isPlayer() || !p->isDummie()) continue;
         if (p->enemy) {
             // if (p->visible)
             //     glowPlayer(p, visibleEnemyContextId);
