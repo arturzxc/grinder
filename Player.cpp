@@ -27,6 +27,7 @@ struct Player {
     float deltaPitch;
     float deltaYaw;
     bool targetLocked;
+    int contextId;
 
     Player(int index, LocalPlayer* in_localPlayer) {
         this->index = index;
@@ -54,6 +55,7 @@ struct Player {
         deltaYaw = 0;
         deltaPitch = 0;
         targetLocked = false;
+        contextId = 0;
     }
 
     void readMemory() {
@@ -75,6 +77,7 @@ struct Player {
         lastTimeAimedAt = mem::ReadInt(base + off::LAST_AIMEDAT_TIME);
         aimedAt = lastTimeAimedAtPrev < lastTimeAimedAt;
         lastTimeAimedAtPrev = lastTimeAimedAt;
+        contextId = mem::Read<int>(base + off::GLOW_ACTIVE_STATES + 1);
         if (myLocalPlayer->isValid()) {
             localPlayer = myLocalPlayer->base == base;
             friendly = myLocalPlayer->teamNumber == teamNumber;

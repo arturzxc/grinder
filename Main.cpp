@@ -43,7 +43,7 @@ int main() {
     std::vector<Player*> dummyPlayers;
     std::vector<Item*> items;
     //fill players & dummies lists
-    for (int i = 0; i < 70; i++) humanPlayers.push_back(new Player(i, &localPlayer));
+    for (int i = 0; i < 100; i++) humanPlayers.push_back(new Player(i, &localPlayer));
     for (int i = 0; i < 15000; i++) dummyPlayers.push_back(new Player(i, &localPlayer));
     for (int i = 0; i < 50000; i++) items.push_back(new Item(i));
     //start main loop
@@ -82,7 +82,7 @@ int main() {
         else counter = 0;
 
         //print loop info every now and then
-        if (counter % 100 == 0)
+        if (counter == 1 || counter % 500 == 0)
             printf("| LOOP[%04d] OK | Processing time: %02dms | Time left to sleep: %02dms |\n",
                 counter, processingTime, timeLeftToSleep);
     }
