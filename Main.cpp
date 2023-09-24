@@ -60,8 +60,22 @@ int main() {
                 // test(&localPlayer);
                 glowPlayers(players);
                 if (display.keyDown(XK_R)) {
-                    for (int i = 0; i < items.size(); i++) items.at(i)->readMemory();
+                    // for (int i = 0; i < items.size(); i++) items.at(i)->readMemory();
                     // glowItems(&items);
+
+
+                    int contextId = 0;
+                    long highlightSettingsPtr = mem::Read<long>(off::REGION + off::GLOW_SETTINGS); //find pointer to all the contexts
+                    const long HIGHLIGHT_CONTEXT_SIZE = 0x28;
+                    GlowMode newGlowMode = { 112,108,64,64 };
+                    GlowMode oldFlowMode = mem::Read<GlowMode>(highlightSettingsPtr + (HIGHLIGHT_CONTEXT_SIZE * contextId) + 4);
+                    if (newGlowMode != oldFlowMode)
+                        mem::Write<GlowMode>(highlightSettingsPtr + (HIGHLIGHT_CONTEXT_SIZE * contextId) + 4, newGlowMode);
+
+                    Color newColor = { 100,100,100 };
+                    Color oldColor = mem::Read<Color>(highlightSettingsPtr + (HIGHLIGHT_CONTEXT_SIZE * contextId) + 8);
+                    if (oldColor != newColor)
+                        mem::Write<Color>(highlightSettingsPtr + (HIGHLIGHT_CONTEXT_SIZE * contextId) + 8, newColor);
                 }
             }
             else {

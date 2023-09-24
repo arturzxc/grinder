@@ -71,13 +71,13 @@ struct Player {
         localOrigin = mem::ReadFloatVector3D(base + off::LOCAL_ORIGIN);
         glowEnable = mem::ReadInt(base + off::GLOW_ENABLE);
         glowThroughWall = mem::ReadInt(base + off::GLOW_THROUGH_WALL);
+        contextId = mem::Read<int>(base + off::GLOW_ACTIVE_STATES + 1);
         lastTimeVisible = mem::ReadInt(base + off::LAST_VISIBLE_TIME);
         visible = lastTimeVisiblePrev < lastTimeVisible; //make dummies always visible cause vis check for them is fucked up.
         lastTimeVisiblePrev = lastTimeVisible;
         lastTimeAimedAt = mem::ReadInt(base + off::LAST_AIMEDAT_TIME);
         aimedAt = lastTimeAimedAtPrev < lastTimeAimedAt;
         lastTimeAimedAtPrev = lastTimeAimedAt;
-        contextId = mem::Read<int>(base + off::GLOW_ACTIVE_STATES + 1);
         if (myLocalPlayer->isValid()) {
             localPlayer = myLocalPlayer->base == base;
             friendly = myLocalPlayer->teamNumber == teamNumber;

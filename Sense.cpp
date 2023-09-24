@@ -35,16 +35,16 @@ void glowPlayers(std::vector<Player*>* players) {
     //     mem::Write<Color>(highlightSettingsPtr + (HIGHLIGHT_CONTEXT_SIZE * i) + 8, { 0,100,0 });
     // }
 
-    GlowMode newGlowMode = { 112,108,40,64 };
-    int contextId = 0;
-    GlowMode oldFlowMode = mem::Read<GlowMode>(highlightSettingsPtr + (HIGHLIGHT_CONTEXT_SIZE * contextId) + 4);
-    if (newGlowMode != oldFlowMode)
-        mem::Write<GlowMode>(highlightSettingsPtr + (HIGHLIGHT_CONTEXT_SIZE * contextId) + 4, newGlowMode);
+    int contextId = 0;    
+    // GlowMode newGlowMode = { 112,108,40,64 };
+    // GlowMode oldFlowMode = mem::Read<GlowMode>(highlightSettingsPtr + (HIGHLIGHT_CONTEXT_SIZE * contextId) + 4);
+    // if (newGlowMode != oldFlowMode)
+    //     mem::Write<GlowMode>(highlightSettingsPtr + (HIGHLIGHT_CONTEXT_SIZE * contextId) + 4, newGlowMode);
 
-    Color newColor = { 100,100,100 };
-    Color oldColor = mem::Read<Color>(highlightSettingsPtr + (HIGHLIGHT_CONTEXT_SIZE * contextId) + 8);
-    if (oldColor != newColor)
-        mem::Write<Color>(highlightSettingsPtr + (HIGHLIGHT_CONTEXT_SIZE * contextId) + 8, newColor);
+    // Color newColor = { 1,1,1 };
+    // Color oldColor = mem::Read<Color>(highlightSettingsPtr + (HIGHLIGHT_CONTEXT_SIZE * contextId) + 8);
+    // if (oldColor != newColor)
+    //     mem::Write<Color>(highlightSettingsPtr + (HIGHLIGHT_CONTEXT_SIZE * contextId) + 8, newColor);
 
     //manupulate player contextIds as needed
     for (int i = 0; i < players->size(); i++) {
