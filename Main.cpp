@@ -67,12 +67,12 @@ int main() {
                     int contextId = 0;
                     long highlightSettingsPtr = mem::Read<long>(off::REGION + off::GLOW_SETTINGS); //find pointer to all the contexts
                     const long HIGHLIGHT_CONTEXT_SIZE = 0x28;
-                    GlowMode newGlowMode = { 112,108,64,64 };
+                    GlowMode newGlowMode = { 112,108,50,127 };
                     GlowMode oldFlowMode = mem::Read<GlowMode>(highlightSettingsPtr + (HIGHLIGHT_CONTEXT_SIZE * contextId) + 4);
                     if (newGlowMode != oldFlowMode)
                         mem::Write<GlowMode>(highlightSettingsPtr + (HIGHLIGHT_CONTEXT_SIZE * contextId) + 4, newGlowMode);
 
-                    Color newColor = { 0,100,0 };
+                    Color newColor = { 100,50,0 };
                     Color oldColor = mem::Read<Color>(highlightSettingsPtr + (HIGHLIGHT_CONTEXT_SIZE * contextId) + 8);
                     if (oldColor != newColor)
                         mem::Write<Color>(highlightSettingsPtr + (HIGHLIGHT_CONTEXT_SIZE * contextId) + 8, newColor);
