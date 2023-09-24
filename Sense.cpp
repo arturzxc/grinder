@@ -35,6 +35,17 @@ void glowPlayers(std::vector<Player*>* players) {
     //     mem::Write<Color>(highlightSettingsPtr + (HIGHLIGHT_CONTEXT_SIZE * i) + 8, { 0,100,0 });
     // }
 
+    GlowMode newGlowMode = { 112,108,40,64 };
+    int contextId = 0;
+    GlowMode oldFlowMode = mem::Read<GlowMode>(highlightSettingsPtr + (HIGHLIGHT_CONTEXT_SIZE * contextId) + 4);
+    if (newGlowMode != oldFlowMode)
+        mem::Write<GlowMode>(highlightSettingsPtr + (HIGHLIGHT_CONTEXT_SIZE * contextId) + 4, newGlowMode);
+
+    Color newColor = { 100,100,100 };
+    Color oldColor = mem::Read<Color>(highlightSettingsPtr + (HIGHLIGHT_CONTEXT_SIZE * contextId) + 8);
+    if (oldColor != newColor)
+        mem::Write<Color>(highlightSettingsPtr + (HIGHLIGHT_CONTEXT_SIZE * contextId) + 8, newColor);
+
     //manupulate player contextIds as needed
     for (int i = 0; i < players->size(); i++) {
         Player* p = players->at(i);
@@ -50,8 +61,8 @@ void glowPlayers(std::vector<Player*>* players) {
                 mem::Write<int>(p->base + off::GLOW_ENABLE, 1);
             if (p->glowThroughWall != 1)
                 mem::Write<int>(p->base + off::GLOW_THROUGH_WALL, 1);
-            if (p->contextId != 52)
-                mem::Write<int>(p->base + off::GLOW_ACTIVE_STATES + 1, 52);
+            if (p->contextId != contextId)
+                mem::Write<int>(p->base + off::GLOW_ACTIVE_STATES + 1, contextId);
         }
     }
 }
