@@ -25,30 +25,33 @@ void glowPlayers(std::vector<Player*>* players) {
 
     //Setting #1: For visible enemies
 
-    for (int i = 0;i < 3;i++) {
-        GlowMode gm = mem::Read<GlowMode>(highlightSettingsPtr + (HIGHLIGHT_CONTEXT_SIZE * i) + 4);
-        gm.bodyStyle = static_cast<std::byte>(112);
-        gm.borderStyle = static_cast<std::byte>(108);
-        gm.borderWidth = static_cast<std::byte>(40);
-        gm.transparency = static_cast<std::byte>(64);
-        mem::Write<GlowMode>(highlightSettingsPtr + (HIGHLIGHT_CONTEXT_SIZE * i) + 4, gm);
-        mem::Write<Color>(highlightSettingsPtr + (HIGHLIGHT_CONTEXT_SIZE * i) + 8, { 0,100,0 });
-    }
+    // for (int i = 0;i < 1;i++) {
+    //     GlowMode gm = mem::Read<GlowMode>(highlightSettingsPtr + (HIGHLIGHT_CONTEXT_SIZE * i) + 4);
+    //     gm.bodyStyle = static_cast<std::byte>(112);
+    //     gm.borderStyle = static_cast<std::byte>(108);
+    //     gm.borderWidth = static_cast<std::byte>(40);
+    //     gm.transparency = static_cast<std::byte>(64);
+    //     mem::Write<GlowMode>(highlightSettingsPtr + (HIGHLIGHT_CONTEXT_SIZE * i) + 4, gm);
+    //     mem::Write<Color>(highlightSettingsPtr + (HIGHLIGHT_CONTEXT_SIZE * i) + 8, { 0,100,0 });
+    // }
 
     //manupulate player contextIds as needed
     for (int i = 0; i < players->size(); i++) {
         Player* p = players->at(i);
         if (!p->isValid()) continue;
-	if (!p->isPlayer() && !p->isDummie()) continue;
+        if (!p->isPlayer() && !p->isDummie()) continue;
         if (p->enemy) {
             // if (p->visible)
             //     glowPlayer(p, visibleEnemyContextId);
             // else
             //     glowPlayer(p, invisibleEnemyContextId);
 
-            mem::Write<int>(p->base + off::GLOW_ENABLE, 1);
-            mem::Write<int>(p->base + off::GLOW_THROUGH_WALL, 1);
-            mem::Write<int>(p->base + off::GLOW_ACTIVE_STATES + 1, 1);
+            if (p->glowEnable != 1)
+                mem::Write<int>(p->base + off::GLOW_ENABLE, 1);
+            if (p->glowThroughWall != 1)
+                mem::Write<int>(p->base + off::GLOW_THROUGH_WALL, 1);
+            if (p->contextId != 52)
+                mem::Write<int>(p->base + off::GLOW_ACTIVE_STATES + 1, 52);
         }
     }
 }
