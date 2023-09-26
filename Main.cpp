@@ -58,9 +58,9 @@ int main() {
             for (int i = 0; i < items->size(); i++)
                 items->at(i)->readMemory();
 
-        //run features
-        aimBot->moveCrosshairs();
+        //run features                
         triggerBot->shootAtEnemy();
+        aimBot->moveCrosshairs();
         sense->modifyHighlights();
         sense->glowPlayers();
 
@@ -74,9 +74,9 @@ int main() {
         counter = (counter < 1000) ? ++counter : counter = 0;
 
         //print loop info every now and then
-        if (counter == 1 || counter % 500 == 0)
-            printf("| LOOP[%04d] OK | Processing time: %02dms | Time left to sleep: %02dms |\n",
-                counter, processingTime, timeLeftToSleep);
+        // if (counter == 1 || counter % 500 == 0)
+        //     printf("| LOOP[%04d] OK | Processing time: %02dms | Time left to sleep: %02dms |\n",
+        //         counter, processingTime, timeLeftToSleep);
     }
 
 

@@ -10,7 +10,9 @@ struct Player {
     int currentShields;
     int glowEnable;
     int glowThroughWall;
+    FloatVector3D localOrigin_prev;
     FloatVector3D localOrigin;
+    FloatVector3D localOrigin_predicted;
     int lastTimeVisible;
     int lastTimeVisiblePrev;
     bool visible;
@@ -23,6 +25,7 @@ struct Player {
     float distance3DToLocalPlayer;
     float distance2DToLocalPlayer;
     FloatVector2D desiredViewAngles;
+    FloatVector2D desiredViewAnglesWeighted;
     float distanceToCrosshairs;
     float deltaPitch;
     float deltaYaw;
@@ -36,6 +39,7 @@ struct Player {
 
     void reset() {
         base = 0;
+        targetLocked = false;
     }
 
     void readMemory() {
@@ -48,7 +52,12 @@ struct Player {
         dead = (isDummie()) ? false : mem::ReadShort(base + off::LIFE_STATE) > 0;
         knocked = (isDummie()) ? false : mem::ReadShort(base + off::BLEEDOUT_STATE) > 0;
         currentShields = mem::ReadInt(base + off::CURRENT_SHIELDS);
+        localOrigin_prev = FloatVector3D(localOrigin.x, localOrigin.y, localOrigin.z);
         localOrigin = mem::ReadFloatVector3D(base + off::LOCAL_ORIGIN);
+        int angelWeight = 20;
+        int playerSpeed = 25;
+        FloatVector3D localOrigin_diff = localOrigin.subtract(localOrigin_prev).normalize().multiply(playerSpeed);
+        localOrigin_predicted = localOrigin.add(localOrigin_diff);
         glowEnable = mem::ReadInt(base + off::GLOW_ENABLE);
         glowThroughWall = mem::ReadInt(base + off::GLOW_THROUGH_WALL);
         contextId = mem::Read<int>(base + off::GLOW_HIGHLIGHT_ID + 1);
@@ -64,10 +73,21 @@ struct Player {
             enemy = !friendly;
             distance3DToLocalPlayer = myLocalPlayer->localOrigin.distance(localOrigin);
             distance2DToLocalPlayer = myLocalPlayer->localOrigin.to2D().distance(localOrigin.to2D());
-            if (visible) { //asd
+            if (visible) {
                 desiredViewAngles = FloatVector2D(calcDesiredPitch(), calcDesiredYaw());
-                deltaPitch = calcPitchDelta(myLocalPlayer->viewAngles.x, desiredViewAngles.x);
-                deltaYaw = calcYawDelta(myLocalPlayer->viewAngles.y, desiredViewAngles.y);
+
+                //new Yaw
+                float smooth = 20;
+                float increment = calculateYawDelta(myLocalPlayer->viewAngles.y, desiredViewAngles.y) / smooth;
+                float newYaw = clampYaw(myLocalPlayer->viewAngles.y + increment);
+                desiredViewAnglesWeighted.y = newYaw;
+
+                desiredViewAnglesWeighted = FloatVector2D(
+                    calcDesiredPitchWeighted(myLocalPlayer->viewAngles.x, desiredViewAngles.x, angelWeight),
+                    newYaw);
+
+                deltaPitch = calcPitchDelta(myLocalPlayer->viewAngles.x, desiredViewAnglesWeighted.x);
+                deltaYaw = calcYawDelta(myLocalPlayer->viewAngles.y, desiredViewAnglesWeighted.y);
             }
         }
     }
@@ -100,10 +120,27 @@ struct Player {
                 mem::Write<int>(base + off::GLOW_ENABLE, 1);
             if (glowThroughWall != 1)
                 mem::Write<int>(base + off::GLOW_THROUGH_WALL, 1);
-            int newContextId = aimedAt ? 1 : 0;
+            int newContextId = targetLocked ? 1 : 0;
             if (contextId != newContextId)
                 mem::Write<int>(base + off::GLOW_HIGHLIGHT_ID + 1, newContextId);
         }
+    }
+
+    double calcDesiredPitchWeighted(double pitchA, double pitchB, double weight) {
+        // Ensure pitchA and pitchB are within the valid range [-89, 89] degrees
+        pitchA = std::max(std::min(pitchA, 89.0), -89.0);
+        pitchB = std::max(std::min(pitchB, 89.0), -89.0);
+
+        // Calculate the difference between the pitch angles
+        double pitchDifference = pitchB - pitchA;
+
+        // Calculate the new pitch angle as a weighted average of pitchA and pitchB
+        double result = pitchA + (weight * pitchDifference / 100.0);
+
+        // Ensure the result stays within the valid range [-89, 89] degrees
+        result = std::max(std::min(result, 89.0), -89.0);
+
+        return result;
     }
 
     float calcDesiredPitch() {
@@ -130,7 +167,47 @@ struct Player {
         //we only need x and y to calculate the angle so transform the origins into 2D vectors
         const FloatVector2D shift = FloatVector2D(100000, 100000);
         const FloatVector2D originA = myLocalPlayer->localOrigin.to2D().add(shift);
-        const FloatVector2D originB = localOrigin.to2D().add(shift);
+        const FloatVector2D originB = localOrigin_predicted.to2D().add(shift);
+
+        // //calculate angle
+        const FloatVector2D diff = originB.subtract(originA);
+        const double yawInRadians = std::atan2(diff.y, diff.x);
+
+        //convert and return
+        const float degrees = yawInRadians * (180.0f / M_PI);
+        return degrees;
+    }
+
+    // Function to calculate a new angle between two angles (in degrees)
+    // The third parameter 'weight' determines the proportion of angleA in the result
+    double calcDesiredYawWeighted(double angleA, double angleB, int weight) {
+        // Normalize angles to the range [-180, 180] degrees
+        angleA = fmod(angleA + 180.0, 360.0) - 180.0;
+        angleB = fmod(angleB + 180.0, 360.0) - 180.0;
+
+        // Calculate the difference between the angles
+        double angleDifference = angleB - angleA;
+
+        // Normalize the angle difference to the range [-180, 180] degrees
+        angleDifference = fmod(angleDifference + 180.0, 360.0) - 180.0;
+
+        // Calculate the new angle as a weighted average of angleA and angleB
+        double result = angleA + (weight * angleDifference / 100.0);
+
+        // Normalize the result to the range [-180, 180] degrees
+        result = fmod(result + 180.0, 360.0) - 180.0;
+
+        return result;
+    }
+
+    float calcDesiredYaw(int weight) {
+        if (localPlayer)return 0;
+        //clone & shift so that we are in the coordinate quadrant no. 1
+        //biggest apex map is something like 50k wide and long so 100k shift should always be enough
+        //we only need x and y to calculate the angle so transform the origins into 2D vectors
+        const FloatVector2D shift = FloatVector2D(100000, 100000);
+        const FloatVector2D originA = myLocalPlayer->localOrigin.to2D().add(shift);
+        const FloatVector2D originB = localOrigin_predicted.to2D().add(shift);
 
         // //calculate angle
         const FloatVector2D diff = originB.subtract(originA);
@@ -154,6 +231,25 @@ struct Player {
     float calcPitchDelta(float currentPitch, float desiredPitch) {
         float angularDifference = desiredPitch - currentPitch;
         return fabs(angularDifference);
+    }
+
+    float calculateYawDelta(float oldAngle, float newAngle) {
+        float wayA = newAngle - oldAngle;
+        float wayB = 360 - abs(wayA);
+        if (wayA > 0 && wayB > 0)
+            wayB *= -1;
+        if (fabs(wayA) < fabs(wayB))
+            return wayA;
+        return wayB;
+    }
+
+    float clampYaw(float angle) {
+        float myAngle = angle;
+        if (myAngle > 180)
+            myAngle = (360 - myAngle) * -1;
+        else if (myAngle < -180)
+            myAngle = (360 + myAngle);
+        return myAngle;
     }
 
 };

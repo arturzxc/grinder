@@ -5,8 +5,6 @@ private:
     LocalPlayer* localPlayer;
     std::vector<Item*>* items;
     std::vector<Player*>* players;
-
-    const int MAX_FOV = 10;
     Player* target = nullptr;
 
     bool targetValid(Player* p) {
@@ -14,9 +12,16 @@ private:
         if (!p->isCombatReady()) return false;
         if (!p->enemy)  return false;
         if (!p->visible)  return false;
-        if (p->deltaPitch > MAX_FOV)  return false;
-        if (p->deltaYaw > MAX_FOV)  return false;
         return true;
+    }
+
+    void assignTarget(int index) { //for testing
+        Player* bestTargetSoFar = nullptr;
+        for (int i = 0;i < players->size();i++)
+            if (index == players->at(i)->index) {
+                target = players->at(i);
+            }
+        target == bestTargetSoFar;
     }
 
     void assignTarget() {
@@ -32,10 +37,6 @@ private:
             }
         }
         target = bestTargetSoFar;
-        if (target == nullptr)
-            printf("No valid target to be assigned can be found \n");
-        else
-            printf("Target assigned. Target index: %d\n", target->index);
     }
 
     void reset() {
@@ -52,16 +53,27 @@ public:
     }
 
     void moveCrosshairs() {
-        //checks
-        if (!display->keyDown(XK_Shift_L)) { reset(); return; }
+
+        //who are we aiming at
+        // for (int i = 0;i < players->size();i++)
+        //     if (players->at(i)->isDummie() && players->at(i)->aimedAt)
+        //         printf("[%d] \n", players->at(i)->index);
+
+
+        //checks        
+        if (!display->keyDown(XK_Shift_L)) { reset(); return; } //SHIT FAILS TO LOCK BECAUSE BUTTON PRESS NEEDS TO SAVE PREVIOUS STATE
+
         if (!localPlayer->isCombatReady()) { reset(); return; }
 
-        //try to find a target. if none can be found then just return
         if (!targetValid(target))
             assignTarget();
         if (!targetValid(target)) { reset(); return; }
 
-        //aim at the target
-        mem::WriteFloatVector2D(localPlayer->base + off::VIEW_ANGLES, target->desiredViewAngles.clamp());
+        //start moving crosshairs towards the locked target
+        mem::WriteFloatVector2D(localPlayer->base + off::VIEW_ANGLES, target->desiredViewAnglesWeighted.clamp());
+
+        //change the flag so that sense highlight this guy more
+        if (target != nullptr)
+            target->targetLocked = true;
     }
 };

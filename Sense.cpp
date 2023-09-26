@@ -41,7 +41,7 @@ public:
 
             {//highlight 1: highlight for enemies (locked)
                 int highlightId = HIGHLIGHT_ID_ENEMY_LOCKED;
-                const GlowMode newGlowMode = { 112,108,120,127 };
+                const GlowMode newGlowMode = { 112,108,127,127 };
                 const GlowMode oldGlowMode = mem::Read<GlowMode>(highlightSettingsPtr + (highlightSize * highlightId) + 4);
                 if (newGlowMode != oldGlowMode)
                     mem::Write<GlowMode>(highlightSettingsPtr + (highlightSize * highlightId) + 4, newGlowMode);

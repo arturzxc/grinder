@@ -42,6 +42,10 @@ struct FloatVector2D {
         return FloatVector2D(clampedX, clampedY);
     }
 
+    void flipY() {
+        y *= -1;
+    }
+
     bool isZeroVector() {
         return x == 0 && y == 0;
     }

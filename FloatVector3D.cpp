@@ -31,6 +31,22 @@ struct FloatVector3D {
         return x == 0 && y == 0 && z == 0;
     }
 
+    FloatVector3D normalize() const {
+        float mag = magnitude();
+        if (mag != 0) {
+            return FloatVector3D(x / mag, y / mag, z / mag);
+        }
+        else {
+            // Handle division by zero gracefully, return a zero vector.
+            return FloatVector3D();
+        }
+    }
+
+    FloatVector3D multiply(float scalar) const {
+        return FloatVector3D(x * scalar, y * scalar, z * scalar);
+    }
+
+
     std::string toString() const {
         return "(" + std::to_string(x) + ", " + std::to_string(y) + ", " + std::to_string(z) + ")";
     }
