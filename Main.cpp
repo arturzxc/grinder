@@ -27,56 +27,63 @@ int main() {
     //begin main loop
     int counter = 0;
     while (1) {
-        long long startTime = util::currentEpochMillis();
+        try {
+            long long startTime = util::currentEpochMillis();
 
-        //read level and make sure it is playable
-        level->readMemory();
-        if (!level->playable) {
-            printf("Waiting for a playable level! Sleeping 10 seconds... \n");
-            std::this_thread::sleep_for(std::chrono::milliseconds(10000));
-            continue;
+            //read level and make sure it is playable
+            level->readMemory();
+            if (!level->playable) {
+                printf("Waiting for a playable level! Sleeping 10 seconds... \n");
+                std::this_thread::sleep_for(std::chrono::milliseconds(10000));
+                continue;
+            }
+
+            //read localPlayer and make sure he is valid
+            localPlayer->readMemory();
+            if (!localPlayer->isValid()) throw new std::invalid_argument("LocalPlayer invalid!");
+
+            //populate players list with human players and dummies if in training range
+            players->clear();
+            for (int i = 0; i < humanPlayers->size(); i++)
+                players->push_back(humanPlayers->at(i));
+            if (level->trainingArea)
+                for (int i = 0; i < dummyPlayers->size(); i++)
+                    players->push_back(dummyPlayers->at(i));
+
+            //read players
+            for (int i = 0; i < players->size(); i++)
+                players->at(i)->readMemory();
+
+            //read items on key press
+            if (display->keyDown(XK_R))
+                for (int i = 0; i < items->size(); i++)
+                    items->at(i)->readMemory();
+
+            //run features                
+            triggerBot->shootAtEnemy();
+            if (counter % 2 == 0)
+                aimBot->moveCrosshairs();
+            sense->modifyHighlights();
+            sense->glowPlayers();
+
+            //check how fast we completed all the processing and if we still have time left to sleep
+            int processingTime = static_cast<int>(util::currentEpochMillis() - startTime);
+            int goalSleepTime = 6; // 16.67ms=60HZ | 6.97ms=144HZ
+            int timeLeftToSleep = std::max(0, goalSleepTime - processingTime);
+            std::this_thread::sleep_for(std::chrono::milliseconds(timeLeftToSleep));
+
+            //update counter
+            counter = (counter < 1000) ? ++counter : counter = 0;
+
+            //print loop info every now and then
+            // if (counter == 1 || counter % 500 == 0)
+            //     printf("| LOOP[%04d] OK | Processing time: %02dms | Time left to sleep: %02dms |\n",
+            //         counter, processingTime, timeLeftToSleep);
         }
-
-        //read localPlayer and make sure he is valid
-        localPlayer->readMemory();
-        if (!localPlayer->isValid()) throw new std::invalid_argument("LocalPlayer invalid!");
-
-        //populate players list with human players and dummies if in training range
-        players->clear();
-        for (int i = 0; i < humanPlayers->size(); i++)
-            players->push_back(humanPlayers->at(i));
-        if (level->trainingArea)
-            for (int i = 0; i < dummyPlayers->size(); i++)
-                players->push_back(dummyPlayers->at(i));
-
-        //read players
-        for (int i = 0; i < players->size(); i++)
-            players->at(i)->readMemory();
-
-        //read items on key press
-        if (display->keyDown(XK_R))
-            for (int i = 0; i < items->size(); i++)
-                items->at(i)->readMemory();
-
-        //run features                
-        triggerBot->shootAtEnemy();
-        aimBot->moveCrosshairs();
-        sense->modifyHighlights();
-        sense->glowPlayers();
-
-        //check how fast we completed all the processing and if we still have time left to sleep
-        int processingTime = static_cast<int>(util::currentEpochMillis() - startTime);
-        int goalSleepTime = 6; // 16.67ms=60HZ | 6.97ms=144HZ
-        int timeLeftToSleep = std::max(0, goalSleepTime - processingTime);
-        std::this_thread::sleep_for(std::chrono::milliseconds(timeLeftToSleep));
-
-        //update counter
-        counter = (counter < 1000) ? ++counter : counter = 0;
-
-        //print loop info every now and then
-        // if (counter == 1 || counter % 500 == 0)
-        //     printf("| LOOP[%04d] OK | Processing time: %02dms | Time left to sleep: %02dms |\n",
-        //         counter, processingTime, timeLeftToSleep);
+        catch (...) {
+            printf("COMPLETE ERROR CLUSTERFUCK! SLEEPING 30 SECONDS AND TRYING AGAIN!");
+            std::this_thread::sleep_for(std::chrono::seconds(30));
+        }
     }
 
 

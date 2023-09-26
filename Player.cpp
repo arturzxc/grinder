@@ -31,6 +31,7 @@ struct Player {
     float deltaYaw;
     bool targetLocked;
     int contextId;
+    float increment;
 
     Player(int index, LocalPlayer* in_localPlayer) {
         this->index = index;
@@ -40,6 +41,7 @@ struct Player {
     void reset() {
         base = 0;
         targetLocked = false;
+        increment = 999999;
     }
 
     void readMemory() {
@@ -54,7 +56,6 @@ struct Player {
         currentShields = mem::ReadInt(base + off::CURRENT_SHIELDS);
         localOrigin_prev = FloatVector3D(localOrigin.x, localOrigin.y, localOrigin.z);
         localOrigin = mem::ReadFloatVector3D(base + off::LOCAL_ORIGIN);
-        int angelWeight = 20;
         int playerSpeed = 25;
         FloatVector3D localOrigin_diff = localOrigin.subtract(localOrigin_prev).normalize().multiply(playerSpeed);
         localOrigin_predicted = localOrigin.add(localOrigin_diff);
@@ -78,16 +79,18 @@ struct Player {
 
                 //new Yaw
                 float smooth = 20;
-                float increment = calculateYawDelta(myLocalPlayer->viewAngles.y, desiredViewAngles.y) / smooth;
+                increment = calculateYawDelta(myLocalPlayer->viewAngles.y, desiredViewAngles.y) / smooth;
+                smooth = (increment < 0.5) ? 10 : 20;
                 float newYaw = clampYaw(myLocalPlayer->viewAngles.y + increment);
                 desiredViewAnglesWeighted.y = newYaw;
 
+                int angelWeight = 20;
                 desiredViewAnglesWeighted = FloatVector2D(
                     calcDesiredPitchWeighted(myLocalPlayer->viewAngles.x, desiredViewAngles.x, angelWeight),
                     newYaw);
 
                 deltaPitch = calcPitchDelta(myLocalPlayer->viewAngles.x, desiredViewAnglesWeighted.x);
-                deltaYaw = calcYawDelta(myLocalPlayer->viewAngles.y, desiredViewAnglesWeighted.y);
+                // deltaYaw = calcYawDelta(myLocalPlayer->viewAngles.y, desiredViewAnglesWeighted.y);
             }
         }
     }

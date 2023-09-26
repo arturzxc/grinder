@@ -11,7 +11,6 @@ private:
         if (p == nullptr) return false;
         if (!p->isCombatReady()) return false;
         if (!p->enemy)  return false;
-        if (!p->visible)  return false;
         return true;
     }
 
@@ -30,6 +29,9 @@ private:
         for (int i = 0; i < players->size(); i++) {
             Player* p = players->at(i);
             if (!targetValid(p)) continue;
+            if (!p->visible)   continue;
+            if (fabs(p->increment) > 1) continue;
+            if (p->deltaPitch > 3) continue;
             float myScore = p->deltaPitch + p->deltaYaw;
             if (myScore < bestScoreSoFar) {
                 bestTargetSoFar = p;
