@@ -29,7 +29,7 @@ public:
 
             {//highlight 0: highlight for enemies
                 const int highlightId = HIGHLIGHT_ID_ENEMY;
-                const GlowMode newGlowMode = { 112,108,35,127 };
+                const GlowMode newGlowMode = { 112,108,100,127 };
                 const GlowMode oldGlowMode = mem::Read<GlowMode>(highlightSettingsPtr + (highlightSize * highlightId) + 4);
                 if (newGlowMode != oldGlowMode)
                     mem::Write<GlowMode>(highlightSettingsPtr + (highlightSize * highlightId) + 4, newGlowMode);
