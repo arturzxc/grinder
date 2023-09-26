@@ -10,7 +10,7 @@ cd grinder
 
 # 3. Compile the program:
 ```
-g++ -g Main.cpp -lX11 -lXtst
+make
 ```
 
 # 4. Open Apex
