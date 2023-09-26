@@ -24,12 +24,12 @@ namespace off {
     //glow
     const long GLOW_ENABLE = 0x294;                                                         // DT_HighlightSettings.?
     const long GLOW_THROUGH_WALL = 0x278;                                                   // DT_HighlightSettings.?
-    const long GLOW_ACTIVE_STATES = 0x298;                                                  // DT_HighlightSettings.m_highlightServerActiveStates    
-    const long GLOW_SETTINGS = 0xb5f9620;                                                   // Miscellaneous.? THIS SHIT IS GLOBAL
+    const long GLOW_HIGHLIGHT_ID = 0x298;                                                   // DT_HighlightSettings.m_highlightServerActiveStates    
+    const long GLOW_HIGHLIGHTS = 0xb5f9620;                                                 // Miscellaneous.? THIS SHIT IS GLOBAL
     //weapon 
     const long WEAPON_HANDLE = 0x1954;                                                      //[RecvTable.DT_Player]->m_latestPrimaryWeapons
     const long WEAPON_INDEX = 0x1798;                                                       //[RecvTable.DT_WeaponX]->m_weaponNameIndex
-    const long WEAPON_SEMIAUTO = 0x19ad + 0x3 + 0x018c;                                     //[RecvTable.DT_BaseCombatCharacter]->m_hudInfo_visibilityTestAlwaysPasses + 0x3 + 0x018c
     //prop survival
     const long ITEM_INDEX = 0x05c0;                                                         //[RecvTable.DT_PropSurvival]->m_scriptNameIndex
+    const long CUSTOM_SCRIPT = 0x1578;                                                      //[RecvTable.DT_PropSurvival]->m_customScriptInt
 }

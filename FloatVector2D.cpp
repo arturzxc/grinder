@@ -34,8 +34,8 @@ struct FloatVector2D {
         if (clampedX > 89) clampedX = 89;
         //yaw has a full rotation so we might want to move it to the oposite side from negative to positive or vice versa
         float clampedY = y;
-        if (clampedY < -180) clampedY = clampedY + 360;
-        if (clampedY > 180) clampedY = clampedY - 360;
+        if (clampedY < -180) clampedY += 360;
+        if (clampedY > 180) clampedY -= 360;
         //create the vector
         if (clampedX > 89 || clampedX < -89) throw std::invalid_argument("SHIT CLAMPING OF PITCH. CHECK YOUR CODE");
         if (clampedY > 180 || clampedY < -180) throw std::invalid_argument("SHIT CLAMPING OF YAW. CHECK YOUR CODE");

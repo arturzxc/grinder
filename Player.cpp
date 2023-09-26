@@ -36,44 +36,24 @@ struct Player {
 
     void reset() {
         base = 0;
-        name = "";
-        dead = true;
-        knocked = true;
-        teamNumber = -1;
-        currentShields = -1;
-        glowEnable = 5;
-        glowThroughWall = 2;
-        localOrigin = FloatVector3D();
-        visible = false;
-        localPlayer = false;
-        friendly = false;
-        enemy = false;
-        aimedAt = false;
-        distance3DToLocalPlayer = 999999999;
-        distance2DToLocalPlayer = 999999999;
-        desiredViewAngles = FloatVector2D();
-        deltaYaw = 0;
-        deltaPitch = 0;
-        targetLocked = false;
-        contextId = 0;
     }
 
     void readMemory() {
         reset();
         base = mem::ReadLong(off::REGION + off::ENTITY_LIST + ((index + 1) << 5));
-        if (base == 0) { reset();return; }
+        if (base == 0) { reset(); return; }
         name = mem::ReadString(base + off::NAME);
         teamNumber = mem::ReadInt(base + off::TEAM_NUMBER);
-        if (!isPlayer() && !isDummie()) return;
+        if (!isPlayer() && !isDummie()) { reset(); return; }
         dead = (isDummie()) ? false : mem::ReadShort(base + off::LIFE_STATE) > 0;
         knocked = (isDummie()) ? false : mem::ReadShort(base + off::BLEEDOUT_STATE) > 0;
         currentShields = mem::ReadInt(base + off::CURRENT_SHIELDS);
         localOrigin = mem::ReadFloatVector3D(base + off::LOCAL_ORIGIN);
         glowEnable = mem::ReadInt(base + off::GLOW_ENABLE);
         glowThroughWall = mem::ReadInt(base + off::GLOW_THROUGH_WALL);
-        contextId = mem::Read<int>(base + off::GLOW_ACTIVE_STATES + 1);
+        contextId = mem::Read<int>(base + off::GLOW_HIGHLIGHT_ID + 1);
         lastTimeVisible = mem::ReadInt(base + off::LAST_VISIBLE_TIME);
-        visible = lastTimeVisiblePrev < lastTimeVisible; //make dummies always visible cause vis check for them is fucked up.
+        visible = (isDummie()) || lastTimeVisiblePrev < lastTimeVisible; //make dummies always visible as the vis check for them is fucked
         lastTimeVisiblePrev = lastTimeVisible;
         lastTimeAimedAt = mem::ReadInt(base + off::LAST_AIMEDAT_TIME);
         aimedAt = lastTimeAimedAtPrev < lastTimeAimedAt;
@@ -85,8 +65,8 @@ struct Player {
             distance3DToLocalPlayer = myLocalPlayer->localOrigin.distance(localOrigin);
             distance2DToLocalPlayer = myLocalPlayer->localOrigin.to2D().distance(localOrigin.to2D());
             desiredViewAngles = FloatVector2D(calcDesiredPitch(), calcDesiredYaw());
-            deltaPitch = CalculatePitchDistance(myLocalPlayer->viewAngles.x, desiredViewAngles.x);
-            deltaYaw = CalculateYawDistance(myLocalPlayer->viewAngles.y, desiredViewAngles.y);
+            deltaPitch = calcPitchDelta(myLocalPlayer->viewAngles.x, desiredViewAngles.x);
+            deltaYaw = calcYawDelta(myLocalPlayer->viewAngles.y, desiredViewAngles.y);
         }
     }
 
@@ -108,6 +88,20 @@ struct Player {
 
     bool isDummie() {
         return teamNumber == 97;
+    }
+
+    void glow() {
+        if (!isValid()) return;
+        if (!isPlayer() && !isDummie()) return;
+        if (enemy) {
+            if (glowEnable != 1)
+                mem::Write<int>(base + off::GLOW_ENABLE, 1);
+            if (glowThroughWall != 1)
+                mem::Write<int>(base + off::GLOW_THROUGH_WALL, 1);
+            int newContextId = aimedAt ? 1 : 0;
+            if (contextId != newContextId)
+                mem::Write<int>(base + off::GLOW_HIGHLIGHT_ID + 1, newContextId);
+        }
     }
 
     float calcDesiredPitch() {
@@ -145,7 +139,7 @@ struct Player {
         return degrees;
     }
 
-    float CalculateYawDistance(float currentYaw, float desiredYaw) {
+    float calcYawDelta(float currentYaw, float desiredYaw) {
         float angularDifference = desiredYaw - currentYaw;
         if (angularDifference < -180.0f)
             angularDifference += 360.0f;
@@ -155,9 +149,9 @@ struct Player {
         return fabs(angularDifference);
     }
 
-    float CalculatePitchDistance(float currentPitch, float desiredPitch) {
+    float calcPitchDelta(float currentPitch, float desiredPitch) {
         float angularDifference = desiredPitch - currentPitch;
-        return  std::abs(angularDifference);
+        return fabs(angularDifference);
     }
 
 };

@@ -1,10 +1,3 @@
-// #pragma once
-// struct CProp {
-//     int itemId;
-//     std::string itemName;
-// };
-
-// WORK ON THIS SHIT LATER
 // { 1, { "Kraber", Rarity::Weapon }},
 // { 2, { "Mastiff", Rarity::Weapon }},
 // { 8, { "LStar", Rarity::Weapon }},

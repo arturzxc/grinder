@@ -4,7 +4,6 @@ struct Item {
     long base;
     std::string name;
     std::string sigName;
-    bool isProp;
     int customScript;
 
     Item(int index) {
@@ -13,19 +12,17 @@ struct Item {
 
     void reset() {
         base = 0;
-        isProp = false;
     }
 
     void readMemory() {
         reset();
         base = mem::ReadLong(off::REGION + off::ENTITY_LIST + ((index + 1) << 5));
-        if (base == 0) { reset();return; }
+        if (base == 0) { reset(); return; }
         long sigNamePointer = mem::ReadLong(base + off::SIGNIFIER_NAME);
         if (sigNamePointer != 0) {
             sigName = mem::ReadString(sigNamePointer);
-            if (isItem()) {
-                customScript = mem::ReadInt(base + 0x1668);
-            }
+            if (!isItem()) { reset(); return; }
+            customScript = mem::ReadInt(base + 0x1578);
         }
 
     }

@@ -1,3 +1,4 @@
+#pragma once
 struct LocalPlayer {
     long base;
     bool dead;
@@ -9,20 +10,9 @@ struct LocalPlayer {
     FloatVector2D viewAngles;
     FloatVector2D punchAngles;
     int weaponIndex;
-    bool weaponSemiAuto;
 
     void reset() {
         base = 0;
-        dead = true;
-        knocked = true;
-        teamNumber = -1;
-        inAttack = false;
-        inZoom = false;
-        localOrigin = FloatVector3D();
-        viewAngles = FloatVector2D();
-        punchAngles = FloatVector2D();
-        weaponIndex = -1;
-        weaponSemiAuto = false;
     }
 
     void readMemory() {
@@ -43,7 +33,6 @@ struct LocalPlayer {
             long weaponHandleMasked = weaponHandle & 0xffff;
             long weaponEntity = mem::ReadLong(off::REGION + off::ENTITY_LIST + (weaponHandleMasked << 5));
             weaponIndex = mem::ReadInt(weaponEntity + off::WEAPON_INDEX);
-            weaponSemiAuto = mem::ReadShort(weaponEntity + off::WEAPON_SEMIAUTO) > 0;
         }
     }
 

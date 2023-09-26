@@ -1,4 +1,3 @@
-
 #pragma once
 struct Level {
 	std::string name;
