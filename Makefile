@@ -10,19 +10,20 @@ SRCS = Main.cpp
 LIBS = -lX11 -lXtst
 
 # Default target
-all: a.out
-
-# Compilation and linking
-a.out: $(SRCS)
-	$(CXX) $^ -o $@ $(LIBS)
+all: rebuild; 
 
 # Clean up object files and the executable
 clean:
 	rm -f a.out
 
-# Phony target to force the rebuild
-build:
-	@$(MAKE) clean
-	@$(MAKE) all
+# Compilation and linking
+a.out: $(SRCS)
+	$(CXX) $^ -o $@ $(LIBS)
 
-.PHONY: all force-rebuild clean
+
+# clean & build
+rebuild:
+	@$(MAKE) clean
+	@$(MAKE) a.out
+	echo "SUCCESS!"
+

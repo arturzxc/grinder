@@ -64,9 +64,11 @@ struct Player {
             enemy = !friendly;
             distance3DToLocalPlayer = myLocalPlayer->localOrigin.distance(localOrigin);
             distance2DToLocalPlayer = myLocalPlayer->localOrigin.to2D().distance(localOrigin.to2D());
-            desiredViewAngles = FloatVector2D(calcDesiredPitch(), calcDesiredYaw());
-            deltaPitch = calcPitchDelta(myLocalPlayer->viewAngles.x, desiredViewAngles.x);
-            deltaYaw = calcYawDelta(myLocalPlayer->viewAngles.y, desiredViewAngles.y);
+            if (visible) { //asd
+                desiredViewAngles = FloatVector2D(calcDesiredPitch(), calcDesiredYaw());
+                deltaPitch = calcPitchDelta(myLocalPlayer->viewAngles.x, desiredViewAngles.x);
+                deltaYaw = calcYawDelta(myLocalPlayer->viewAngles.y, desiredViewAngles.y);
+            }
         }
     }
 
