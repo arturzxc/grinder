@@ -52,7 +52,7 @@ public:
             }
 
             //highlight for items
-            for (int i = 30;i < 35;i++) {
+            for (int i = 31;i < 35;i++) {
                 const int highlightId = i;
                 const GlowMode newGlowMode = { 137,138,35,127 };
                 const GlowMode oldGlowMode = mem::Read<GlowMode>(highlightSettingsPtr + (highlightSize * highlightId) + 4);
