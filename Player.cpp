@@ -25,11 +25,10 @@ struct Player {
     float distance3DToLocalPlayer;
     float distance2DToLocalPlayer;
     FloatVector2D desiredViewAngles;
-    FloatVector2D desiredViewAnglesWeighted;
+    FloatVector2D desiredViewAnglesSmoothed;
     float distanceToCrosshairs;
     float deltaPitch;
     float deltaYaw;
-    bool targetLocked;
     int contextId;
     float increment;
 
@@ -40,8 +39,6 @@ struct Player {
 
     void reset() {
         base = 0;
-        targetLocked = false;
-        increment = 999999;
     }
 
     void readMemory() {
@@ -79,18 +76,17 @@ struct Player {
 
                 //new Yaw
                 float smooth = 20;
-                increment = calculateYawDelta(myLocalPlayer->viewAngles.y, desiredViewAngles.y) / smooth;
+                increment = calculateYawIncrement(myLocalPlayer->viewAngles.y, desiredViewAngles.y) / smooth;
                 smooth = (increment < 0.5) ? 10 : 20;
                 float newYaw = clampYaw(myLocalPlayer->viewAngles.y + increment);
-                desiredViewAnglesWeighted.y = newYaw;
+                desiredViewAnglesSmoothed.y = newYaw;
 
                 int angelWeight = 20;
-                desiredViewAnglesWeighted = FloatVector2D(
+                desiredViewAnglesSmoothed = FloatVector2D(
                     calcDesiredPitchWeighted(myLocalPlayer->viewAngles.x, desiredViewAngles.x, angelWeight),
                     newYaw);
 
-                deltaPitch = calcPitchDelta(myLocalPlayer->viewAngles.x, desiredViewAnglesWeighted.x);
-                // deltaYaw = calcYawDelta(myLocalPlayer->viewAngles.y, desiredViewAnglesWeighted.y);
+                deltaPitch = calcPitchDelta(myLocalPlayer->viewAngles.x, desiredViewAnglesSmoothed.x);
             }
         }
     }
@@ -180,62 +176,12 @@ struct Player {
         return degrees;
     }
 
-    // Function to calculate a new angle between two angles (in degrees)
-    // The third parameter 'weight' determines the proportion of angleA in the result
-    double calcDesiredYawWeighted(double angleA, double angleB, int weight) {
-        // Normalize angles to the range [-180, 180] degrees
-        angleA = fmod(angleA + 180.0, 360.0) - 180.0;
-        angleB = fmod(angleB + 180.0, 360.0) - 180.0;
-
-        // Calculate the difference between the angles
-        double angleDifference = angleB - angleA;
-
-        // Normalize the angle difference to the range [-180, 180] degrees
-        angleDifference = fmod(angleDifference + 180.0, 360.0) - 180.0;
-
-        // Calculate the new angle as a weighted average of angleA and angleB
-        double result = angleA + (weight * angleDifference / 100.0);
-
-        // Normalize the result to the range [-180, 180] degrees
-        result = fmod(result + 180.0, 360.0) - 180.0;
-
-        return result;
-    }
-
-    float calcDesiredYaw(int weight) {
-        if (localPlayer)return 0;
-        //clone & shift so that we are in the coordinate quadrant no. 1
-        //biggest apex map is something like 50k wide and long so 100k shift should always be enough
-        //we only need x and y to calculate the angle so transform the origins into 2D vectors
-        const FloatVector2D shift = FloatVector2D(100000, 100000);
-        const FloatVector2D originA = myLocalPlayer->localOrigin.to2D().add(shift);
-        const FloatVector2D originB = localOrigin_predicted.to2D().add(shift);
-
-        // //calculate angle
-        const FloatVector2D diff = originB.subtract(originA);
-        const double yawInRadians = std::atan2(diff.y, diff.x);
-
-        //convert and return
-        const float degrees = yawInRadians * (180.0f / M_PI);
-        return degrees;
-    }
-
-    float calcYawDelta(float currentYaw, float desiredYaw) {
-        float angularDifference = desiredYaw - currentYaw;
-        if (angularDifference < -180.0f)
-            angularDifference += 360.0f;
-        else if (angularDifference > 180.0f) {
-            angularDifference -= 360.0f;
-        }
-        return fabs(angularDifference);
-    }
-
     float calcPitchDelta(float currentPitch, float desiredPitch) {
         float angularDifference = desiredPitch - currentPitch;
         return fabs(angularDifference);
     }
 
-    float calculateYawDelta(float oldAngle, float newAngle) {
+    float calculateYawIncrement(float oldAngle, float newAngle) {
         float wayA = newAngle - oldAngle;
         float wayB = 360 - abs(wayA);
         if (wayA > 0 && wayB > 0)

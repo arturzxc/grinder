@@ -1,3 +1,4 @@
+#pragma once
 struct AimBot {
 private:
     XDisplay* display;
@@ -72,10 +73,6 @@ public:
         if (!targetValid(target)) { reset(); return; }
 
         //start moving crosshairs towards the locked target
-        mem::WriteFloatVector2D(localPlayer->base + off::VIEW_ANGLES, target->desiredViewAnglesWeighted.clamp());
-
-        //change the flag so that sense highlight this guy more
-        if (target != nullptr)
-            target->targetLocked = true;
+        mem::WriteFloatVector2D(localPlayer->base + off::VIEW_ANGLES, target->desiredViewAnglesSmoothed.clamp());
     }
 };
