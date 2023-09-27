@@ -27,25 +27,12 @@ public:
             const long highlightSettingsPtr = mem::Read<long>(off::REGION + off::GLOW_HIGHLIGHTS);
             const long highlightSize = 0x28;
 
-            {//highlight 0: highlight for enemies
-                const int highlightId = HIGHLIGHT_ID_ENEMY;
+            for (int highlightId = 0;highlightId <= 7;highlightId++) {//highlight 0: highlight for enemies
                 const GlowMode newGlowMode = { 112,108,100,127 };
                 const GlowMode oldGlowMode = mem::Read<GlowMode>(highlightSettingsPtr + (highlightSize * highlightId) + 4);
                 if (newGlowMode != oldGlowMode)
                     mem::Write<GlowMode>(highlightSettingsPtr + (highlightSize * highlightId) + 4, newGlowMode);
                 Color newColor = { 0,10,0 };
-                const Color oldColor = mem::Read<Color>(highlightSettingsPtr + (highlightSize * highlightId) + 8);
-                if (oldColor != newColor)
-                    mem::Write<Color>(highlightSettingsPtr + (highlightSize * highlightId) + 8, newColor);
-            }
-
-            {//highlight 1: highlight for enemies (locked)
-                int highlightId = HIGHLIGHT_ID_ENEMY_LOCKED;
-                const GlowMode newGlowMode = { 112,108,127,127 };
-                const GlowMode oldGlowMode = mem::Read<GlowMode>(highlightSettingsPtr + (highlightSize * highlightId) + 4);
-                if (newGlowMode != oldGlowMode)
-                    mem::Write<GlowMode>(highlightSettingsPtr + (highlightSize * highlightId) + 4, newGlowMode);
-                const Color newColor = { 100,100,100 };
                 const Color oldColor = mem::Read<Color>(highlightSettingsPtr + (highlightSize * highlightId) + 8);
                 if (oldColor != newColor)
                     mem::Write<Color>(highlightSettingsPtr + (highlightSize * highlightId) + 8, newColor);

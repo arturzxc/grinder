@@ -123,9 +123,8 @@ struct Player {
                 mem::Write<int>(base + off::GLOW_ENABLE, 1);
             if (glowThroughWall != 1)
                 mem::Write<int>(base + off::GLOW_THROUGH_WALL, 1);
-            int newContextId = targetLocked ? 1 : 0;
-            if (contextId != newContextId)
-                mem::Write<int>(base + off::GLOW_HIGHLIGHT_ID + 1, newContextId);
+            if (contextId != 0)
+                mem::Write<int>(base + off::GLOW_HIGHLIGHT_ID + 1, 0);
         }
     }
 
