@@ -20,7 +20,6 @@ int main() {
     for (int i = 0; i < 50000; i++) items->push_back(new Item(i));
 
     //create features
-    AimBot* aimBot = new AimBot(display, level, localPlayer, items, players);
     TriggerBot* triggerBot = new TriggerBot(display, level, localPlayer, items, players);
     Sense* sense = new Sense(display, level, localPlayer, items, players);
 
@@ -54,16 +53,9 @@ int main() {
             for (int i = 0; i < players->size(); i++)
                 players->at(i)->readMemory();
 
-            //read items on key press
-            if (display->keyDown(XK_R))
-                for (int i = 0; i < items->size(); i++)
-                    items->at(i)->readMemory();
-
             //run features                
             triggerBot->shootAtEnemy();
-            if (counter % 2 == 0)
-                aimBot->moveCrosshairs();
-            sense->modifyHighlights();
+            sense->modifyHighlights(counter);
             sense->glowPlayers();
 
             //check how fast we completed all the processing and if we still have time left to sleep
@@ -76,9 +68,9 @@ int main() {
             counter = (counter < 1000) ? ++counter : counter = 0;
 
             //print loop info every now and then
-            // if (counter == 1 || counter % 500 == 0)
-            //     printf("| LOOP[%04d] OK | Processing time: %02dms | Time left to sleep: %02dms |\n",
-            //         counter, processingTime, timeLeftToSleep);
+            if (counter == 1 || counter % 500 == 0)
+                printf("| LOOP[%04d] OK | Processing time: %02dms | Time left to sleep: %02dms |\n",
+                    counter, processingTime, timeLeftToSleep);
         }
         catch (...) {
             printf("COMPLETE ERROR CLUSTERFUCK! SLEEPING 30 SECONDS AND TRYING AGAIN!");

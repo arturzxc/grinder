@@ -1,16 +1,12 @@
 #pragma once
 struct Sense {
-private:
+
     XDisplay* display;
     Level* level;
     LocalPlayer* localPlayer;
     std::vector<Item*>* items;
     std::vector<Player*>* players;
 
-    const int HIGHLIGHT_ID_ENEMY = 0;
-    const int HIGHLIGHT_ID_ENEMY_LOCKED = 1;
-
-public:
     Sense(XDisplay* display, Level* level, LocalPlayer* localPlayer, std::vector<Item*>* items, std::vector<Player*>* players) {
         this->display = display;
         this->level = level;
@@ -19,16 +15,16 @@ public:
         this->players = players;
     }
 
-    void modifyHighlights() {
+    void modifyHighlights(int counter) {
         //only modiy highlights on keypress. Basically hit the R button in the dropship and should be enough.
-        if (display->keyDown(XK_R) && localPlayer->isCombatReady()) {
-
+        // if (display->keyDown(XK_R) && localPlayer->isCombatReady()) {
             //find pointer to all the highlights
-            const long highlightSettingsPtr = mem::Read<long>(off::REGION + off::GLOW_HIGHLIGHTS);
+            const long highlightSettingsPtr = mem::Read<long>(OFF_REGION + OFF_GLOW_HIGHLIGHTS);
             const long highlightSize = 0x28;
 
-            for (int highlightId = 0;highlightId <= 7;highlightId++) {//highlight 0: highlight for enemies
-                const GlowMode newGlowMode = { 112,108,100,127 };
+            //player highlights
+            for (int highlightId = 0; highlightId < 1; highlightId++) {
+                const GlowMode newGlowMode = { 112,108,50,127 };
                 const GlowMode oldGlowMode = mem::Read<GlowMode>(highlightSettingsPtr + (highlightSize * highlightId) + 4);
                 if (newGlowMode != oldGlowMode)
                     mem::Write<GlowMode>(highlightSettingsPtr + (highlightSize * highlightId) + 4, newGlowMode);
@@ -38,20 +34,23 @@ public:
                     mem::Write<Color>(highlightSettingsPtr + (highlightSize * highlightId) + 8, newColor);
             }
 
-            //highlight for items
-            for (int i = 31;i < 35;i++) {
-                const int highlightId = i;
+            //item highlights
+            for (int highlightId = 31; highlightId < 35; highlightId++) {
                 const GlowMode newGlowMode = { 137,138,35,127 };
                 const GlowMode oldGlowMode = mem::Read<GlowMode>(highlightSettingsPtr + (highlightSize * highlightId) + 4);
                 if (newGlowMode != oldGlowMode)
                     mem::Write<GlowMode>(highlightSettingsPtr + (highlightSize * highlightId) + 4, newGlowMode);
             }
-        }
+        // }
     }
 
     void glowPlayers() {
-        for (int i = 0; i < players->size(); i++)
-            players->at(i)->glow();
+        for (int i = 0; i < players->size(); i++) {
+            Player* p = players->at(i);
+            if (!p->isValid()) continue;
+            if (!p->enemy) continue;
+            p->glow();
+        }
     }
 
 };

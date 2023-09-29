@@ -7,8 +7,6 @@ struct LocalPlayer {
     bool inAttack;
     bool inZoom;
     FloatVector3D localOrigin;
-    FloatVector2D viewAngles;
-    FloatVector2D punchAngles;
     int weaponIndex;
 
     void reset() {
@@ -17,22 +15,18 @@ struct LocalPlayer {
 
     void readMemory() {
         reset();
-        base = mem::ReadLong(off::REGION + off::LOCAL_PLAYER);
-        if (base == 0) { reset();return; }
-        dead = mem::ReadShort(base + off::LIFE_STATE) > 0;
-        knocked = mem::ReadShort(base + off::BLEEDOUT_STATE) > 0;
-        inAttack = mem::ReadShort(off::REGION + off::IN_ATTACK) > 0;
-        inZoom = mem::ReadShort(off::REGION + off::IN_ZOOM) > 0;
-        teamNumber = mem::ReadInt(base + off::TEAM_NUMBER);
-        localOrigin = mem::ReadFloatVector3D(base + off::LOCAL_ORIGIN);
-        viewAngles = mem::ReadFloatVector2D(base + off::VIEW_ANGLES);
-        punchAngles = mem::ReadFloatVector2D(base + off::PUNCH_ANGLES);
+        base = mem::Read<long>(OFF_REGION + OFF_LOCAL_PLAYER);
+        if (base == 0) { reset(); return; }
+        dead = mem::Read<short>(base + OFF_LIFE_STATE) > 0;
+        knocked = mem::Read<short>(base + OFF_BLEEDOUT_STATE) > 0;
+        inZoom = mem::Read<short>(OFF_REGION + OFF_IN_ZOOM) > 0;
+        teamNumber = mem::Read<int>(base + OFF_TEAM_NUMBER);
+        localOrigin = mem::Read<FloatVector3D>(base + OFF_LOCAL_ORIGIN);
         if (!dead && !knocked) {
-            //find weapon & weapon index
-            long weaponHandle = mem::ReadLong(base + off::WEAPON_HANDLE);
+            long weaponHandle = mem::Read<long>(base + OFF_WEAPON_HANDLE);
             long weaponHandleMasked = weaponHandle & 0xffff;
-            long weaponEntity = mem::ReadLong(off::REGION + off::ENTITY_LIST + (weaponHandleMasked << 5));
-            weaponIndex = mem::ReadInt(weaponEntity + off::WEAPON_INDEX);
+            long weaponEntity = mem::Read<long>(OFF_REGION + OFF_ENTITY_LIST + (weaponHandleMasked << 5));
+            weaponIndex = mem::Read<int>(weaponEntity + OFF_WEAPON_INDEX);
         }
     }
 

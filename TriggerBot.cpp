@@ -48,7 +48,7 @@ public:
             if (!player->isCombatReady()) continue;
             if (!player->enemy) continue;
             if (!player->aimedAt) continue;
-            if (player->distance3DToLocalPlayer < RANGE_MAX) {
+            if (player->distanceToLocalPlayer < RANGE_MAX) {
                 display->mouseClickLeft();
                 break;
             }

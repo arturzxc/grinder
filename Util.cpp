@@ -1,6 +1,5 @@
 #pragma once
 namespace util {
-
     float metersToGameUnits(float meters) {
         return 39.37007874 * meters;
     }
@@ -17,5 +16,4 @@ namespace util {
         std::uniform_real_distribution<float> dis(min, max);
         return dis(gen);
     }
-
 };

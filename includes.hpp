@@ -27,6 +27,4 @@
 #include "Player.cpp"
 #include "Item.cpp"
 #include "Sense.cpp"
-#include "NoRecoil.cpp"
 #include "TriggerBot.cpp"
-#include "AimBot.cpp"

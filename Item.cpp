@@ -16,13 +16,13 @@ struct Item {
 
     void readMemory() {
         reset();
-        base = mem::ReadLong(off::REGION + off::ENTITY_LIST + ((index + 1) << 5));
+        base = mem::Read<long>(OFF_REGION + OFF_ENTITY_LIST + ((index + 1) << 5));
         if (base == 0) { reset(); return; }
-        long sigNamePointer = mem::ReadLong(base + off::SIGNIFIER_NAME);
+        long sigNamePointer = mem::Read<long>(base + OFF_SIGNIFIER_NAME);
         if (sigNamePointer != 0) {
-            sigName = mem::ReadString(sigNamePointer);
+            sigName = mem::ReadString(sigNamePointer, 1024);
             if (!isItem()) { reset(); return; }
-            customScript = mem::ReadInt(base + 0x1578);
+            customScript = mem::Read<int>(base + OFF_CUSTOM_SCRIPT);
         }
 
     }

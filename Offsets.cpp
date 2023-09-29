@@ -1,35 +1,28 @@
+//GameVersion=v3.0.44.22
 #pragma once
-namespace off {
-    // core    
-    const long REGION = 0x140000000;                                                        //[Static]->Region
-    const long LEVEL = 0x16f71e0;                                                           //[Miscellaneous]->LevelName
-    const long LOCAL_PLAYER = 0x21d3758;                                                    //[Miscellaneous]->LocalPlayer
-    const long ENTITY_LIST = 0x1e23418;                                                     //[Miscellaneous]->cl_entitylist
-    // buttons
-    const long IN_ATTACK = 0x07422868;                                                      //[Buttons]->in_attack
-    const long IN_ZOOM = 0x074229e8;                                                        //[Buttons]->in_zoom
-    // player
-    const long LOCAL_ORIGIN = 0x0188;                                                       //[DataMap.CBaseViewModel]->m_localOrigin
-    const long TEAM_NUMBER = 0x037c;                                                        //[RecvTable.DT_BaseEntity]->m_iTeamNum
-    const long NAME = 0x04b9;                                                               //[RecvTable.DT_BaseEntity]->m_iName
-    const long SIGNIFIER_NAME = 0x04b0;                                                     //[RecvTable.DT_BaseEntity]->m_iSignifierName
-    const long CURRENT_SHIELDS = 0x01a0;                                                    //[RecvTable.DT_BaseEntity]->m_shieldHealth
-    const long LIFE_STATE = 0x06c8;                                                         //[RecvTable.DT_Player]->m_lifeState
-    const long PUNCH_ANGLES = 0x23f8;                                                       //[DataMap.C_Player]->m_currentFrameLocalPlayer.m_vecPunchWeapon_Angle
-    const long VIEW_ANGLES = 0x24f4 - 0x14;                                                 //[DataMap.C_Player]->m_ammoPoolCapacity - 0x14
-    const long BLEEDOUT_STATE = 0x26a0;                                                     //[RecvTable.DT_Player]->m_bleedoutState
-    const long ZOOMING = 0x1b91;                                                            //[RecvTable.DT_Player]->m_bZooming        
-    const long LAST_VISIBLE_TIME = 0x19ad + 0x3;                                            //[RecvTable.DT_BaseCombatCharacter]->m_hudInfo_visibilityTestAlwaysPasses + 0x3
-    const long LAST_AIMEDAT_TIME = 0x19ad + 0x3 + 0x8;                                      //[RecvTable.DT_BaseCombatCharacter]->m_hudInfo_visibilityTestAlwaysPasses + 0x3 +0x8
-    //glow
-    const long GLOW_ENABLE = 0x294;                                                         // DT_HighlightSettings.?
-    const long GLOW_THROUGH_WALL = 0x278;                                                   // DT_HighlightSettings.?
-    const long GLOW_HIGHLIGHT_ID = 0x298;                                                   // DT_HighlightSettings.m_highlightServerActiveStates    
-    const long GLOW_HIGHLIGHTS = 0xb5f9620;                                                 // Miscellaneous.? THIS SHIT IS GLOBAL
-    //weapon 
-    const long WEAPON_HANDLE = 0x1954;                                                      //[RecvTable.DT_Player]->m_latestPrimaryWeapons
-    const long WEAPON_INDEX = 0x1798;                                                       //[RecvTable.DT_WeaponX]->m_weaponNameIndex
-    //prop survival
-    const long ITEM_INDEX = 0x05c0;                                                         //[RecvTable.DT_PropSurvival]->m_scriptNameIndex
-    const long CUSTOM_SCRIPT = 0x1578;                                                      //[RecvTable.DT_PropSurvival]->m_customScriptInt
-}
+// core    
+long OFF_REGION = 0x140000000;                      //[Static]->Region
+long OFF_LEVEL = 0x16f71e0;                         //[Miscellaneous]->LevelName
+long OFF_LOCAL_PLAYER = 0x21d3758;                  //[Miscellaneous]->LocalPlayer
+long OFF_ENTITY_LIST = 0x1e23418;                   //[Miscellaneous]->cl_entitylist
+long OFF_IN_ZOOM = 0x074229e8;                      //[Buttons]->in_zoom   
+// player
+long OFF_LOCAL_ORIGIN = 0x0188;                     //[DataMap.CBaseViewModel]->m_localOrigin
+long OFF_TEAM_NUMBER = 0x037c;                      //[RecvTable.DT_BaseEntity]->m_iTeamNum
+long OFF_NAME = 0x04b9;                             //[RecvTable.DT_BaseEntity]->m_iName
+long OFF_SIGNIFIER_NAME = 0x04b0;                   //[RecvTable.DT_BaseEntity]->m_iSignifierName
+long OFF_LIFE_STATE = 0x06c8;                       //[RecvTable.DT_Player]->m_lifeState
+long OFF_BLEEDOUT_STATE = 0x26a0;                   //[RecvTable.DT_Player]->m_bleedoutState  
+long OFF_LAST_AIMEDAT_TIME = 0x19ad + 0x3 + 0x8;    //[RecvTable.DT_BaseCombatCharacter]->m_hudInfo_visibilityTestAlwaysPasses + 0x3 + 0x8
+//weapon 
+long OFF_WEAPON_HANDLE = 0x1954;                    //[RecvTable.DT_Player]->m_latestPrimaryWeapons
+long OFF_WEAPON_INDEX = 0x1798;                     //[RecvTable.DT_WeaponX]->m_weaponNameIndex
+//glow
+long OFF_GLOW_ENABLE = 0x294;                       //[DT_HighlightSettings].?
+long OFF_GLOW_THROUGH_WALL = 0x278;                 //[DT_HighlightSettings].?
+long OFF_GLOW_HIGHLIGHT_ID = 0x298;                 //[DT_HighlightSettings].m_highlightServerActiveStates    
+long OFF_GLOW_HIGHLIGHTS = 0xb5f9620;               //[?]->?
+//items
+long OFF_ITEM_INDEX = 0x05c0;                       //[RecvTable.DT_PropSurvival]->m_scriptNameIndex
+long OFF_CUSTOM_SCRIPT = 0x1578;                    //[RecvTable.DT_PropSurvival]->m_customScriptInt
+
