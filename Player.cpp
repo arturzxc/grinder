@@ -48,6 +48,7 @@ struct Player {
             friendly = myLocalPlayer->teamNumber == teamNumber;
             enemy = !friendly;
             distanceToLocalPlayer = myLocalPlayer->localOrigin.distance(localOrigin);
+            
         }
     }
 
@@ -75,5 +76,23 @@ struct Player {
         if (glowEnable != 1) mem::Write<int>(base + OFF_GLOW_ENABLE, 1);
         if (glowThroughWall != 2) mem::Write<int>(base + OFF_GLOW_THROUGH_WALL, 2);
         if (highlightId != 0) mem::Write<int>(base + OFF_GLOW_HIGHLIGHT_ID + 1, 0);
+    }
+
+    float calcDesiredYaw(int weight) {
+        if (isLocalPlayer) return 0;
+        //clone & shift so that we are in the coordinate quadrant no #1
+        //biggest apex map is something like 50k wide and long so 100k shift should always be enough
+        //we only need x and y to calculate the angle so transform the origins into 2D vectors
+        const FloatVector2D shift = FloatVector2D(100000, 100000);
+        const FloatVector2D originA = myLocalPlayer->localOrigin.to2D().add(shift);
+        const FloatVector2D originB = localOrigin.to2D().add(shift);
+
+        // //calculate angle
+        const FloatVector2D diff = originB.subtract(originA);
+        const double yawInRadians = std::atan2(diff.y, diff.x);
+
+        //convert and return
+        const float degrees = yawInRadians * (180.0f / M_PI);
+        return degrees;
     }
 };
