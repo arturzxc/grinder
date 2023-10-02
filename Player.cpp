@@ -48,7 +48,7 @@ struct Player {
             friendly = myLocalPlayer->teamNumber == teamNumber;
             enemy = !friendly;
             distanceToLocalPlayer = myLocalPlayer->localOrigin.distance(localOrigin);
-            
+
         }
     }
 
@@ -78,9 +78,26 @@ struct Player {
         if (highlightId != 0) mem::Write<int>(base + OFF_GLOW_HIGHLIGHT_ID + 1, 0);
     }
 
-    float calcDesiredYaw(int weight) {
+    float calcDesiredPitch() {
         if (isLocalPlayer) return 0;
-        //clone & shift so that we are in the coordinate quadrant no #1
+        //clone & shift so that we are in the coordinate quadrant no. 1
+        //biggest apex map is something like 50k wide and long so 100k shift should always be enough
+        const FloatVector3D shift = FloatVector3D(100000, 100000, 100000);
+        const FloatVector3D originA = myLocalPlayer->localOrigin.add(shift);
+        const FloatVector3D originB = localOrigin.add(shift).subtract(FloatVector3D(0, 0, 20)); //subtract a little bit so that we aim at the chest
+
+        //calculate angle
+        const float deltaZ = originB.z - originA.z;
+        const float pitchInRadians = std::atan2(-deltaZ, distance2DToLocalPlayer);
+
+        //convert and return
+        const float degrees = pitchInRadians * (180.0f / M_PI);
+        return degrees;
+    }
+
+    float calcDesiredYaw() {
+        if (isLocalPlayer) return 0;
+        //clone & shift so that we are in the coordinate quadrant no. 1
         //biggest apex map is something like 50k wide and long so 100k shift should always be enough
         //we only need x and y to calculate the angle so transform the origins into 2D vectors
         const FloatVector2D shift = FloatVector2D(100000, 100000);
