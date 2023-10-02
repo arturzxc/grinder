@@ -73,9 +73,9 @@ int main() {
             counter = (counter < 1000) ? ++counter : counter = 0;
 
             //print loop info every now and then
-            if (counter == 1 || counter % 500 == 0)
-                printf("| LOOP[%04d] OK | Processing time: %02dms | Time left to sleep: %02dms |\n",
-                    counter, processingTime, timeLeftToSleep);
+            // if (counter == 1 || counter % 500 == 0)
+            //     printf("| LOOP[%04d] OK | Processing time: %02dms | Time left to sleep: %02dms |\n",
+            //         counter, processingTime, timeLeftToSleep);
         }
         catch (const std::exception& ex) {
             printf("COMPLETE ERROR CLUSTERFUCK! SLEEPING 30 SECONDS AND TRYING AGAIN! \n, %s", ex.what());

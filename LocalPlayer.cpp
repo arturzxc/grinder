@@ -8,6 +8,9 @@ struct LocalPlayer {
     bool inZoom;
     FloatVector3D localOrigin;
     FloatVector2D viewAngles;
+    FloatVector2D punchAngles;
+    FloatVector2D punchAnglesPrev;
+    FloatVector2D punchAnglesDiff;
     int weaponIndex;
 
     void reset() {
@@ -23,6 +26,10 @@ struct LocalPlayer {
         teamNumber = mem::Read<int>(base + OFF_TEAM_NUMBER);
         localOrigin = mem::Read<FloatVector3D>(base + OFF_LOCAL_ORIGIN);
         viewAngles = mem::Read<FloatVector2D>(base + OFF_VIEW_ANGLES);
+        punchAngles = mem::Read<FloatVector2D>(base + OFF_PUNCH_ANGLES);
+        punchAnglesDiff = punchAnglesPrev.subtract(punchAngles);
+        punchAnglesPrev = punchAngles;
+        // printf("PUNCH_ANGLES_DIFF %s \n", punchAnglesDiff.toString().c_str());
         if (!dead && !knocked) {
             long weaponHandle = mem::Read<long>(base + OFF_WEAPON_HANDLE);
             long weaponHandleMasked = weaponHandle & 0xffff;

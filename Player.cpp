@@ -27,6 +27,7 @@ struct Player {
     FloatVector2D aimbotDesiredAngles;
     FloatVector2D aimbotDesiredAnglesIncrement;
     FloatVector2D aimbotDesiredAnglesSmoothed;
+    FloatVector2D aimbotDesiredAnglesSmoothedNoRecoil;
     float aimbotScore;
 
     Player(int index, LocalPlayer* in_localPlayer) {
@@ -64,8 +65,9 @@ struct Player {
             distance2DToLocalPlayer = myLocalPlayer->localOrigin.to2D().distance(localOrigin.to2D());
             if (visible) {
                 aimbotDesiredAngles = calcDesiredAngles();
-                aimbotDesiredAnglesIncrement = calcDesiredAnglesIncrement().divide({ aimbotSmmothing,aimbotSmmothing });
-                aimbotDesiredAnglesSmoothed = myLocalPlayer->viewAngles.add(aimbotDesiredAnglesIncrement);;
+                aimbotDesiredAnglesIncrement = calcDesiredAnglesIncrement().divide({ aimbotSmmothing, aimbotSmmothing });
+                aimbotDesiredAnglesSmoothed = myLocalPlayer->viewAngles.add(aimbotDesiredAnglesIncrement);
+                aimbotDesiredAnglesSmoothedNoRecoil = aimbotDesiredAnglesSmoothed.subtract(myLocalPlayer->punchAngles.divide({ aimbotSmmothing, aimbotSmmothing }));
                 aimbotScore = calcAimbotScore();
             }
         }
