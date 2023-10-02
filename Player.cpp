@@ -11,13 +11,23 @@ struct Player {
     int glowThroughWall;
     int highlightId;
     FloatVector3D localOrigin;
-    bool isLocalPlayer;
+    bool local;
     bool friendly;
     bool enemy;
     int lastTimeAimedAt;
     int lastTimeAimedAtPrev;
     bool aimedAt;
+    int lastTimeVisible;
+    int lastTimeVisiblePrev;
+    bool visible;
     float distanceToLocalPlayer;
+    float distance2DToLocalPlayer;
+    //values used by aimbot
+    float aimbotSmmothing = 20;
+    FloatVector2D aimbotDesiredAngles;
+    FloatVector2D aimbotDesiredAnglesIncrement;
+    FloatVector2D aimbotDesiredAnglesSmoothed;
+    float aimbotScore;
 
     Player(int index, LocalPlayer* in_localPlayer) {
         this->index = index;
@@ -42,13 +52,22 @@ struct Player {
         highlightId = mem::Read<int>(base + OFF_GLOW_HIGHLIGHT_ID + 1);
         lastTimeAimedAt = mem::Read<int>(base + OFF_LAST_AIMEDAT_TIME);
         aimedAt = lastTimeAimedAtPrev < lastTimeAimedAt;
+        lastTimeVisible = mem::Read<int>(base + OFF_LAST_VISIBLE_TIME);
+        visible = (isDummie()) || lastTimeVisiblePrev < lastTimeVisible; //make dummies always visible as the vis check for them is fucked
+        lastTimeVisiblePrev = lastTimeVisible;
         lastTimeAimedAtPrev = lastTimeAimedAt;
         if (myLocalPlayer->isValid()) {
-            isLocalPlayer = myLocalPlayer->base == base;
+            local = myLocalPlayer->base == base;
             friendly = myLocalPlayer->teamNumber == teamNumber;
             enemy = !friendly;
             distanceToLocalPlayer = myLocalPlayer->localOrigin.distance(localOrigin);
-
+            distance2DToLocalPlayer = myLocalPlayer->localOrigin.to2D().distance(localOrigin.to2D());
+            if (visible) {
+                aimbotDesiredAngles = calcDesiredAngles();
+                aimbotDesiredAnglesIncrement = calcDesiredAnglesIncrement().divide({ aimbotSmmothing,aimbotSmmothing });
+                aimbotDesiredAnglesSmoothed = myLocalPlayer->viewAngles.add(aimbotDesiredAnglesIncrement);;
+                aimbotScore = calcAimbotScore();
+            }
         }
     }
 
@@ -78,38 +97,57 @@ struct Player {
         if (highlightId != 0) mem::Write<int>(base + OFF_GLOW_HIGHLIGHT_ID + 1, 0);
     }
 
+    FloatVector2D calcDesiredAngles() {
+        return FloatVector2D(calcDesiredPitch(), calcDesiredYaw());
+    }
+
     float calcDesiredPitch() {
-        if (isLocalPlayer) return 0;
-        //clone & shift so that we are in the coordinate quadrant no. 1
-        //biggest apex map is something like 50k wide and long so 100k shift should always be enough
+        if (local) return 0;
         const FloatVector3D shift = FloatVector3D(100000, 100000, 100000);
         const FloatVector3D originA = myLocalPlayer->localOrigin.add(shift);
-        const FloatVector3D originB = localOrigin.add(shift).subtract(FloatVector3D(0, 0, 20)); //subtract a little bit so that we aim at the chest
-
-        //calculate angle
+        const FloatVector3D originB = localOrigin.add(shift).subtract(FloatVector3D(0, 0, 20));
         const float deltaZ = originB.z - originA.z;
         const float pitchInRadians = std::atan2(-deltaZ, distance2DToLocalPlayer);
-
-        //convert and return
         const float degrees = pitchInRadians * (180.0f / M_PI);
         return degrees;
     }
 
     float calcDesiredYaw() {
-        if (isLocalPlayer) return 0;
-        //clone & shift so that we are in the coordinate quadrant no. 1
-        //biggest apex map is something like 50k wide and long so 100k shift should always be enough
-        //we only need x and y to calculate the angle so transform the origins into 2D vectors
+        if (local) return 0;
         const FloatVector2D shift = FloatVector2D(100000, 100000);
         const FloatVector2D originA = myLocalPlayer->localOrigin.to2D().add(shift);
         const FloatVector2D originB = localOrigin.to2D().add(shift);
-
-        // //calculate angle
         const FloatVector2D diff = originB.subtract(originA);
         const double yawInRadians = std::atan2(diff.y, diff.x);
-
-        //convert and return
         const float degrees = yawInRadians * (180.0f / M_PI);
         return degrees;
+    }
+
+    FloatVector2D calcDesiredAnglesIncrement() {
+        return FloatVector2D(calcPitchIncrement(), calcYawIncrement());
+    }
+
+    float calcPitchIncrement() {
+        float wayA = aimbotDesiredAngles.x - myLocalPlayer->viewAngles.x;
+        float wayB = 180 - abs(wayA);
+        if (wayA > 0 && wayB > 0)
+            wayB *= -1;
+        if (fabs(wayA) < fabs(wayB))
+            return wayA;
+        return wayB;
+    }
+
+    float calcYawIncrement() {
+        float wayA = aimbotDesiredAngles.y - myLocalPlayer->viewAngles.y;
+        float wayB = 360 - abs(wayA);
+        if (wayA > 0 && wayB > 0)
+            wayB *= -1;
+        if (fabs(wayA) < fabs(wayB))
+            return wayA;
+        return wayB;
+    }
+
+    float calcAimbotScore() {
+        return 1000 - (fabs(aimbotDesiredAnglesIncrement.x) + fabs(aimbotDesiredAnglesIncrement.y));
     }
 };

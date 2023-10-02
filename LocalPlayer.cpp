@@ -7,6 +7,7 @@ struct LocalPlayer {
     bool inAttack;
     bool inZoom;
     FloatVector3D localOrigin;
+    FloatVector2D viewAngles;
     int weaponIndex;
 
     void reset() {
@@ -21,6 +22,7 @@ struct LocalPlayer {
         inZoom = mem::Read<short>(OFF_REGION + OFF_IN_ZOOM) > 0;
         teamNumber = mem::Read<int>(base + OFF_TEAM_NUMBER);
         localOrigin = mem::Read<FloatVector3D>(base + OFF_LOCAL_ORIGIN);
+        viewAngles = mem::Read<FloatVector2D>(base + OFF_VIEW_ANGLES);
         if (!dead && !knocked) {
             long weaponHandle = mem::Read<long>(base + OFF_WEAPON_HANDLE);
             long weaponHandleMasked = weaponHandle & 0xffff;
@@ -38,5 +40,9 @@ struct LocalPlayer {
         if (dead) return false;
         if (knocked) return false;
         return true;
+    }
+
+    void lookAt(FloatVector2D angles) {
+        mem::Write<FloatVector2D>(base + OFF_VIEW_ANGLES, angles.clamp());
     }
 };

@@ -18,6 +18,7 @@ int main() {
     for (int i = 0; i < 15000; i++) dummyPlayers->push_back(new Player(i, localPlayer));
 
     //create features
+    AimBot* aimBot = new AimBot(display, level, localPlayer, players);
     TriggerBot* triggerBot = new TriggerBot(display, level, localPlayer, players);
     Sense* sense = new Sense(display, level, localPlayer, players);
 
@@ -58,6 +59,7 @@ int main() {
 
             //run features                
             triggerBot->shootAtEnemy();
+            aimBot->update();
             sense->modifyHighlights();
             sense->glowPlayers();
 

@@ -14,6 +14,10 @@ struct FloatVector2D {
         return FloatVector2D(x + other.x, y + other.y);
     }
 
+    FloatVector2D divide(const FloatVector2D& other) const {
+        return FloatVector2D(x / other.x, y / other.y);
+    }
+
     float dotProduct(const FloatVector2D& other) const {
         return x * other.x + y * other.y;
     }

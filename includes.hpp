@@ -27,3 +27,4 @@
 #include "Player.cpp"
 #include "Sense.cpp"
 #include "TriggerBot.cpp"
+#include "AimBot.cpp"
