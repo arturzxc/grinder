@@ -10,7 +10,9 @@ struct Player {
     int glowEnable;
     int glowThroughWall;
     int highlightId;
+    FloatVector3D localOrigin_prev;
     FloatVector3D localOrigin;
+    FloatVector3D localOrigin_predicted;
     bool local;
     bool friendly;
     bool enemy;
@@ -47,7 +49,13 @@ struct Player {
         if (!isPlayer() && !isDummie()) { reset(); return; }
         dead = (isDummie()) ? false : mem::Read<short>(base + OFF_LIFE_STATE) > 0;
         knocked = (isDummie()) ? false : mem::Read<short>(base + OFF_BLEEDOUT_STATE) > 0;
-        localOrigin = mem::Read<FloatVector3D>(base + OFF_LOCAL_ORIGIN);
+
+        localOrigin = mem::Read<FloatVector3D>(base + OFF_LOCAL_ORIGIN);        
+        FloatVector3D localOrigin_diff = localOrigin.subtract(localOrigin_prev).normalize().multiply(13);
+        localOrigin_predicted = localOrigin.add(localOrigin_diff);
+        localOrigin_prev = FloatVector3D(localOrigin.x, localOrigin.y, localOrigin.z);
+
+
         glowEnable = mem::Read<int>(base + OFF_GLOW_ENABLE);
         glowThroughWall = mem::Read<int>(base + OFF_GLOW_THROUGH_WALL);
         highlightId = mem::Read<int>(base + OFF_GLOW_HIGHLIGHT_ID + 1);
@@ -113,7 +121,7 @@ struct Player {
         if (local) return 0;
         const FloatVector3D shift = FloatVector3D(100000, 100000, 100000);
         const FloatVector3D originA = myLocalPlayer->localOrigin.add(shift);
-        const FloatVector3D originB = localOrigin.add(shift).subtract(FloatVector3D(0, 0, 30));
+        const FloatVector3D originB = localOrigin_predicted.add(shift).subtract(FloatVector3D(0, 0, 25));
         const float deltaZ = originB.z - originA.z;
         const float pitchInRadians = std::atan2(-deltaZ, distance2DToLocalPlayer);
         const float degrees = pitchInRadians * (180.0f / M_PI);
@@ -124,7 +132,7 @@ struct Player {
         if (local) return 0;
         const FloatVector2D shift = FloatVector2D(100000, 100000);
         const FloatVector2D originA = myLocalPlayer->localOrigin.to2D().add(shift);
-        const FloatVector2D originB = localOrigin.to2D().add(shift);
+        const FloatVector2D originB = localOrigin_predicted.to2D().add(shift);
         const FloatVector2D diff = originB.subtract(originA);
         const double yawInRadians = std::atan2(diff.y, diff.x);
         const float degrees = yawInRadians * (180.0f / M_PI);
