@@ -1,20 +1,16 @@
 #pragma once
 struct TriggerBot {
-private:
     XDisplay* display;
     Level* level;
     LocalPlayer* localPlayer;
-    std::vector<Item*>* items;
     std::vector<Player*>* players;
-
     const float TB_MAX_RANGE_ZOOMED = util::metersToGameUnits(100);
     const float TB_MAX_RANGE_HIPFRE = util::metersToGameUnits(10);
-public:
-    TriggerBot(XDisplay* display, Level* level, LocalPlayer* localPlayer, std::vector<Item*>* items, std::vector<Player*>* players) {
+
+    TriggerBot(XDisplay* display, Level* level, LocalPlayer* localPlayer, std::vector<Player*>* players) {
         this->display = display;
         this->level = level;
         this->localPlayer = localPlayer;
-        this->items = items;
         this->players = players;
     }
 

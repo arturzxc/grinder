@@ -22,7 +22,5 @@ long OFF_GLOW_ENABLE = 0x294;                       //[DT_HighlightSettings].?
 long OFF_GLOW_THROUGH_WALL = 0x278;                 //[DT_HighlightSettings].?
 long OFF_GLOW_HIGHLIGHT_ID = 0x298;                 //[DT_HighlightSettings].m_highlightServerActiveStates    
 long OFF_GLOW_HIGHLIGHTS = 0xb5f9620;               //[?]->?
-//items
-long OFF_ITEM_INDEX = 0x05c0;                       //[RecvTable.DT_PropSurvival]->m_scriptNameIndex
-long OFF_CUSTOM_SCRIPT = 0x1578;                    //[RecvTable.DT_PropSurvival]->m_customScriptInt
+
 

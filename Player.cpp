@@ -11,7 +11,7 @@ struct Player {
     int glowThroughWall;
     int highlightId;
     FloatVector3D localOrigin;
-    bool localPlayer;
+    bool isLocalPlayer;
     bool friendly;
     bool enemy;
     int lastTimeAimedAt;
@@ -28,10 +28,9 @@ struct Player {
         base = 0;
     }
 
-    void readMemory() {
-        reset();
+    void readFromMemory() {
         base = mem::Read<long>(OFF_REGION + OFF_ENTITY_LIST + ((index + 1) << 5));
-        if (base == 0) { reset(); return; }
+        if (base == 0) return;
         name = mem::ReadString(base + OFF_NAME, 1024);
         teamNumber = mem::Read<int>(base + OFF_TEAM_NUMBER);
         if (!isPlayer() && !isDummie()) { reset(); return; }
@@ -45,7 +44,7 @@ struct Player {
         aimedAt = lastTimeAimedAtPrev < lastTimeAimedAt;
         lastTimeAimedAtPrev = lastTimeAimedAt;
         if (myLocalPlayer->isValid()) {
-            localPlayer = myLocalPlayer->base == base;
+            isLocalPlayer = myLocalPlayer->base == base;
             friendly = myLocalPlayer->teamNumber == teamNumber;
             enemy = !friendly;
             distanceToLocalPlayer = myLocalPlayer->localOrigin.distance(localOrigin);

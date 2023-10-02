@@ -25,6 +25,5 @@
 #include "Level.cpp"
 #include "LocalPlayer.cpp"
 #include "Player.cpp"
-#include "Item.cpp"
 #include "Sense.cpp"
 #include "TriggerBot.cpp"

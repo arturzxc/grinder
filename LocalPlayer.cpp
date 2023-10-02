@@ -13,10 +13,9 @@ struct LocalPlayer {
         base = 0;
     }
 
-    void readMemory() {
-        reset();
+    void readFromMemory() {
         base = mem::Read<long>(OFF_REGION + OFF_LOCAL_PLAYER);
-        if (base == 0) { reset(); return; }
+        if (base == 0) return;
         dead = mem::Read<short>(base + OFF_LIFE_STATE) > 0;
         knocked = mem::Read<short>(base + OFF_BLEEDOUT_STATE) > 0;
         inZoom = mem::Read<short>(OFF_REGION + OFF_IN_ZOOM) > 0;

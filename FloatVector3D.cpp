@@ -33,13 +33,9 @@ struct FloatVector3D {
 
     FloatVector3D normalize() const {
         float mag = magnitude();
-        if (mag != 0) {
+        if (mag != 0)
             return FloatVector3D(x / mag, y / mag, z / mag);
-        }
-        else {
-            // Handle division by zero gracefully, return a zero vector.
-            return FloatVector3D();
-        }
+        return FloatVector3D();
     }
 
     FloatVector3D multiply(float scalar) const {
