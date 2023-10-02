@@ -51,12 +51,15 @@ struct Player {
         glowEnable = mem::Read<int>(base + OFF_GLOW_ENABLE);
         glowThroughWall = mem::Read<int>(base + OFF_GLOW_THROUGH_WALL);
         highlightId = mem::Read<int>(base + OFF_GLOW_HIGHLIGHT_ID + 1);
+
         lastTimeAimedAt = mem::Read<int>(base + OFF_LAST_AIMEDAT_TIME);
         aimedAt = lastTimeAimedAtPrev < lastTimeAimedAt;
+        lastTimeAimedAtPrev = lastTimeAimedAt;
+
         lastTimeVisible = mem::Read<int>(base + OFF_LAST_VISIBLE_TIME);
         visible = (isDummie()) || lastTimeVisiblePrev < lastTimeVisible; //make dummies always visible as the vis check for them is fucked
         lastTimeVisiblePrev = lastTimeVisible;
-        lastTimeAimedAtPrev = lastTimeAimedAt;
+
         if (myLocalPlayer->isValid()) {
             local = myLocalPlayer->base == base;
             friendly = myLocalPlayer->teamNumber == teamNumber;
@@ -65,9 +68,12 @@ struct Player {
             distance2DToLocalPlayer = myLocalPlayer->localOrigin.to2D().distance(localOrigin.to2D());
             if (visible) {
                 aimbotDesiredAngles = calcDesiredAngles();
-                aimbotDesiredAnglesIncrement = calcDesiredAnglesIncrement().divide({ aimbotSmmothing, aimbotSmmothing });
-                aimbotDesiredAnglesSmoothed = myLocalPlayer->viewAngles.add(aimbotDesiredAnglesIncrement);
-                aimbotDesiredAnglesSmoothedNoRecoil = aimbotDesiredAnglesSmoothed.subtract(myLocalPlayer->punchAngles.divide({ aimbotSmmothing, aimbotSmmothing }));
+                aimbotDesiredAnglesIncrement = calcDesiredAnglesIncrement()
+                    .divide({ aimbotSmmothing, aimbotSmmothing });
+                aimbotDesiredAnglesSmoothed = myLocalPlayer->viewAngles
+                    .add(aimbotDesiredAnglesIncrement);
+                aimbotDesiredAnglesSmoothedNoRecoil = aimbotDesiredAnglesSmoothed
+                    .subtract(myLocalPlayer->punchAngles.divide({ aimbotSmmothing, aimbotSmmothing }));
                 aimbotScore = calcAimbotScore();
             }
         }
@@ -107,7 +113,7 @@ struct Player {
         if (local) return 0;
         const FloatVector3D shift = FloatVector3D(100000, 100000, 100000);
         const FloatVector3D originA = myLocalPlayer->localOrigin.add(shift);
-        const FloatVector3D originB = localOrigin.add(shift).subtract(FloatVector3D(0, 0, 20));
+        const FloatVector3D originB = localOrigin.add(shift).subtract(FloatVector3D(0, 0, 30));
         const float deltaZ = originB.z - originA.z;
         const float pitchInRadians = std::atan2(-deltaZ, distance2DToLocalPlayer);
         const float degrees = pitchInRadians * (180.0f / M_PI);
