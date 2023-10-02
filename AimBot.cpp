@@ -28,6 +28,7 @@ struct AimBot {
             if (!p->isCombatReady())continue;
             if (!p->enemy) continue;
             if (!p->visible) continue;
+            if (p->aimedAt) continue;
             if (fabs(p->aimbotDesiredAnglesIncrement.x) > 0.7) continue;//FOV check
             if (fabs(p->aimbotDesiredAnglesIncrement.y) > 0.7) continue;//FOV check            
             if (target == nullptr || p->aimbotScore > target->aimbotScore) target = p;
