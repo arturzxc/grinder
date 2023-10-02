@@ -25,7 +25,6 @@ struct Player {
     float distanceToLocalPlayer;
     float distance2DToLocalPlayer;
     //values used by aimbot
-    float aimbotSmmothing = 20;
     FloatVector2D aimbotDesiredAngles;
     FloatVector2D aimbotDesiredAnglesIncrement;
     FloatVector2D aimbotDesiredAnglesSmoothed;
@@ -50,7 +49,7 @@ struct Player {
         dead = (isDummie()) ? false : mem::Read<short>(base + OFF_LIFE_STATE) > 0;
         knocked = (isDummie()) ? false : mem::Read<short>(base + OFF_BLEEDOUT_STATE) > 0;
 
-        localOrigin = mem::Read<FloatVector3D>(base + OFF_LOCAL_ORIGIN);        
+        localOrigin = mem::Read<FloatVector3D>(base + OFF_LOCAL_ORIGIN);
         FloatVector3D localOrigin_diff = localOrigin.subtract(localOrigin_prev).normalize().multiply(30);
         localOrigin_predicted = localOrigin.add(localOrigin_diff);
         localOrigin_prev = FloatVector3D(localOrigin.x, localOrigin.y, localOrigin.z);
@@ -75,6 +74,7 @@ struct Player {
             distanceToLocalPlayer = myLocalPlayer->localOrigin.distance(localOrigin);
             distance2DToLocalPlayer = myLocalPlayer->localOrigin.to2D().distance(localOrigin.to2D());
             if (visible) {
+                float aimbotSmmothing = (distance2DToLocalPlayer < 2000) ? 100 : 20;
                 aimbotDesiredAngles = calcDesiredAngles();
                 aimbotDesiredAnglesIncrement = calcDesiredAnglesIncrement()
                     .divide({ aimbotSmmothing, aimbotSmmothing });
@@ -110,7 +110,8 @@ struct Player {
     void glow() {
         if (glowEnable != 1) mem::Write<int>(base + OFF_GLOW_ENABLE, 1);
         if (glowThroughWall != 2) mem::Write<int>(base + OFF_GLOW_THROUGH_WALL, 2);
-        if (highlightId != 0) mem::Write<int>(base + OFF_GLOW_HIGHLIGHT_ID + 1, 0);
+        int id = (visible) ? 0 : 10;
+        if (highlightId != id) mem::Write<int>(base + OFF_GLOW_HIGHLIGHT_ID + 1, id);
     }
 
     FloatVector2D calcDesiredAngles() {
@@ -121,7 +122,7 @@ struct Player {
         if (local) return 0;
         const FloatVector3D shift = FloatVector3D(100000, 100000, 100000);
         const FloatVector3D originA = myLocalPlayer->localOrigin.add(shift);
-        const FloatVector3D originB = localOrigin_predicted.add(shift).subtract(FloatVector3D(0, 0, 25));
+        const FloatVector3D originB = localOrigin_predicted.add(shift).subtract(FloatVector3D(0, 0, 20));
         const float deltaZ = originB.z - originA.z;
         const float pitchInRadians = std::atan2(-deltaZ, distance2DToLocalPlayer);
         const float degrees = pitchInRadians * (180.0f / M_PI);

@@ -18,6 +18,7 @@ struct AimBot {
         if (!display->keyDown(XK_Shift_L)) { target = nullptr; return; };
         if (target == nullptr) assignTarget();
         if (target == nullptr) return;
+        if (!target->visible) return;
         // if (target->aimedAt) return;
         localPlayer->lookAt(target->aimbotDesiredAnglesSmoothedNoRecoil);
     }
