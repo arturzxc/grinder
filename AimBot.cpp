@@ -19,7 +19,7 @@ struct AimBot {
         if (target == nullptr) assignTarget();
         if (target == nullptr) return;
         if (!target->visible) return;
-        // if (target->aimedAt) return;
+        printf("LP: %.4f | DA: %.4f | DASR: %.4f \n", localPlayer->viewAngles.x, target->aimbotDesiredAngles.x, target->aimbotDesiredAnglesSmoothedNoRecoil.x);
         localPlayer->lookAt(target->aimbotDesiredAnglesSmoothedNoRecoil);
     }
 

@@ -37,22 +37,22 @@ int main() {
                 continue;
             }
 
-            //read localPlayer and make sure he is valid
+            // read localPlayer and make sure he is valid
             localPlayer->readFromMemory();
-            if (!localPlayer->isValid()) throw new std::invalid_argument("LocalPlayer invalid!");
+            if (!localPlayer->isValid()) throw std::invalid_argument("LocalPlayer invalid!");
 
-            //read players
             players->clear();
-            for (int i = 0; i < humanPlayers->size(); i++) {
-                Player* p = humanPlayers->at(i);
-                p->readFromMemory();
-                if (p->isValid()) players->push_back(p);
-            }
-
             //read dummies
             if (level->trainingArea)
                 for (int i = 0; i < dummyPlayers->size(); i++) {
                     Player* p = dummyPlayers->at(i);
+                    p->readFromMemory();
+                    if (p->isValid()) players->push_back(p);
+                }
+            //read players
+            else
+                for (int i = 0; i < humanPlayers->size(); i++) {
+                    Player* p = humanPlayers->at(i);
                     p->readFromMemory();
                     if (p->isValid()) players->push_back(p);
                 }
@@ -73,12 +73,16 @@ int main() {
             counter = (counter < 1000) ? ++counter : counter = 0;
 
             //print loop info every now and then
-            if (counter == 1 || counter % 500 == 0)
+            if (counter == 1 || counter % 700 == 0)
                 printf("| LOOP[%04d] OK | Processing time: %02dms | Time left to sleep: %02dms |\n",
                     counter, processingTime, timeLeftToSleep);
         }
+        catch (std::invalid_argument& e) {
+            printf("!!!ERROR!!! %s SLEEPING 30 SECONDS AND TRYING AGAIN! \n", e.what());
+            std::this_thread::sleep_for(std::chrono::seconds(30));
+        }
         catch (...) {
-            printf("PROBABLY LOADING LEVEL! SLEEPING 30 SECONDS AND TRYING AGAIN! \n");
+            printf("!!!UNKNOWN ERROR!!! SLEEPING 30 SECONDS AND TRYING AGAIN! \n");
             std::this_thread::sleep_for(std::chrono::seconds(30));
         }
     }

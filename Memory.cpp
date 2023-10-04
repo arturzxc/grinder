@@ -89,7 +89,7 @@ namespace mem {
         char buffer[size] = { 0 };
         bool success = Read(address, &buffer, size);
         if (!success)
-            throw new std::invalid_argument("Failed to read String at address: " + address);
+            throw std::invalid_argument("Failed to read String at address: " + address);
         return std::string(buffer);
     }
 

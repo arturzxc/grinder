@@ -1,9 +1,11 @@
 //GameVersion=v3.0.45.39
+//LastUpdated=04/10/2023
+//UpdatedBy:arturzxc
 #pragma once
 // core    
 constexpr long OFF_REGION = 0x140000000;                      //[Static]->Region
 constexpr long OFF_LEVEL = 0x16f61c0;                         //[Miscellaneous]->LevelName
-constexpr long OFF_LOCAL_PLAYER = 0x21d3758;                  //[Miscellaneous]->LocalPlayer
+constexpr long OFF_LOCAL_PLAYER = 0x21d2738;                  //[Miscellaneous]->LocalPlayer
 constexpr long OFF_ENTITY_LIST = 0x1e223f8;                   //[Miscellaneous]->cl_entitylist
 // player
 constexpr long OFF_ZOOMING = 0x1b91;                          //[RecvTable.DT_Player]->m_bZooming

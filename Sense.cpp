@@ -15,9 +15,9 @@ struct Sense {
     void modifyHighlights() {
         const long highlightSettingsPtr = mem::Read<long>(OFF_REGION + OFF_GLOW_HIGHLIGHTS);
         const long highlightSize = 0x28;
-        { //player highlight (visible)
+        { //player highlight 
             int highlightId = 0;
-            const GlowMode newGlowMode = { 118,9,60,127 };
+            const GlowMode newGlowMode = { 112,9,45,127 };
             const GlowMode oldGlowMode = mem::Read<GlowMode>(highlightSettingsPtr + (highlightSize * highlightId) + 4);
             if (newGlowMode != oldGlowMode)
                 mem::Write<GlowMode>(highlightSettingsPtr + (highlightSize * highlightId) + 4, newGlowMode);
@@ -26,13 +26,13 @@ struct Sense {
             if (oldColor != newColor)
                 mem::Write<Color>(highlightSettingsPtr + (highlightSize * highlightId) + 8, newColor);
         }
-        { //player highlight (hidden)
-            int highlightId = 10;
-            const GlowMode newGlowMode = { 118,108,100,127 };
+        { //player highlight hidden
+            int highlightId = 1;
+            const GlowMode newGlowMode = { 2,9,45,127 };
             const GlowMode oldGlowMode = mem::Read<GlowMode>(highlightSettingsPtr + (highlightSize * highlightId) + 4);
             if (newGlowMode != oldGlowMode)
                 mem::Write<GlowMode>(highlightSettingsPtr + (highlightSize * highlightId) + 4, newGlowMode);
-            Color newColor = { 100,0,0 };
+            Color newColor = { 10,0,0 };
             const Color oldColor = mem::Read<Color>(highlightSettingsPtr + (highlightSize * highlightId) + 8);
             if (oldColor != newColor)
                 mem::Write<Color>(highlightSettingsPtr + (highlightSize * highlightId) + 8, newColor);

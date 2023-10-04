@@ -74,7 +74,9 @@ struct Player {
             distanceToLocalPlayer = myLocalPlayer->localOrigin.distance(localOrigin);
             distance2DToLocalPlayer = myLocalPlayer->localOrigin.to2D().distance(localOrigin.to2D());
             if (visible) {
-                float aimbotSmmothing = (distance2DToLocalPlayer < 2000) ? 100 : 20;
+                float aimbotSmmothing = (distance2DToLocalPlayer < util::metersToGameUnits(5)) ? 100 : 20;
+                if (aimbotSmmothing < 1)
+                    aimbotSmmothing = 1;
                 aimbotDesiredAngles = calcDesiredAngles();
                 aimbotDesiredAnglesIncrement = calcDesiredAnglesIncrement()
                     .divide({ aimbotSmmothing, aimbotSmmothing });
@@ -110,7 +112,7 @@ struct Player {
     void glow() {
         if (glowEnable != 1) mem::Write<int>(base + OFF_GLOW_ENABLE, 1);
         if (glowThroughWall != 2) mem::Write<int>(base + OFF_GLOW_THROUGH_WALL, 2);
-        int id = (visible) ? 0 : 10;
+        int id = (visible) ? 0 : 1;
         if (highlightId != id) mem::Write<int>(base + OFF_GLOW_HIGHLIGHT_ID + 1, id);
     }
 
