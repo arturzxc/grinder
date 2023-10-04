@@ -22,7 +22,7 @@ struct LocalPlayer {
         if (base == 0) return;
         dead = mem::Read<short>(base + OFF_LIFE_STATE) > 0;
         knocked = mem::Read<short>(base + OFF_BLEEDOUT_STATE) > 0;
-        inZoom = mem::Read<short>(OFF_REGION + OFF_IN_ZOOM) > 0;
+        inZoom = mem::Read<short>(base + OFF_ZOOMING) > 0;
         teamNumber = mem::Read<int>(base + OFF_TEAM_NUMBER);
         localOrigin = mem::Read<FloatVector3D>(base + OFF_LOCAL_ORIGIN);
         viewAngles = mem::Read<FloatVector2D>(base + OFF_VIEW_ANGLES);
