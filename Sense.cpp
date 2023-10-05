@@ -17,7 +17,7 @@ struct Sense {
         const long highlightSize = 0x28;
         { //player highlight 
             int highlightId = 0;
-            const GlowMode newGlowMode = { 112,9,45,127 };
+            const GlowMode newGlowMode = { 112,0,35,127 };
             const GlowMode oldGlowMode = mem::Read<GlowMode>(highlightSettingsPtr + (highlightSize * highlightId) + 4);
             if (newGlowMode != oldGlowMode)
                 mem::Write<GlowMode>(highlightSettingsPtr + (highlightSize * highlightId) + 4, newGlowMode);
@@ -28,7 +28,7 @@ struct Sense {
         }
         { //player highlight hidden
             int highlightId = 1;
-            const GlowMode newGlowMode = { 2,9,45,127 };
+            const GlowMode newGlowMode = { 2,0,120,127 };
             const GlowMode oldGlowMode = mem::Read<GlowMode>(highlightSettingsPtr + (highlightSize * highlightId) + 4);
             if (newGlowMode != oldGlowMode)
                 mem::Write<GlowMode>(highlightSettingsPtr + (highlightSize * highlightId) + 4, newGlowMode);
