@@ -1,5 +1,16 @@
 #include "includes.hpp"
 
+//TESTING MAIN
+// int main() {
+//     XDisplay* display = new XDisplay();
+//     int counter = 0;
+//     while (counter < 100) {
+//         display->moveMouseRelative(0, 1);
+//         counter++;
+//         std::this_thread::sleep_for(std::chrono::milliseconds(100));
+//     }
+// }
+
 int main() {
     //basic checks
     if (getuid()) { std::cout << "RUN AS SUDO!\n"; return -1; }
@@ -18,6 +29,7 @@ int main() {
     for (int i = 0; i < 15000; i++) dummyPlayers->push_back(new Player(i, localPlayer));
 
     //create features
+    NoRecoil* noRecoil = new NoRecoil(display, level, localPlayer, players);
     AimBot* aimBot = new AimBot(display, level, localPlayer, players);
     TriggerBot* triggerBot = new TriggerBot(display, level, localPlayer, players);
     Sense* sense = new Sense(display, level, localPlayer, players);
@@ -59,7 +71,8 @@ int main() {
 
             //run features                
             triggerBot->shootAtEnemy();
-            aimBot->update();
+            aimBot->aimAssist();
+            // noRecoil->reduceRecoil(counter);
             sense->modifyHighlights();
             sense->glowPlayers();
 
@@ -74,16 +87,16 @@ int main() {
 
             //print loop info every now and then
             if (counter == 1 || counter % 700 == 0)
-                printf("| LOOP[%04d] OK | Processing time: %02dms | Time left to sleep: %02dms |\n",
-                    counter, processingTime, timeLeftToSleep);
+                printf("| LOOP[%04d] OK | Processing time: %02dms | Time left to sleep: %02dms | Level: %s |\n",
+                    counter, processingTime, timeLeftToSleep, level->name.c_str());
         }
         catch (std::invalid_argument& e) {
-            printf("!!!ERROR!!! %s SLEEPING 30 SECONDS AND TRYING AGAIN! \n", e.what());
-            std::this_thread::sleep_for(std::chrono::seconds(30));
+            printf("!!!ERROR!!! %s SLEEPING 10 SECONDS AND TRYING AGAIN! \n", e.what());
+            std::this_thread::sleep_for(std::chrono::seconds(10));
         }
         catch (...) {
-            printf("!!!UNKNOWN ERROR!!! SLEEPING 30 SECONDS AND TRYING AGAIN! \n");
-            std::this_thread::sleep_for(std::chrono::seconds(30));
+            printf("!!!UNKNOWN ERROR!!! SLEEPING 10 SECONDS AND TRYING AGAIN! \n");
+            std::this_thread::sleep_for(std::chrono::seconds(10));
         }
     }
 

@@ -25,6 +25,7 @@ struct Player {
     float distanceToLocalPlayer;
     float distance2DToLocalPlayer;
     //values used by aimbot
+    bool aimbotLocked;
     FloatVector2D aimbotDesiredAngles;
     FloatVector2D aimbotDesiredAnglesIncrement;
     FloatVector2D aimbotDesiredAnglesSmoothed;
@@ -64,7 +65,7 @@ struct Player {
         lastTimeAimedAtPrev = lastTimeAimedAt;
 
         lastTimeVisible = mem::Read<int>(base + OFF_LAST_VISIBLE_TIME);
-        visible = lastTimeVisiblePrev < lastTimeVisible; //make dummies always visible as the vis check for them is fucked
+        visible = (isDummie()) || lastTimeVisiblePrev < lastTimeVisible; //make dummies always visible as the vis check for them is fucked
         lastTimeVisiblePrev = lastTimeVisible;
 
         if (myLocalPlayer->isValid()) {
@@ -112,7 +113,9 @@ struct Player {
     void glow() {
         if (glowEnable != 1) mem::Write<int>(base + OFF_GLOW_ENABLE, 1);
         if (glowThroughWall != 2) mem::Write<int>(base + OFF_GLOW_THROUGH_WALL, 2);
-        int id = (visible) ? 0 : 1;        
+        if (glowThroughWall != 2) mem::Write<int>(base + OFF_GLOW_FIX, 2);
+        int id = (visible) ? 0 : 1;
+        if (aimbotLocked) id = 2;
         if (highlightId != id) mem::Write<int>(base + OFF_GLOW_HIGHLIGHT_ID + 1, id);
     }
 
@@ -124,7 +127,7 @@ struct Player {
         if (local) return 0;
         const FloatVector3D shift = FloatVector3D(100000, 100000, 100000);
         const FloatVector3D originA = myLocalPlayer->localOrigin.add(shift);
-        const FloatVector3D originB = localOrigin_predicted.add(shift).subtract(FloatVector3D(0, 0, 20));
+        const FloatVector3D originB = localOrigin_predicted.add(shift).subtract(FloatVector3D(0, 0, 10));
         const float deltaZ = originB.z - originA.z;
         const float pitchInRadians = std::atan2(-deltaZ, distance2DToLocalPlayer);
         const float degrees = pitchInRadians * (180.0f / M_PI);

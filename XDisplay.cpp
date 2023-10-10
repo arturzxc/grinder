@@ -22,4 +22,19 @@ public:
         XTestFakeButtonEvent(display, Button1, False, 0);
         XFlush(display);
     }
+
+    bool isLeftMouseButtonDown() {
+        Window root, child;
+        int root_x, root_y, win_x, win_y;
+        unsigned int mask;
+        if (XQueryPointer(display, XRootWindow(display, DefaultScreen(display)), &root, &child, &root_x, &root_y, &win_x, &win_y, &mask))
+            return (mask & Button1Mask) != 0;
+        return false;
+    }
+
+    void moveControllerAimStick(int deltaX, int deltaY) {
+        XTestFakeRelativeMotionEvent(display, deltaX, deltaY, CurrentTime);
+        XFlush(display);
+    }
+
 };
