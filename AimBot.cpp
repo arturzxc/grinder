@@ -25,25 +25,14 @@ struct AimBot {
         if (!target->visible) return;
         if (target->distance2DToLocalPlayer > maxDistance) { target = nullptr; return; };
 
-        //ViewAngles version
+        //ViewAngles version (more percise but interferes with mouse movement)
         // localPlayer->lookAt(target->aimbotDesiredAnglesSmoothedNoRecoil)
 
-
-        //Moving controller stick version
-        // if(fabs(target->aimbotDesiredAnglesIncrement.y)
-
+        //Moving controller stick version (does not really interefere with mouse movement)
         int stickSpeed = 20;
-
-        //SOME SHIT GETS PARSED AS 0 AND WE SHOULD CHANGE IT TO 1 or -1 so the assist keeps working. we only stop when close enought to destination
-
         int stickYawIncrement = floor(target->aimbotDesiredAnglesIncrement.y * stickSpeed * -1, 1);
-        // printf("NEW_INC_YAW: %d\n", stickYawIncrement);
-
         int stickPitchIncrement = floor(target->aimbotDesiredAnglesIncrement.x * stickSpeed * 1, 1);
-        // printf("NEW_INC_PITCH: %d\n", stickPitchIncrement);
-
         display->moveControllerAimStick(stickYawIncrement, stickPitchIncrement);
-
     }
 
     void assignTarget() {

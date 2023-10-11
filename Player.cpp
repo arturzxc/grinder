@@ -76,15 +76,11 @@ struct Player {
             distance2DToLocalPlayer = myLocalPlayer->localOrigin.to2D().distance(localOrigin.to2D());
             if (visible) {
                 float aimbotSmmothing = (distance2DToLocalPlayer < util::metersToGameUnits(5)) ? 100 : 20;
-                if (aimbotSmmothing < 1)
-                    aimbotSmmothing = 1;
+                if (aimbotSmmothing < 1) aimbotSmmothing = 1;
                 aimbotDesiredAngles = calcDesiredAngles();
-                aimbotDesiredAnglesIncrement = calcDesiredAnglesIncrement()
-                    .divide({ aimbotSmmothing, aimbotSmmothing });
-                aimbotDesiredAnglesSmoothed = myLocalPlayer->viewAngles
-                    .add(aimbotDesiredAnglesIncrement);
-                aimbotDesiredAnglesSmoothedNoRecoil = aimbotDesiredAnglesSmoothed
-                    .subtract(myLocalPlayer->punchAngles.divide({ aimbotSmmothing, aimbotSmmothing }));
+                aimbotDesiredAnglesIncrement = calcDesiredAnglesIncrement().divide({ aimbotSmmothing, aimbotSmmothing });
+                aimbotDesiredAnglesSmoothed = myLocalPlayer->viewAngles.add(aimbotDesiredAnglesIncrement);
+                aimbotDesiredAnglesSmoothedNoRecoil = aimbotDesiredAnglesSmoothed.subtract(myLocalPlayer->punchAngles.divide({ aimbotSmmothing, aimbotSmmothing }));
                 aimbotScore = calcAimbotScore();
             }
         }
