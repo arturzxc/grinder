@@ -55,7 +55,6 @@ struct Player {
         localOrigin_predicted = localOrigin.add(localOrigin_diff);
         localOrigin_prev = FloatVector3D(localOrigin.x, localOrigin.y, localOrigin.z);
 
-
         glowEnable = mem::Read<int>(base + OFF_GLOW_ENABLE);
         glowThroughWall = mem::Read<int>(base + OFF_GLOW_THROUGH_WALL);
         highlightId = mem::Read<int>(base + OFF_GLOW_HIGHLIGHT_ID + 1);

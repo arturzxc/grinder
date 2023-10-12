@@ -50,31 +50,30 @@ int main() {
             }
 
             // // read localPlayer and make sure he is valid
-            // localPlayer->readFromMemory();
-            // if (!localPlayer->isValid()) throw std::invalid_argument("LocalPlayer invalid!");
+            localPlayer->readFromMemory();
+            if (!localPlayer->isValid()) throw std::invalid_argument("LocalPlayer invalid!");
 
             // players->clear();
-            // //read dummies
-            // if (level->trainingArea)
-            //     for (int i = 0; i < dummyPlayers->size(); i++) {
-            //         Player* p = dummyPlayers->at(i);
-            //         p->readFromMemory();
-            //         if (p->isValid()) players->push_back(p);
-            //     }
+            //read dummies
+            if (level->trainingArea)
+                for (int i = 0; i < dummyPlayers->size(); i++) {
+                    Player* p = dummyPlayers->at(i);
+                    p->readFromMemory();
+                    if (p->isValid()) players->push_back(p);
+                }
             // //read players
-            // else
-            //     for (int i = 0; i < humanPlayers->size(); i++) {
-            //         Player* p = humanPlayers->at(i);
-            //         p->readFromMemory();
-            //         if (p->isValid()) players->push_back(p);
-            //     }
+            else
+                for (int i = 0; i < humanPlayers->size(); i++) {
+                    Player* p = humanPlayers->at(i);
+                    p->readFromMemory();
+                    if (p->isValid()) players->push_back(p);
+                }
 
             // //run features                
-            // triggerBot->shootAtEnemy();
-            // aimBot->aimAssist(counter);
-            // noRecoil->reduceRecoil(counter);
+            triggerBot->shootAtEnemy();
+            aimBot->aimAssist(counter);
             sense->modifyHighlights();
-            // sense->glowPlayers();
+            sense->glowPlayers();
 
             //check how fast we completed all the processing and if we still have time left to sleep
             int processingTime = static_cast<int>(util::currentEpochMillis() - startTime);

@@ -18,11 +18,10 @@ struct AimBot {
     }
 
     void aimAssist(int counter) {
-
-
         highlightTargetIfExists();
         if (!localPlayer->isCombatReady()) { target = nullptr; return; };
         if (!display->isLeftMouseButtonDown()) { target = nullptr; return; };
+        // if (!display->keyDown(XK_H)) { target = nullptr; return; } //for debug
         if (target == nullptr) assignTarget();
         if (target == nullptr) return;
         if (!target->visible) return;
@@ -66,7 +65,7 @@ struct AimBot {
             target->aimbotLocked = true;
     }
 
-    int floor(float num) {
+    int floor(int num) {
         if (num < 0 && num > -1) return -1;
         if (num > 0 && num < 1) return 1;
         return num;
