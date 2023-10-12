@@ -21,7 +21,7 @@ constexpr long OFF_VIEW_ANGLES = 0x24f4 - 0x14;               //[DataMap.C_Playe
 constexpr long OFF_PUNCH_ANGLES = 0x23f8;                     //[?]->m_currentFrameLocalPlayer.m_vecPunchWeapon_Angle
 //weapon 
 constexpr long OFF_WEAPON_HANDLE = 0x1954;                    //[RecvTable.DT_Player]->m_latestPrimaryWeapons
-constexpr long OFF_WEAPON_INDEX = 0x1584;                     //[RecvTable.DT_WeaponX]->m_weaponNameIndex
+constexpr long OFF_WEAPON_INDEX = 0x1798;                     //[RecvTable.DT_WeaponX]->m_weaponNameIndex
 //glow
 constexpr long OFF_GLOW_ENABLE = 0x294;                       //[DT_HighlightSettings].?
 constexpr long OFF_GLOW_THROUGH_WALL = 0x278;                 //[DT_HighlightSettings].?
