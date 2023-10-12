@@ -16,7 +16,9 @@ struct AimBot {
         this->players = players;
     }
 
-    void aimAssist() {
+    void aimAssist(int counter) {
+
+
         highlightTargetIfExists();
         if (!localPlayer->isCombatReady()) { target = nullptr; return; };
         if (!display->isLeftMouseButtonDown()) { target = nullptr; return; };
@@ -25,14 +27,21 @@ struct AimBot {
         if (!target->visible) return;
         if (target->distance2DToLocalPlayer > maxDistance) { target = nullptr; return; };
 
-        //ViewAngles version (more percise but interferes with mouse movement)
-        // localPlayer->lookAt(target->aimbotDesiredAnglesSmoothedNoRecoil)
-
-        //Moving controller stick version (does not really interefere with mouse movement)
         int stickSpeed = 20;
-        int stickYawIncrement = floor(target->aimbotDesiredAnglesIncrement.y * stickSpeed * -1, 1);
-        int stickPitchIncrement = floor(target->aimbotDesiredAnglesIncrement.x * stickSpeed * 1, 1);
-        display->moveControllerAimStick(stickYawIncrement, stickPitchIncrement);
+
+        //No recoil
+        FloatVector2D punchAnglesDiff = localPlayer->punchAnglesDiff;
+        int nrPitchIncrement = floor(punchAnglesDiff.x * stickSpeed);
+        int nrYawIncrement = floor(-punchAnglesDiff.y * stickSpeed);
+
+        //Aimbot
+        int aimYawIncrement = floor(target->aimbotDesiredAnglesIncrement.y * stickSpeed * -1);
+        int aimPitchIncrement = floor(target->aimbotDesiredAnglesIncrement.x * stickSpeed * 1);
+
+        //move stick
+        display->moveControllerAimStick(
+            aimPitchIncrement + nrPitchIncrement,
+            aimYawIncrement + nrYawIncrement);
     }
 
     void assignTarget() {
@@ -58,9 +67,9 @@ struct AimBot {
             target->aimbotLocked = true;
     }
 
-    int floor(int num, int floor) {
-        if (num < 0 && num > -1) return -floor;
-        if (num > 0 && num < 1) return floor;
+    int floor(float num) {
+        if (num < 0 && num > -1) return -1;
+        if (num > 0 && num < 1) return 1;
         return num;
     }
 };

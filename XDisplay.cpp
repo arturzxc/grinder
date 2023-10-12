@@ -32,8 +32,8 @@ public:
         return false;
     }
 
-    void moveControllerAimStick(int deltaX, int deltaY) {
-        XTestFakeRelativeMotionEvent(display, deltaX, deltaY, CurrentTime);
+    void moveControllerAimStick(int pitchMovement, int yawMovement) {
+        XTestFakeRelativeMotionEvent(display, yawMovement, pitchMovement, CurrentTime);
         XFlush(display);
     }
 

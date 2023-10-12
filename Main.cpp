@@ -71,7 +71,7 @@ int main() {
 
             //run features                
             triggerBot->shootAtEnemy();
-            aimBot->aimAssist();
+            aimBot->aimAssist(counter);
             // noRecoil->reduceRecoil(counter);
             sense->modifyHighlights();
             sense->glowPlayers();

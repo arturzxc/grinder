@@ -7,6 +7,7 @@ constexpr long OFF_REGION = 0x140000000;                      //[Static]->Region
 constexpr long OFF_LEVEL = 0x16f51c0;                         //[Miscellaneous]->LevelName
 constexpr long OFF_LOCAL_PLAYER = 0x21d1738;                  //[Miscellaneous]->LocalPlayer
 constexpr long OFF_ENTITY_LIST = 0x1e213f8;                   //[Miscellaneous]->cl_entitylist
+constexpr long OFF_IN_ATTACK = 0x07420848;                    //[Buttons]->in_attack
 // player
 constexpr long OFF_ZOOMING = 0x1b91;                          //[RecvTable.DT_Player]->m_bZooming
 constexpr long OFF_LOCAL_ORIGIN = 0x0188;                     //[DataMap.CBaseViewModel]->m_localOrigin

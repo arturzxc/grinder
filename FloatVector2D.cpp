@@ -31,6 +31,10 @@ struct FloatVector2D {
         return diff.magnitude();
     }
 
+    FloatVector2D multiply(float scalar) const {
+        return FloatVector2D(x * scalar, y * scalar);
+    }
+
     FloatVector2D clamp() const {
         //pitch doesnt have a full rotation so just set it to max value if its more than that
         float clampedX = x;

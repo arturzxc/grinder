@@ -24,12 +24,12 @@ struct LocalPlayer {
         knocked = mem::Read<short>(base + OFF_BLEEDOUT_STATE) > 0;
         inZoom = mem::Read<short>(base + OFF_ZOOMING) > 0;
         teamNumber = mem::Read<int>(base + OFF_TEAM_NUMBER);
+        inAttack = mem::Read<bool>(OFF_REGION + OFF_IN_ATTACK) > 0;
         localOrigin = mem::Read<FloatVector3D>(base + OFF_LOCAL_ORIGIN);
         viewAngles = mem::Read<FloatVector2D>(base + OFF_VIEW_ANGLES);
         punchAngles = mem::Read<FloatVector2D>(base + OFF_PUNCH_ANGLES);
         punchAnglesDiff = punchAnglesPrev.subtract(punchAngles);
         punchAnglesPrev = punchAngles;
-        // printf("PUNCH_ANGLES_DIFF %s \n", punchAnglesDiff.toString().c_str());
         if (!dead && !knocked) {
             long weaponHandle = mem::Read<long>(base + OFF_WEAPON_HANDLE);
             long weaponHandleMasked = weaponHandle & 0xffff;
@@ -43,7 +43,7 @@ struct LocalPlayer {
     }
 
     bool isCombatReady() {
-        if (base == 0)return false;
+        if (base == 0) return false;
         if (dead) return false;
         if (knocked) return false;
         return true;
