@@ -1,6 +1,6 @@
 ## Intall build-essential (Mandatory. You only need to do this once) !!!
 ```
-sudo apt install build-essential
+sudo apt-get install build-essential
 ```
 
 ## Intall libx11-dev (Mandatory. You only need to do this once) !!!
