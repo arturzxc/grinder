@@ -20,8 +20,7 @@ struct AimBot {
     void aimAssist(int counter) {
         highlightTargetIfExists();
         if (!localPlayer->isCombatReady()) { target = nullptr; return; };
-        if (!display->isLeftMouseButtonDown()) { target = nullptr; return; };
-        // if (!display->keyDown(XK_H)) { target = nullptr; return; } //for debug
+        if (!localPlayer->inAttack && !display->keyDown(XK_H)) { target = nullptr; return; }; //The H button is mostly for debugging in the range        
         if (target == nullptr) assignTarget();
         if (target == nullptr) return;
         if (!target->visible) return;

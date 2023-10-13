@@ -1,16 +1,5 @@
 #include "includes.hpp"
 
-//TESTING MAIN
-// int main() {
-//     XDisplay* display = new XDisplay();
-//     int counter = 0;
-//     while (counter < 100) {
-//         display->moveMouseRelative(0, 1);
-//         counter++;
-//         std::this_thread::sleep_for(std::chrono::milliseconds(100));
-//     }
-// }
-
 int main() {
     //basic checks
     if (getuid()) { std::cout << "RUN AS SUDO!\n"; return -1; }
@@ -33,6 +22,7 @@ int main() {
     AimBot* aimBot = new AimBot(display, level, localPlayer, players);
     TriggerBot* triggerBot = new TriggerBot(display, level, localPlayer, players);
     Sense* sense = new Sense(display, level, localPlayer, players);
+    Movement* movement = new Movement(display, level, localPlayer, players);
 
     //begin main loop
     int counter = 0;
@@ -74,6 +64,7 @@ int main() {
             aimBot->aimAssist(counter);
             sense->modifyHighlights();
             sense->glowPlayers();
+            movement->tapStrafe();
 
             //check how fast we completed all the processing and if we still have time left to sleep
             int processingTime = static_cast<int>(util::currentEpochMillis() - startTime);
