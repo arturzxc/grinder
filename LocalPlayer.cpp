@@ -6,6 +6,7 @@ struct LocalPlayer {
     int teamNumber;
     bool inAttack;
     bool inZoom;
+    bool inJump;
     FloatVector3D localOrigin;
     FloatVector2D viewAngles;
     FloatVector2D punchAngles;
@@ -25,6 +26,7 @@ struct LocalPlayer {
         inZoom = mem::Read<short>(base + OFF_ZOOMING) > 0;
         teamNumber = mem::Read<int>(base + OFF_TEAM_NUMBER);
         inAttack = mem::Read<bool>(OFF_REGION + OFF_IN_ATTACK) > 0;
+        inJump = mem::Read<bool>(OFF_REGION + OFF_IN_JUMP) > 0;
         localOrigin = mem::Read<FloatVector3D>(base + OFF_LOCAL_ORIGIN);
         viewAngles = mem::Read<FloatVector2D>(base + OFF_VIEW_ANGLES);
         punchAngles = mem::Read<FloatVector2D>(base + OFF_PUNCH_ANGLES);

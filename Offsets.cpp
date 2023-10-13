@@ -2,11 +2,17 @@
 //LastUpdated=12/10/2023
 //UpdatedBy:arturzxc
 #pragma once
+
+//core
 constexpr long OFF_REGION = 0x140000000;                      //[Static]->Region
 constexpr long OFF_LEVEL = 0x16f51e0;                         //[Miscellaneous]->LevelName
 constexpr long OFF_LOCAL_PLAYER = 0x21d1758;                  //[Miscellaneous]->LocalPlayer
 constexpr long OFF_ENTITY_LIST = 0x1e21418;                   //[Miscellaneous]->cl_entitylist
+
+//buttons
 constexpr long OFF_IN_ATTACK = 0x07420868;                    //[Buttons]->in_attack
+constexpr long OFF_IN_JUMP = 0x07420958;                      //[Buttons]->in_jump
+
 // player
 constexpr long OFF_ZOOMING = 0x1b91;                          //[RecvTable.DT_Player]->m_bZooming
 constexpr long OFF_LOCAL_ORIGIN = 0x017c;                     //[DataMap.CBaseViewModel]->m_localOrigin
