@@ -18,6 +18,10 @@ struct FloatVector2D {
         return FloatVector2D(x / other.x, y / other.y);
     }
 
+    FloatVector2D divide(float scalar) const {
+        return FloatVector2D(x / scalar, y / scalar);
+    }
+
     float dotProduct(const FloatVector2D& other) const {
         return x * other.x + y * other.y;
     }
@@ -33,6 +37,25 @@ struct FloatVector2D {
 
     FloatVector2D multiply(float scalar) const {
         return FloatVector2D(x * scalar, y * scalar);
+    }
+
+    // Normalize the vector and return a new normalized vector
+    FloatVector2D normalized() const {
+        FloatVector2D result;
+        float length = std::sqrt(x * x + y * y);
+        if (length != 0) {
+            result.x = x / length;
+            result.y = y / length;
+        }
+        return result;
+    }
+
+    // Multiply the vector by a scalar and return a new vector
+    FloatVector2D multipliedByScalar(float scalar) const {
+        FloatVector2D result;
+        result.x = x * scalar;
+        result.y = y * scalar;
+        return result;
     }
 
     FloatVector2D clamp() const {
