@@ -13,8 +13,8 @@ struct NoRecoil {
     }
 
     void reduceRecoil(int counter) {
-        if (counter % 2 != 0) return;
-        if (!display->isLeftMouseButtonDown())  return;
-        display->moveControllerAimStick(0, 1);
+        // if (counter % 2 != 0) return;
+        // if (!display->isLeftMouseButtonDown())  return;
+        // display->moveMouseRelative(0, 1);
     }
 };
