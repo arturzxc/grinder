@@ -33,7 +33,7 @@ int main() {
             long long startTime = util::currentEpochMillis();
 
             // will attempt to reload config if there have been any updates to it
-            if (counter % 200 == 0) cl->reloadFile();
+            if (counter % 20 == 0) cl->reloadFile();
 
             //read level and make sure it is playable
             level->readFromMemory();
