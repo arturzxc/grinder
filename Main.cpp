@@ -53,7 +53,7 @@ int main() {
             localPlayer->readFromMemory();
             if (!localPlayer->isValid()) throw std::invalid_argument("LocalPlayer invalid!");
 
-            // players->clear();
+            players->clear();
             //read dummies
             if (level->trainingArea)
                 for (int i = 0; i < dummyPlayers->size(); i++) {
