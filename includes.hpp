@@ -14,6 +14,13 @@
 #include <X11/Xutil.h>
 #include <X11/extensions/XTest.h>
 #include <random>
+#include <fstream>
+#include <sys/stat.h>
+#include <algorithm>
+#include <cctype>
+#include <locale>
+#include <iterator>
+#include "ConfigLoader.cpp"
 #include "Offsets.cpp"
 #include "Util.cpp"
 #include "FloatVector2D.cpp"
@@ -28,5 +35,3 @@
 #include "Sense.cpp"
 #include "TriggerBot.cpp"
 #include "AimBot.cpp"
-#include "NoRecoil.cpp"
-#include "Movement.cpp"

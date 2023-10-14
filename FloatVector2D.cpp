@@ -39,7 +39,6 @@ struct FloatVector2D {
         return FloatVector2D(x * scalar, y * scalar);
     }
 
-    // Normalize the vector and return a new normalized vector
     FloatVector2D normalized() const {
         FloatVector2D result;
         float length = std::sqrt(x * x + y * y);
@@ -50,7 +49,6 @@ struct FloatVector2D {
         return result;
     }
 
-    // Multiply the vector by a scalar and return a new vector
     FloatVector2D multipliedByScalar(float scalar) const {
         FloatVector2D result;
         result.x = x * scalar;
@@ -71,10 +69,6 @@ struct FloatVector2D {
         if (clampedX > 89 || clampedX < -89) throw std::invalid_argument("SHIT CLAMPING OF PITCH. CHECK YOUR CODE");
         if (clampedY > 180 || clampedY < -180) throw std::invalid_argument("SHIT CLAMPING OF YAW. CHECK YOUR CODE");
         return FloatVector2D(clampedX, clampedY);
-    }
-
-    void flipY() {
-        y *= -1;
     }
 
     bool isZeroVector() {

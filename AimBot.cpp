@@ -1,11 +1,11 @@
 #pragma once
 struct AimBot {
+    ConfigLoader* cl;
     XDisplay* display;
     Level* level;
     LocalPlayer* localPlayer;
     std::vector<Player*>* players;
     Player* target = nullptr;
-
 
     const float STICK_SPEED = 15; //The lower your mouse sensitivity the higher you might want this!
     const float SMOOTH = 10; //no reason to change really
@@ -13,7 +13,8 @@ struct AimBot {
     const float MIN_AIMBOT_REACTION_FOV = 0.1; //if our crosshair is super close to the target angle then stop 
     const int MAX_DISTANCE = util::metersToGameUnits(200);
 
-    AimBot(XDisplay* display, Level* level, LocalPlayer* localPlayer, std::vector<Player*>* players) {
+    AimBot(ConfigLoader* cl, XDisplay* display, Level* level, LocalPlayer* localPlayer, std::vector<Player*>* players) {
+        this->cl = cl;
         this->display = display;
         this->level = level;
         this->localPlayer = localPlayer;
@@ -21,9 +22,10 @@ struct AimBot {
     }
 
     void aimAssist(int counter) {
+        if (!this->cl->FEATURE_AIMBOT_ON) return;
         highlightTargetIfExists();
         if (!localPlayer->isCombatReady()) { target = nullptr; return; };
-        if (!display->keyDown(XK_Shift_L) && !localPlayer->inAttack) { target = nullptr; return; }; //The H button is mostly for debugging in the range        
+        if (!display->keyDown(XK_Shift_L) && !localPlayer->inAttack) { target = nullptr; return; };
         if (target == nullptr) assignTarget();
         if (target == nullptr) return;
         if (!target->visible) return;
