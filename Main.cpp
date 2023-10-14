@@ -39,7 +39,7 @@ int main() {
                 continue;
             }
 
-            // // read localPlayer and make sure he is valid
+            //read localPlayer and make sure he is valid
             localPlayer->readFromMemory();
             if (!localPlayer->isValid()) throw std::invalid_argument("LocalPlayer invalid!");
 
