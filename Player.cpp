@@ -51,7 +51,7 @@ struct Player {
         knocked = (isDummie()) ? false : mem::Read<short>(base + OFF_BLEEDOUT_STATE) > 0;
 
         localOrigin = mem::Read<FloatVector3D>(base + OFF_LOCAL_ORIGIN);
-        FloatVector3D localOrigin_diff = localOrigin.subtract(localOrigin_prev).normalize().multiply(30);
+        FloatVector3D localOrigin_diff = localOrigin.subtract(localOrigin_prev).normalize().multiply(20);
         localOrigin_predicted = localOrigin.add(localOrigin_diff);
         localOrigin_prev = FloatVector3D(localOrigin.x, localOrigin.y, localOrigin.z);
 
