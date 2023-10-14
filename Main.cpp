@@ -14,11 +14,11 @@ int main() {
     std::vector<Player*>* players = new std::vector<Player*>;
 
     //fill in slots for players, dummies and items
-    for (int i = 0; i < 100; i++) humanPlayers->push_back(new Player(i, localPlayer));
+    for (int i = 0; i < 70; i++) humanPlayers->push_back(new Player(i, localPlayer));
     for (int i = 0; i < 15000; i++) dummyPlayers->push_back(new Player(i, localPlayer));
 
     //create features
-    NoRecoil* noRecoil = new NoRecoil(display, level, localPlayer, players);
+    // NoRecoil* noRecoil = new NoRecoil(display, level, localPlayer, players);
     AimBot* aimBot = new AimBot(display, level, localPlayer, players);
     TriggerBot* triggerBot = new TriggerBot(display, level, localPlayer, players);
     Sense* sense = new Sense(display, level, localPlayer, players);
@@ -43,7 +43,7 @@ int main() {
             localPlayer->readFromMemory();
             if (!localPlayer->isValid()) throw std::invalid_argument("LocalPlayer invalid!");
 
-            // players->clear();
+            players->clear();
             //read dummies
             if (level->trainingArea)
                 for (int i = 0; i < dummyPlayers->size(); i++) {
@@ -51,7 +51,7 @@ int main() {
                     p->readFromMemory();
                     if (p->isValid()) players->push_back(p);
                 }
-            // //read players
+            //read players
             else
                 for (int i = 0; i < humanPlayers->size(); i++) {
                     Player* p = humanPlayers->at(i);
@@ -64,7 +64,7 @@ int main() {
             aimBot->aimAssist(counter);
             sense->modifyHighlights();
             sense->glowPlayers();
-            movement->tapStrafe();
+            // movement->tapStrafe();
 
             //check how fast we completed all the processing and if we still have time left to sleep
             int processingTime = static_cast<int>(util::currentEpochMillis() - startTime);
