@@ -44,12 +44,16 @@ struct Sense {
                 cl->SENSE_ENEMY_INVISIBLE_BODY_STYLE,
                 cl->SENSE_ENEMY_INVISIBLE_BORDER_STYLE,
                 cl->SENSE_ENEMY_INVISIBLE_BORDER_WIDTH,
-                127
+                100
             };
             const GlowMode oldGlowMode = mem::Read<GlowMode>(highlightSettingsPtr + (highlightSize * highlightId) + 4);
             if (newGlowMode != oldGlowMode)
                 mem::Write<GlowMode>(highlightSettingsPtr + (highlightSize * highlightId) + 4, newGlowMode);
-            Color newColor = { cl->SENSE_ENEMY_INVISIBLE_COLOR_RED,cl->SENSE_ENEMY_INVISIBLE_COLOR_GREEN,cl->SENSE_ENEMY_INVISIBLE_COLOR_BLUE };
+            Color newColor = {
+                cl->SENSE_ENEMY_INVISIBLE_COLOR_RED,
+                cl->SENSE_ENEMY_INVISIBLE_COLOR_GREEN,
+                cl->SENSE_ENEMY_INVISIBLE_COLOR_BLUE
+            };
             const Color oldColor = mem::Read<Color>(highlightSettingsPtr + (highlightSize * highlightId) + 8);
             if (oldColor != newColor)
                 mem::Write<Color>(highlightSettingsPtr + (highlightSize * highlightId) + 8, newColor);
