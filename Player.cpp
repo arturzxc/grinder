@@ -64,7 +64,7 @@ struct Player {
         lastTimeAimedAtPrev = lastTimeAimedAt;
 
         lastTimeVisible = mem::Read<int>(base + OFF_LAST_VISIBLE_TIME);
-        visible = (isDummie()) || lastTimeVisiblePrev < lastTimeVisible; //make dummies always visible as the vis check for them is fucked
+        visible = aimedAt || lastTimeVisiblePrev < lastTimeVisible; //aimedAt is only true when looking at unobscured target. Helps the shit in-game vis check a bit.
         lastTimeVisiblePrev = lastTimeVisible;
 
         if (myLocalPlayer->isValid()) {
@@ -105,7 +105,7 @@ struct Player {
         if (glowEnable != 1) mem::Write<int>(base + OFF_GLOW_ENABLE, 1);
         if (glowThroughWall != 2) mem::Write<int>(base + OFF_GLOW_THROUGH_WALL, 2);
         if (glowThroughWall != 2) mem::Write<int>(base + OFF_GLOW_FIX, 2);
-        int id = (visible || aimedAt) ? 0 : 1;
+        int id = (visible) ? 0 : 1;
         if (aimbotLocked) id = 2;
         if (highlightId != id) mem::Write<int>(base + OFF_GLOW_HIGHLIGHT_ID + 1, id);
     }

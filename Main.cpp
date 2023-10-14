@@ -1,6 +1,9 @@
 #include "includes.hpp"
 
 int main() {
+    //load config
+    ConfigLoader* cl = new ConfigLoader();
+
     //basic checks
     if (getuid()) { std::cout << "RUN AS SUDO!\n"; return -1; }
     if (mem::GetPID() == 0) { std::cout << "OPEN THE GAME FIRST!\n"; return -1; }
@@ -17,10 +20,10 @@ int main() {
     for (int i = 0; i < 70; i++) humanPlayers->push_back(new Player(i, localPlayer));
     for (int i = 0; i < 15000; i++) dummyPlayers->push_back(new Player(i, localPlayer));
 
-    //create features    
-    AimBot* aimBot = new AimBot(display, level, localPlayer, players);
-    TriggerBot* triggerBot = new TriggerBot(display, level, localPlayer, players);
-    Sense* sense = new Sense(display, level, localPlayer, players);
+    //create features        
+    AimBot* aimBot = new AimBot(cl, display, level, localPlayer, players);
+    TriggerBot* triggerBot = new TriggerBot(cl, display, level, localPlayer, players);
+    Sense* sense = new Sense(cl, display, level, localPlayer, players);
 
     //begin main loop
     int counter = 0;
@@ -28,6 +31,9 @@ int main() {
         try {
             //record time so we know how long a single loop iteration takes
             long long startTime = util::currentEpochMillis();
+
+            // will attempt to reload config if there have been any updates to it
+            if (counter % 200 == 0) cl->reloadFile();
 
             //read level and make sure it is playable
             level->readFromMemory();
@@ -41,15 +47,14 @@ int main() {
             localPlayer->readFromMemory();
             if (!localPlayer->isValid()) throw std::invalid_argument("LocalPlayer invalid!");
 
+            //read players
             players->clear();
-            //read dummies
             if (level->trainingArea)
                 for (int i = 0; i < dummyPlayers->size(); i++) {
                     Player* p = dummyPlayers->at(i);
                     p->readFromMemory();
                     if (p->isValid()) players->push_back(p);
                 }
-            //read players
             else
                 for (int i = 0; i < humanPlayers->size(); i++) {
                     Player* p = humanPlayers->at(i);
@@ -57,12 +62,11 @@ int main() {
                     if (p->isValid()) players->push_back(p);
                 }
 
-            // //run features                
+            //run features                
             triggerBot->shootAtEnemy();
             aimBot->aimAssist(counter);
             sense->modifyHighlights();
             sense->glowPlayers();
-            // movement->tapStrafe();
 
             //check how fast we completed all the processing and if we still have time left to sleep
             int processingTime = static_cast<int>(util::currentEpochMillis() - startTime);
@@ -70,13 +74,13 @@ int main() {
             int timeLeftToSleep = std::max(0, goalSleepTime - processingTime);
             std::this_thread::sleep_for(std::chrono::milliseconds(timeLeftToSleep));
 
-            //update counter
-            counter = (counter < 1000) ? ++counter : counter = 0;
-
             //print loop info every now and then
-            if (counter == 1 || counter % 700 == 0)
+            if (counter % 500 == 0)
                 printf("| LOOP[%04d] OK | Processing time: %02dms | Time left to sleep: %02dms | Level: %s |\n",
                     counter, processingTime, timeLeftToSleep, level->name.c_str());
+
+            //update counter
+            counter = (counter < 1000) ? ++counter : counter = 0;
         }
         catch (std::invalid_argument& e) {
             printf("!!!ERROR!!! %s SLEEPING 10 SECONDS AND TRYING AGAIN! \n", e.what());

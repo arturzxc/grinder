@@ -1,5 +1,6 @@
 #pragma once
 struct AimBot {
+    ConfigLoader* cl;
     XDisplay* display;
     Level* level;
     LocalPlayer* localPlayer;
@@ -12,7 +13,8 @@ struct AimBot {
     const float MIN_AIMBOT_REACTION_FOV = 0.1; //if our crosshair is super close to the target angle then stop 
     const int MAX_DISTANCE = util::metersToGameUnits(200);
 
-    AimBot(XDisplay* display, Level* level, LocalPlayer* localPlayer, std::vector<Player*>* players) {
+    AimBot(ConfigLoader* cl, XDisplay* display, Level* level, LocalPlayer* localPlayer, std::vector<Player*>* players) {
+        this->cl = cl;
         this->display = display;
         this->level = level;
         this->localPlayer = localPlayer;
@@ -20,6 +22,7 @@ struct AimBot {
     }
 
     void aimAssist(int counter) {
+        if (!this->cl->FEATURE_AIMBOT_ON) return;
         highlightTargetIfExists();
         if (!localPlayer->isCombatReady()) { target = nullptr; return; };
         if (!display->keyDown(XK_Shift_L) && !localPlayer->inAttack) { target = nullptr; return; };

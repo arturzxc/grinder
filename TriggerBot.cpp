@@ -1,5 +1,6 @@
 #pragma once
 struct TriggerBot {
+    ConfigLoader* cl;
     XDisplay* display;
     Level* level;
     LocalPlayer* localPlayer;
@@ -7,7 +8,8 @@ struct TriggerBot {
     const float TB_MAX_RANGE_ZOOMED = util::metersToGameUnits(100);
     const float TB_MAX_RANGE_HIPFRE = util::metersToGameUnits(10);
 
-    TriggerBot(XDisplay* display, Level* level, LocalPlayer* localPlayer, std::vector<Player*>* players) {
+    TriggerBot(ConfigLoader* cl, XDisplay* display, Level* level, LocalPlayer* localPlayer, std::vector<Player*>* players) {
+        this->cl = cl;
         this->display = display;
         this->level = level;
         this->localPlayer = localPlayer;

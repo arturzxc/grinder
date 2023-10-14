@@ -1,11 +1,13 @@
 #pragma once
 struct Sense {
+    ConfigLoader* cl;
     XDisplay* display;
     Level* level;
     LocalPlayer* localPlayer;
     std::vector<Player*>* players;
 
-    Sense(XDisplay* display, Level* level, LocalPlayer* localPlayer, std::vector<Player*>* players) {
+    Sense(ConfigLoader* cl, XDisplay* display, Level* level, LocalPlayer* localPlayer, std::vector<Player*>* players) {
+        this->cl = cl;
         this->display = display;
         this->level = level;
         this->localPlayer = localPlayer;
@@ -13,6 +15,7 @@ struct Sense {
     }
 
     void modifyHighlights() {
+        if (!this->cl->FEATURE_SENSE_ON)return;
         const long highlightSettingsPtr = mem::Read<long>(OFF_REGION + OFF_GLOW_HIGHLIGHTS);
         const long highlightSize = 0x28;
         { //player highlight 
@@ -21,7 +24,7 @@ struct Sense {
             const GlowMode oldGlowMode = mem::Read<GlowMode>(highlightSettingsPtr + (highlightSize * highlightId) + 4);
             if (newGlowMode != oldGlowMode)
                 mem::Write<GlowMode>(highlightSettingsPtr + (highlightSize * highlightId) + 4, newGlowMode);
-            Color newColor = { 0,30,0 };
+            Color newColor = { cl->SENSE_ENEMY_VISIBLE_COLOR_RED,cl->SENSE_ENEMY_VISIBLE_COLOR_GREEN,cl->SENSE_ENEMY_VISIBLE_COLOR_BLUE };
             const Color oldColor = mem::Read<Color>(highlightSettingsPtr + (highlightSize * highlightId) + 8);
             if (oldColor != newColor)
                 mem::Write<Color>(highlightSettingsPtr + (highlightSize * highlightId) + 8, newColor);
@@ -32,7 +35,7 @@ struct Sense {
             const GlowMode oldGlowMode = mem::Read<GlowMode>(highlightSettingsPtr + (highlightSize * highlightId) + 4);
             if (newGlowMode != oldGlowMode)
                 mem::Write<GlowMode>(highlightSettingsPtr + (highlightSize * highlightId) + 4, newGlowMode);
-            Color newColor = { 30,0,0 };
+            Color newColor = { cl->SENSE_ENEMY_INVISIBLE_COLOR_RED,cl->SENSE_ENEMY_INVISIBLE_COLOR_GREEN,cl->SENSE_ENEMY_INVISIBLE_COLOR_BLUE };
             const Color oldColor = mem::Read<Color>(highlightSettingsPtr + (highlightSize * highlightId) + 8);
             if (oldColor != newColor)
                 mem::Write<Color>(highlightSettingsPtr + (highlightSize * highlightId) + 8, newColor);
@@ -43,7 +46,7 @@ struct Sense {
             const GlowMode oldGlowMode = mem::Read<GlowMode>(highlightSettingsPtr + (highlightSize * highlightId) + 4);
             if (newGlowMode != oldGlowMode)
                 mem::Write<GlowMode>(highlightSettingsPtr + (highlightSize * highlightId) + 4, newGlowMode);
-            Color newColor = { 100,100,100 };
+            Color newColor = { cl->SENSE_ENEMY_LOCKEDON_COLOR_RED,cl->SENSE_ENEMY_LOCKEDON_COLOR_GREEN,cl->SENSE_ENEMY_LOCKEDON_COLOR_BLUE };
             const Color oldColor = mem::Read<Color>(highlightSettingsPtr + (highlightSize * highlightId) + 8);
             if (oldColor != newColor)
                 mem::Write<Color>(highlightSettingsPtr + (highlightSize * highlightId) + 8, newColor);
@@ -58,6 +61,7 @@ struct Sense {
     }
 
     void glowPlayers() {
+        if (!this->cl->FEATURE_SENSE_ON)return;
         for (int i = 0; i < players->size(); i++) {
             Player* p = players->at(i);
             if (!p->isValid()) continue;
