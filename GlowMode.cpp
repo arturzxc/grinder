@@ -4,17 +4,17 @@ struct GlowMode {
 
     GlowMode() {}
 
-    GlowMode(int x_val, int y_val, int z_val, int transparency_val) :
-        bodyStyle(static_cast<std::byte>(x_val)),
-        borderStyle(static_cast<std::byte>(y_val)),
-        borderWidth(static_cast<std::byte>(z_val)),
+    GlowMode(int bodyStyle_val, int borderStyle_val, int borderWidth_val, int transparency_val) :
+        bodyStyle(static_cast<std::byte>(bodyStyle_val)),
+        borderStyle(static_cast<std::byte>(borderStyle_val)),
+        borderWidth(static_cast<std::byte>(borderWidth_val)),
         transparency(static_cast<std::byte>(transparency_val)) {}
 
 
-    GlowMode(std::byte x_val, std::byte y_val, std::byte z_val, std::byte transparency_val) :
-        bodyStyle(x_val),
-        borderStyle(y_val),
-        borderWidth(z_val),
+    GlowMode(std::byte bodyStyle_val, std::byte borderStyle_val, std::byte borderWidth_val, std::byte transparency_val) :
+        bodyStyle(bodyStyle_val),
+        borderStyle(borderStyle_val),
+        borderWidth(borderWidth_val),
         transparency(transparency_val) {}
 
     bool isZeroVector() const {

@@ -36,5 +36,4 @@ public:
         XTestFakeRelativeMotionEvent(display, yawMovement, pitchMovement, CurrentTime);
         XFlush(display);
     }
-
 };

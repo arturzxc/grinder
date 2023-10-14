@@ -17,12 +17,10 @@ int main() {
     for (int i = 0; i < 70; i++) humanPlayers->push_back(new Player(i, localPlayer));
     for (int i = 0; i < 15000; i++) dummyPlayers->push_back(new Player(i, localPlayer));
 
-    //create features
-    // NoRecoil* noRecoil = new NoRecoil(display, level, localPlayer, players);
+    //create features    
     AimBot* aimBot = new AimBot(display, level, localPlayer, players);
     TriggerBot* triggerBot = new TriggerBot(display, level, localPlayer, players);
     Sense* sense = new Sense(display, level, localPlayer, players);
-    Movement* movement = new Movement(display, level, localPlayer, players);
 
     //begin main loop
     int counter = 0;

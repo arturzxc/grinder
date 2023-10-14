@@ -6,7 +6,6 @@ struct AimBot {
     std::vector<Player*>* players;
     Player* target = nullptr;
 
-
     const float STICK_SPEED = 15; //The lower your mouse sensitivity the higher you might want this!
     const float SMOOTH = 10; //no reason to change really
     const float MAX_TARGET_ACQUISITION_FOV = 10; //only acquire targets that are no further than 5 degrees from crosshairs
@@ -23,7 +22,7 @@ struct AimBot {
     void aimAssist(int counter) {
         highlightTargetIfExists();
         if (!localPlayer->isCombatReady()) { target = nullptr; return; };
-        if (!display->keyDown(XK_Shift_L) && !localPlayer->inAttack) { target = nullptr; return; }; //The H button is mostly for debugging in the range        
+        if (!display->keyDown(XK_Shift_L) && !localPlayer->inAttack) { target = nullptr; return; };
         if (target == nullptr) assignTarget();
         if (target == nullptr) return;
         if (!target->visible) return;
