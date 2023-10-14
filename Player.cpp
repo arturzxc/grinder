@@ -77,7 +77,7 @@ struct Player {
                 float aimbotSmmothing = (distance2DToLocalPlayer < util::metersToGameUnits(5)) ? 100 : 20;
                 if (aimbotSmmothing < 1) aimbotSmmothing = 1;
                 aimbotDesiredAngles = calcDesiredAngles();
-                aimbotDesiredAnglesIncrement = calcDesiredAnglesIncrement();                
+                aimbotDesiredAnglesIncrement = calcDesiredAnglesIncrement();
                 aimbotScore = calcAimbotScore();
             }
         }
@@ -107,7 +107,7 @@ struct Player {
         if (glowEnable != 1) mem::Write<int>(base + OFF_GLOW_ENABLE, 1);
         if (glowThroughWall != 2) mem::Write<int>(base + OFF_GLOW_THROUGH_WALL, 2);
         if (glowThroughWall != 2) mem::Write<int>(base + OFF_GLOW_FIX, 2);
-        int id = (visible) ? 0 : 1;
+        int id = (visible || aimedAt) ? 0 : 1;
         if (aimbotLocked) id = 2;
         if (highlightId != id) mem::Write<int>(base + OFF_GLOW_HIGHLIGHT_ID + 1, id);
     }
