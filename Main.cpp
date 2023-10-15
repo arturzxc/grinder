@@ -1,4 +1,4 @@
-#include "includes.hpp"
+#include "includes.cpp"
 
 int main() {
     //load config

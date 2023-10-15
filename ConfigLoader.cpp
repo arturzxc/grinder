@@ -14,6 +14,9 @@ struct ConfigLoader {
     bool FEATURE_TRIGGERBOT_ON = true;
 
     //aimbot
+    bool AIMBOT_ACTIVATED_BY_ATTACK = true;
+    bool AIMBOT_ACTIVATED_BY_ADS = false;
+    std::string AIMBOT_ACTIVATED_BY_BUTTON = "XK_Shift_L";
     int AIMBOT_SMOOTH = 20;
     int AIMBOT_STICK_SPEED = 10;
 
@@ -45,6 +48,9 @@ struct ConfigLoader {
         FEATURE_SENSE_ON = (key.compare("FEATURE_SENSE_ON") != 0) ? FEATURE_SENSE_ON : toBool(val);
         FEATURE_TRIGGERBOT_ON = (key.compare("FEATURE_TRIGGERBOT_ON") != 0) ? FEATURE_TRIGGERBOT_ON : toBool(val);
         //aimbot
+        AIMBOT_ACTIVATED_BY_ATTACK = (key.compare("AIMBOT_ACTIVATED_BY_ATTACK") != 0) ? AIMBOT_ACTIVATED_BY_ATTACK : toBool(val);
+        AIMBOT_ACTIVATED_BY_ADS = (key.compare("AIMBOT_ACTIVATED_BY_ADS") != 0) ? AIMBOT_ACTIVATED_BY_ADS : toBool(val);
+        AIMBOT_ACTIVATED_BY_BUTTON = (key.compare("AIMBOT_ACTIVATED_BY_BUTTON") != 0) ? AIMBOT_ACTIVATED_BY_BUTTON : trimConstructive(val);
         AIMBOT_SMOOTH = (key.compare("AIMBOT_SMOOTH") != 0) ? AIMBOT_SMOOTH : stoi(val);
         AIMBOT_STICK_SPEED = (key.compare("AIMBOT_STICK_SPEED") != 0) ? AIMBOT_STICK_SPEED : stoi(val);
         //sense
@@ -76,11 +82,14 @@ struct ConfigLoader {
         printf("FEATURE_AIMBOT_ON\t\t\t\t\t%s\n", FEATURE_AIMBOT_ON ? "YES" : "NO");
         printf("FEATURE_SENSE_ON\t\t\t\t\t%s\n", FEATURE_SENSE_ON ? "YES" : "NO");
         printf("FEATURE_TRIGGERBOT_ON\t\t\t\t\t%s\n", FEATURE_TRIGGERBOT_ON ? "YES" : "NO");
-        printf("\n");
+        printf("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n");
         //aimbot
+        printf("AIMBOT_ACTIVATED_BY_ATTACK\t\t\t\t%s\n", AIMBOT_ACTIVATED_BY_ATTACK ? "YES" : "NO");
+        printf("AIMBOT_ACTIVATED_BY_ADS\t\t\t\t\t%s\n", AIMBOT_ACTIVATED_BY_ADS ? "YES" : "NO");
+        printf("AIMBOT_ACTIVATED_BY_BUTTON\t\t\t\t%s\n", AIMBOT_ACTIVATED_BY_BUTTON.c_str());
         printf("AIMBOT_SMOOTH\t\t\t\t\t\t%.d\n", AIMBOT_SMOOTH);
         printf("AIMBOT_STICK_SPEED\t\t\t\t\t%.d\n", AIMBOT_STICK_SPEED);
-        printf("\n");
+        printf("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n");
         //sense
         printf("SENSE_ENEMY_VISIBLE_COLOR_RED\t\t\t\t%.0f\n", SENSE_ENEMY_VISIBLE_COLOR_RED);
         printf("SENSE_ENEMY_VISIBLE_COLOR_GREEN\t\t\t\t%.0f\n", SENSE_ENEMY_VISIBLE_COLOR_GREEN);
@@ -88,23 +97,18 @@ struct ConfigLoader {
         printf("SENSE_ENEMY_VISIBLE_BODY_STYLE\t\t\t\t%.d\n", SENSE_ENEMY_VISIBLE_BODY_STYLE);
         printf("SENSE_ENEMY_VISIBLE_BORDER_STYLE\t\t\t%.d\n", SENSE_ENEMY_VISIBLE_BORDER_STYLE);
         printf("SENSE_ENEMY_VISIBLE_BORDER_WIDTH\t\t\t%.d\n", SENSE_ENEMY_VISIBLE_BORDER_WIDTH);
-        printf("\n");
-
         printf("SENSE_ENEMY_INVISIBLE_COLOR_RED\t\t\t\t%.0f\n", SENSE_ENEMY_INVISIBLE_COLOR_RED);
         printf("SENSE_ENEMY_INVISIBLE_COLOR_GREEN\t\t\t%.0f\n", SENSE_ENEMY_INVISIBLE_COLOR_GREEN);
         printf("SENSE_ENEMY_INVISIBLE_COLOR_BLUE\t\t\t%.0f\n", SENSE_ENEMY_INVISIBLE_COLOR_BLUE);
         printf("SENSE_ENEMY_INVISIBLE_BODY_STYLE\t\t\t%.d\n", SENSE_ENEMY_INVISIBLE_BODY_STYLE);
         printf("SENSE_ENEMY_INVISIBLE_BORDER_STYLE\t\t\t%.d\n", SENSE_ENEMY_INVISIBLE_BORDER_STYLE);
         printf("SENSE_ENEMY_INVISIBLE_BORDER_WIDTH\t\t\t%.d\n", SENSE_ENEMY_INVISIBLE_BORDER_WIDTH);
-        printf("\n");
-
         printf("SENSE_ENEMY_LOCKEDON_COLOR_RED\t\t\t\t%.0f\n", SENSE_ENEMY_LOCKEDON_COLOR_RED);
         printf("SENSE_ENEMY_LOCKEDON_COLOR_GREEN\t\t\t%.0f\n", SENSE_ENEMY_LOCKEDON_COLOR_GREEN);
         printf("SENSE_ENEMY_LOCKEDON_COLOR_BLUE\t\t\t\t%.0f\n", SENSE_ENEMY_LOCKEDON_COLOR_BLUE);
         printf("SENSE_ENEMY_LOCKEDON_BODY_STYLE\t\t\t\t%.d\n", SENSE_ENEMY_LOCKEDON_BODY_STYLE);
         printf("SENSE_ENEMY_LOCKEDON_BORDER_STYLE\t\t\t%.d\n", SENSE_ENEMY_LOCKEDON_BORDER_STYLE);
         printf("SENSE_ENEMY_LOCKEDON_BORDER_WIDTH\t\t\t%.d\n", SENSE_ENEMY_LOCKEDON_BORDER_WIDTH);
-        printf("\n");
 
         printf("=====================================================================\n\n");
     }
@@ -165,6 +169,12 @@ struct ConfigLoader {
     void trim(std::string& s) {
         ltrim(s);
         rtrim(s);
+    }
+
+    std::string trimConstructive(std::string& s) {
+        ltrim(s);
+        rtrim(s);
+        return s;
     }
 
     void ltrim(std::string& s) {

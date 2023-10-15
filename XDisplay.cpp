@@ -17,6 +17,11 @@ public:
         return buttonDown;
     }
 
+    bool keyDown(std::string XK_keyName) {
+        KeySym keyCode = XStringToKeysym(trimXKPrefix(XK_keyName).c_str());
+        return keyDown(keyCode);
+    }
+
     void mouseClickLeft() {
         XTestFakeButtonEvent(display, Button1, True, 0);
         XTestFakeButtonEvent(display, Button1, False, 0);
@@ -35,5 +40,11 @@ public:
     void moveMouseRelative(int pitchMovement, int yawMovement) {
         XTestFakeRelativeMotionEvent(display, yawMovement, pitchMovement, CurrentTime);
         XFlush(display);
+    }
+
+    std::string trimXKPrefix(const std::string& keyName) {
+        if (keyName.compare(0, 3, "XK_") == 0)
+            return keyName.substr(3);
+        return keyName;
     }
 };
