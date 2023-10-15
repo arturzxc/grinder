@@ -13,6 +13,10 @@ struct ConfigLoader {
     bool FEATURE_SENSE_ON = true;
     bool FEATURE_TRIGGERBOT_ON = true;
 
+    //aimbot
+    int AIMBOT_SMOOTH = 20;
+    int AIMBOT_STICK_SPEED = 10;
+
     //sense
     float SENSE_ENEMY_VISIBLE_COLOR_RED = 0;
     float SENSE_ENEMY_VISIBLE_COLOR_GREEN = 10;
@@ -40,6 +44,9 @@ struct ConfigLoader {
         FEATURE_AIMBOT_ON = (key.compare("FEATURE_AIMBOT_ON") != 0) ? FEATURE_AIMBOT_ON : toBool(val);
         FEATURE_SENSE_ON = (key.compare("FEATURE_SENSE_ON") != 0) ? FEATURE_SENSE_ON : toBool(val);
         FEATURE_TRIGGERBOT_ON = (key.compare("FEATURE_TRIGGERBOT_ON") != 0) ? FEATURE_TRIGGERBOT_ON : toBool(val);
+        //aimbot
+        AIMBOT_SMOOTH = (key.compare("AIMBOT_SMOOTH") != 0) ? AIMBOT_SMOOTH : stoi(val);
+        AIMBOT_STICK_SPEED = (key.compare("AIMBOT_STICK_SPEED") != 0) ? AIMBOT_STICK_SPEED : stoi(val);
         //sense
         SENSE_ENEMY_VISIBLE_COLOR_RED = (key.compare("SENSE_ENEMY_VISIBLE_COLOR_RED") != 0) ? SENSE_ENEMY_VISIBLE_COLOR_RED : stoi(val);
         SENSE_ENEMY_VISIBLE_COLOR_GREEN = (key.compare("SENSE_ENEMY_VISIBLE_COLOR_GREEN") != 0) ? SENSE_ENEMY_VISIBLE_COLOR_GREEN : stoi(val);
@@ -69,6 +76,10 @@ struct ConfigLoader {
         printf("FEATURE_AIMBOT_ON\t\t\t\t\t%s\n", FEATURE_AIMBOT_ON ? "YES" : "NO");
         printf("FEATURE_SENSE_ON\t\t\t\t\t%s\n", FEATURE_SENSE_ON ? "YES" : "NO");
         printf("FEATURE_TRIGGERBOT_ON\t\t\t\t\t%s\n", FEATURE_TRIGGERBOT_ON ? "YES" : "NO");
+        printf("\n");
+        //aimbot
+        printf("AIMBOT_SMOOTH\t\t\t\t\t\t%.d\n", AIMBOT_SMOOTH);
+        printf("AIMBOT_STICK_SPEED\t\t\t\t\t%.d\n", AIMBOT_STICK_SPEED);
         printf("\n");
         //sense
         printf("SENSE_ENEMY_VISIBLE_COLOR_RED\t\t\t\t%.0f\n", SENSE_ENEMY_VISIBLE_COLOR_RED);

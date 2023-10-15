@@ -7,8 +7,6 @@ struct AimBot {
     std::vector<Player*>* players;
     Player* target = nullptr;
 
-    const float STICK_SPEED = 15; //The lower your mouse sensitivity the higher you might want this!
-    const float SMOOTH = 10; //no reason to change really
     const float MAX_TARGET_ACQUISITION_FOV = 10; //only acquire targets that are no further than 5 degrees from crosshairs
     const float MIN_AIMBOT_REACTION_FOV = 0.1; //if our crosshair is super close to the target angle then stop 
     const int MAX_DISTANCE = util::metersToGameUnits(200);
@@ -35,11 +33,11 @@ struct AimBot {
 
     void mouseMoveAim() {
         //No recoil calcs
-        FloatVector2D punchAnglesDiff = localPlayer->punchAnglesDiff.divide(SMOOTH).multiply(STICK_SPEED);
+        FloatVector2D punchAnglesDiff = localPlayer->punchAnglesDiff.divide(cl->AIMBOT_SMOOTH).multiply(cl->AIMBOT_STICK_SPEED);
         double nrPitchIncrement = punchAnglesDiff.x;
         double nrYawIncrement = -punchAnglesDiff.y;
         //Aimbot calcs
-        FloatVector2D aimbotDelta = target->aimbotDesiredAnglesIncrement.divide(SMOOTH).multiply(STICK_SPEED);
+        FloatVector2D aimbotDelta = target->aimbotDesiredAnglesIncrement.divide(cl->AIMBOT_SMOOTH).multiply(cl->AIMBOT_STICK_SPEED);
         double aimYawIncrement = aimbotDelta.y * -1;
         double aimPitchIncrement = aimbotDelta.x;
         //combine
