@@ -18,7 +18,11 @@ struct ConfigLoader {
     bool AIMBOT_ACTIVATED_BY_ADS = false;
     std::string AIMBOT_ACTIVATED_BY_BUTTON = "XK_Shift_L";
     int AIMBOT_SMOOTH = 20;
-    int AIMBOT_STICK_SPEED = 10;
+    int AIMBOT_SMOOTH_EXTRA_BY_DISTANCE = 1000;
+    float AIMBOT_FOV = 5.0000;
+    float AIMBOT_DEADZONE = 0.0100;
+    int AIMBOT_MAX_DISTANCE = 100;
+    int AIMBOT_MIN_DISTANCE = 1;
 
     //sense
     float SENSE_ENEMY_VISIBLE_COLOR_RED = 0;
@@ -52,7 +56,10 @@ struct ConfigLoader {
         AIMBOT_ACTIVATED_BY_ADS = (key.compare("AIMBOT_ACTIVATED_BY_ADS") != 0) ? AIMBOT_ACTIVATED_BY_ADS : toBool(val);
         AIMBOT_ACTIVATED_BY_BUTTON = (key.compare("AIMBOT_ACTIVATED_BY_BUTTON") != 0) ? AIMBOT_ACTIVATED_BY_BUTTON : trimConstructive(val);
         AIMBOT_SMOOTH = (key.compare("AIMBOT_SMOOTH") != 0) ? AIMBOT_SMOOTH : stoi(val);
-        AIMBOT_STICK_SPEED = (key.compare("AIMBOT_STICK_SPEED") != 0) ? AIMBOT_STICK_SPEED : stoi(val);
+        AIMBOT_SMOOTH_EXTRA_BY_DISTANCE = (key.compare("AIMBOT_SMOOTH_EXTRA_BY_DISTANCE") != 0) ? AIMBOT_SMOOTH_EXTRA_BY_DISTANCE : stoi(val);
+        AIMBOT_FOV = (key.compare("AIMBOT_FOV") != 0) ? AIMBOT_FOV : stod(val);
+        AIMBOT_DEADZONE = (key.compare("AIMBOT_DEADZONE") != 0) ? AIMBOT_DEADZONE : stod(val);
+
         //sense
         SENSE_ENEMY_VISIBLE_COLOR_RED = (key.compare("SENSE_ENEMY_VISIBLE_COLOR_RED") != 0) ? SENSE_ENEMY_VISIBLE_COLOR_RED : stoi(val);
         SENSE_ENEMY_VISIBLE_COLOR_GREEN = (key.compare("SENSE_ENEMY_VISIBLE_COLOR_GREEN") != 0) ? SENSE_ENEMY_VISIBLE_COLOR_GREEN : stoi(val);
@@ -88,7 +95,9 @@ struct ConfigLoader {
         printf("AIMBOT_ACTIVATED_BY_ADS\t\t\t\t\t%s\n", AIMBOT_ACTIVATED_BY_ADS ? "YES" : "NO");
         printf("AIMBOT_ACTIVATED_BY_BUTTON\t\t\t\t%s\n", AIMBOT_ACTIVATED_BY_BUTTON.c_str());
         printf("AIMBOT_SMOOTH\t\t\t\t\t\t%.d\n", AIMBOT_SMOOTH);
-        printf("AIMBOT_STICK_SPEED\t\t\t\t\t%.d\n", AIMBOT_STICK_SPEED);
+        printf("AIMBOT_SMOOTH_EXTRA_BY_DISTANCE\t\t\t\t\t\t%.d\n", AIMBOT_SMOOTH_EXTRA_BY_DISTANCE);
+        printf("AIMBOT_FOV\t\t\t\t\t\t%.4f\n", AIMBOT_FOV);
+        printf("AIMBOT_DEADZONE\t\t\t\t\t\t%.4f\n", AIMBOT_DEADZONE);
         printf("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n");
         //sense
         printf("SENSE_ENEMY_VISIBLE_COLOR_RED\t\t\t\t%.0f\n", SENSE_ENEMY_VISIBLE_COLOR_RED);

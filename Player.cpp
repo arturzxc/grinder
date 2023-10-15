@@ -7,6 +7,7 @@ struct Player {
     bool dead;
     bool knocked;
     int teamNumber;
+    int currentHealth;
     int glowEnable;
     int glowThroughWall;
     int highlightId;
@@ -46,6 +47,7 @@ struct Player {
         if (base == 0) return;
         name = mem::ReadString(base + OFF_NAME, 1024);
         teamNumber = mem::Read<int>(base + OFF_TEAM_NUMBER);
+        currentHealth = mem::Read<int>(base + OFF_CURRENT_HEALTH);
         if (!isPlayer() && !isDummie()) { reset(); return; }
         dead = (isDummie()) ? false : mem::Read<short>(base + OFF_LIFE_STATE) > 0;
         knocked = (isDummie()) ? false : mem::Read<short>(base + OFF_BLEEDOUT_STATE) > 0;
@@ -82,7 +84,9 @@ struct Player {
     }
 
     bool isValid() {
-        return base != 0 && (!isPlayer() || !isDummie());
+        return base != 0
+            && currentHealth > 0
+            && (isPlayer() || isDummie());
     }
 
     bool isCombatReady() {
@@ -161,6 +165,6 @@ struct Player {
     }
 
     float calcAimbotScore() {
-        return 1000 - (fabs(aimbotDesiredAnglesIncrement.x) + fabs(aimbotDesiredAnglesIncrement.y));
+        return (1000 - (fabs(aimbotDesiredAnglesIncrement.x) + fabs(aimbotDesiredAnglesIncrement.y)));
     }
 };
