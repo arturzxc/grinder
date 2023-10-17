@@ -17,6 +17,7 @@ struct TriggerBot {
     }
 
     void shootAtEnemy() {
+        if(!cl->FEATURE_TRIGGERBOT_ON) return;
         if (!localPlayer->isCombatReady()) return;
 
         //only these weapons will work with trigger bot
