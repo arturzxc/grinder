@@ -30,11 +30,16 @@ struct AimBot {
         float EXTRA_SMOOTH = cl->AIMBOT_SMOOTH_EXTRA_BY_DISTANCE / target->distanceToLocalPlayer;
         float TOTAL_SMOOTH = cl->AIMBOT_SMOOTH + EXTRA_SMOOTH;
         //No recoil calcs
-        const FloatVector2D punchAnglesDiff = localPlayer->punchAnglesDiff.divide(TOTAL_SMOOTH).multiply(10);
+        const FloatVector2D punchAnglesDiff = localPlayer->punchAnglesDiff
+            .multiply(100)
+            .divide(TOTAL_SMOOTH);
         const double nrPitchIncrement = punchAnglesDiff.x;
         const double nrYawIncrement = -punchAnglesDiff.y;
         //Aimbot calcs
-        const FloatVector2D aimbotDelta = target->aimbotDesiredAnglesIncrement.divide(TOTAL_SMOOTH).multiply(10);
+        const FloatVector2D aimbotDelta = target->aimbotDesiredAnglesIncrement
+            .multiply(100)
+            .divide(TOTAL_SMOOTH);
+
         const double aimYawIncrement = aimbotDelta.y * -1;
         const double aimPitchIncrement = aimbotDelta.x;
         //combine
@@ -76,7 +81,7 @@ struct AimBot {
             if (fabs(p->aimbotDesiredAnglesIncrement.y) > cl->AIMBOT_FOV) continue;
             if (target == nullptr || p->aimbotScore > target->aimbotScore) {
                 target = p;
-//                target->aimbotLocked = true;
+                //                target->aimbotLocked = true;
             }
         }
     }
