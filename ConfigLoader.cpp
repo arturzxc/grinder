@@ -25,6 +25,8 @@ struct ConfigLoader {
     int AIMBOT_MIN_DISTANCE = 1;
 
     //sense
+    bool SENSE_ENEMY_COLOR_SHIELD_BASED = true;
+
     float SENSE_ENEMY_VISIBLE_COLOR_RED = 0;
     float SENSE_ENEMY_VISIBLE_COLOR_GREEN = 10;
     float SENSE_ENEMY_VISIBLE_COLOR_BLUE = 0;
@@ -60,7 +62,9 @@ struct ConfigLoader {
         AIMBOT_FOV = (key.compare("AIMBOT_FOV") != 0) ? AIMBOT_FOV : stod(val);
         AIMBOT_DEADZONE = (key.compare("AIMBOT_DEADZONE") != 0) ? AIMBOT_DEADZONE : stod(val);
 
-        //sense
+        //sense        
+        SENSE_ENEMY_COLOR_SHIELD_BASED = (key.compare("SENSE_ENEMY_COLOR_SHIELD_BASED") != 0) ? SENSE_ENEMY_COLOR_SHIELD_BASED : toBool(val);
+
         SENSE_ENEMY_VISIBLE_COLOR_RED = (key.compare("SENSE_ENEMY_VISIBLE_COLOR_RED") != 0) ? SENSE_ENEMY_VISIBLE_COLOR_RED : stoi(val);
         SENSE_ENEMY_VISIBLE_COLOR_GREEN = (key.compare("SENSE_ENEMY_VISIBLE_COLOR_GREEN") != 0) ? SENSE_ENEMY_VISIBLE_COLOR_GREEN : stoi(val);
         SENSE_ENEMY_VISIBLE_COLOR_BLUE = (key.compare("SENSE_ENEMY_VISIBLE_COLOR_BLUE") != 0) ? SENSE_ENEMY_VISIBLE_COLOR_BLUE : stoi(val);
@@ -95,11 +99,12 @@ struct ConfigLoader {
         printf("AIMBOT_ACTIVATED_BY_ADS\t\t\t\t\t%s\n", AIMBOT_ACTIVATED_BY_ADS ? "YES" : "NO");
         printf("AIMBOT_ACTIVATED_BY_BUTTON\t\t\t\t%s\n", AIMBOT_ACTIVATED_BY_BUTTON.c_str());
         printf("AIMBOT_SMOOTH\t\t\t\t\t\t%.d\n", AIMBOT_SMOOTH);
-        printf("AIMBOT_SMOOTH_EXTRA_BY_DISTANCE\t\t\t\t\t\t%.d\n", AIMBOT_SMOOTH_EXTRA_BY_DISTANCE);
+        printf("AIMBOT_SMOOTH_EXTRA_BY_DISTANCE\t\t\t\t%.d\n", AIMBOT_SMOOTH_EXTRA_BY_DISTANCE);
         printf("AIMBOT_FOV\t\t\t\t\t\t%.4f\n", AIMBOT_FOV);
         printf("AIMBOT_DEADZONE\t\t\t\t\t\t%.4f\n", AIMBOT_DEADZONE);
         printf("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n");
-        //sense
+        //sense        
+        printf("SENSE_ENEMY_COLOR_SHIELD_BASED\t\t\t\t%s\n", SENSE_ENEMY_COLOR_SHIELD_BASED ? "YES" : "NO");
         printf("SENSE_ENEMY_VISIBLE_COLOR_RED\t\t\t\t%.0f\n", SENSE_ENEMY_VISIBLE_COLOR_RED);
         printf("SENSE_ENEMY_VISIBLE_COLOR_GREEN\t\t\t\t%.0f\n", SENSE_ENEMY_VISIBLE_COLOR_GREEN);
         printf("SENSE_ENEMY_VISIBLE_COLOR_BLUE\t\t\t\t%.0f\n", SENSE_ENEMY_VISIBLE_COLOR_BLUE);

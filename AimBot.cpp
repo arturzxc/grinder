@@ -76,7 +76,7 @@ struct AimBot {
             if (fabs(p->aimbotDesiredAnglesIncrement.y) > cl->AIMBOT_FOV) continue;
             if (target == nullptr || p->aimbotScore > target->aimbotScore) {
                 target = p;
-                target->aimbotLocked = true;
+//                target->aimbotLocked = true;
             }
         }
     }
