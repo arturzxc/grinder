@@ -126,6 +126,16 @@ struct Sense {
             if (oldColor != newColor)
                 mem::Write<Color>(highlightSettingsPtr + (highlightSize * highlightId) + 8, newColor);
         }
+        { //player highlight - friendlies
+            int highlightId = 95;
+            const GlowMode oldGlowMode = mem::Read<GlowMode>(highlightSettingsPtr + (highlightSize * highlightId) + 4);
+            if (newGlowModeShieldBased != oldGlowMode)
+                mem::Write<GlowMode>(highlightSettingsPtr + (highlightSize * highlightId) + 4, newGlowModeShieldBased);
+            Color newColor = { 0,0,0 };
+            const Color oldColor = mem::Read<Color>(highlightSettingsPtr + (highlightSize * highlightId) + 8);
+            if (oldColor != newColor)
+                mem::Write<Color>(highlightSettingsPtr + (highlightSize * highlightId) + 8, newColor);
+        }
 
         //item highlights
         for (int highlightId = 30; highlightId < 40; highlightId++) {
