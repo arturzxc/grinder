@@ -13,6 +13,7 @@
 #include <X11/Xlib.h>
 #include <X11/Xutil.h>
 #include <X11/extensions/XTest.h>
+#include <unordered_map>
 #include <random>
 #include <fstream>
 #include <sys/stat.h>
@@ -22,6 +23,7 @@
 #include <iterator>
 #include "ConfigLoader.cpp"
 #include "Offsets.cpp"
+#include "WeaponId.cpp"
 #include "Util.cpp"
 #include "FloatVector2D.cpp"
 #include "FloatVector3D.cpp"

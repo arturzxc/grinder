@@ -17,26 +17,27 @@ struct TriggerBot {
     }
 
     void shootAtEnemy() {
-        if(!cl->FEATURE_TRIGGERBOT_ON) return;
+        if (!cl->FEATURE_TRIGGERBOT_ON) return;
         if (!localPlayer->isCombatReady()) return;
 
         //only these weapons will work with trigger bot
         int weaponId = localPlayer->weaponIndex;
+        // printf("Last weapon held: %s id: %d \n", WeaponName(weaponId).c_str(), weaponId);
         if (
-            weaponId != 87 &&   //kraber
-            weaponId != 100 &&  //p2020
-            weaponId != 91 &&   //mozam
-            weaponId != 82 &&   //EVA8
-            weaponId != 98 &&   //PK
-            weaponId != 90 &&   //Mastiff
-            weaponId != 103 &&  //Wingman
-            weaponId != 80 &&   //Longbow
-            weaponId != 1 &&    //Sentinal
-            weaponId != 84 &&   //G7
-            weaponId != 85 &&   //Hemlock
-            weaponId != 105 &&  //30-30
-            weaponId != 102 &&  //triple
-            weaponId != 107     //namesis
+            weaponId != WEAPON_KRABER &&
+            weaponId != WEAPON_P2020 &&
+            weaponId != WEAPON_MOZAMBIQUE &&
+            weaponId != WEAPON_EVA8 &&
+            weaponId != WEAPON_PEACEKEEPER &&
+            weaponId != WEAPON_MASTIFF &&
+            weaponId != WEAPON_WINGMAN &&
+            weaponId != WEAPON_LONGBOW &&
+            weaponId != WEAPON_SENTINEL &&
+            weaponId != WEAPON_G7 &&
+            weaponId != WEAPON_HEMLOCK &&
+            weaponId != WEAPON_3030 &&
+            weaponId != WEAPON_TRIPLE_TAKE &&
+            weaponId != WEAPON_NEMESIS
             )return;
 
         //max range changes based on if we are zoomed in or not
