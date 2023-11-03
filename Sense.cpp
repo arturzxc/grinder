@@ -129,8 +129,9 @@ struct Sense {
         { //player highlight - friendlies
             int highlightId = 95;
             const GlowMode oldGlowMode = mem::Read<GlowMode>(highlightSettingsPtr + (highlightSize * highlightId) + 4);
-            if (newGlowModeShieldBased != oldGlowMode)
-                mem::Write<GlowMode>(highlightSettingsPtr + (highlightSize * highlightId) + 4, newGlowModeShieldBased);
+            GlowMode myGm = { 118,0,0,127 };
+            if (myGm != oldGlowMode)
+                mem::Write<GlowMode>(highlightSettingsPtr + (highlightSize * highlightId) + 4, myGm);
             Color newColor = { 0,0,0 };
             const Color oldColor = mem::Read<Color>(highlightSettingsPtr + (highlightSize * highlightId) + 8);
             if (oldColor != newColor)
@@ -151,9 +152,12 @@ struct Sense {
         for (int i = 0; i < players->size(); i++) {
             Player* p = players->at(i);
             if (!p->isValid()) continue;
-            if (!p->enemy) continue;
-            if (cl->SENSE_ENEMY_COLOR_SHIELD_BASED) p->glowShieldBased();
-            else p->glow();
+            if (p->enemy) {
+                if (cl->SENSE_ENEMY_COLOR_SHIELD_BASED) p->glowShieldBased();
+                else p->glow();
+            }
+            else
+                p->glowFriendly();
         }
     }
 

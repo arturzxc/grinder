@@ -73,7 +73,7 @@ struct Player {
 
         if (myLocalPlayer->isValid()) {
             local = myLocalPlayer->base == base;
-            bool nonBR = true; //figure out later how to get game mode
+            bool nonBR = false; //figure out later how to get game mode
             friendly = (nonBR)
                 ? (myLocalPlayer->teamNumber % 2 == 0 && teamNumber % 2 == 0) || (myLocalPlayer->teamNumber % 2 != 0 && teamNumber % 2 != 0)
                 : myLocalPlayer->teamNumber == teamNumber;
@@ -110,13 +110,20 @@ struct Player {
         return teamNumber == 97;
     }
 
+    void glowFriendly() {
+        if (glowEnable != 1) mem::Write<int>(base + OFF_GLOW_ENABLE, 1);
+        if (glowThroughWall != 2) mem::Write<int>(base + OFF_GLOW_THROUGH_WALL, 2);
+        if (glowThroughWall != 2) mem::Write<int>(base + OFF_GLOW_FIX, 2);
+        int id = 95;
+        if (highlightId != id) mem::Write<int>(base + OFF_GLOW_HIGHLIGHT_ID + 1, id);
+    }
+
     void glow() {
         if (glowEnable != 1) mem::Write<int>(base + OFF_GLOW_ENABLE, 1);
         if (glowThroughWall != 2) mem::Write<int>(base + OFF_GLOW_THROUGH_WALL, 2);
         if (glowThroughWall != 2) mem::Write<int>(base + OFF_GLOW_FIX, 2);
         int id = (visible) ? 0 : 1;
         if (aimbotLocked) id = 2;
-        if (friendly) id = 95;
         if (highlightId != id) mem::Write<int>(base + OFF_GLOW_HIGHLIGHT_ID + 1, id);
     }
 
@@ -130,7 +137,6 @@ struct Player {
         else if (currentShields <= 70) id = 92;//blue shields
         else if (currentShields <= 100) id = 93;//purple shields / gold
         else  id = 94;//red shields
-        if (friendly) id = 95;
         if (highlightId != id) mem::Write<int>(base + OFF_GLOW_HIGHLIGHT_ID + 1, id);
     }
 
