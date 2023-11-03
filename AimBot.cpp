@@ -29,12 +29,12 @@ struct AimBot {
         //calculate smoothing    
         float EXTRA_SMOOTH = cl->AIMBOT_SMOOTH_EXTRA_BY_DISTANCE / target->distanceToLocalPlayer;
         float TOTAL_SMOOTH = cl->AIMBOT_SMOOTH + EXTRA_SMOOTH;
-        //No recoil calcs
-        const FloatVector2D punchAnglesDiff = localPlayer->punchAnglesDiff
-            .multiply(100)
-            .divide(TOTAL_SMOOTH);
-        const double nrPitchIncrement = punchAnglesDiff.x;
-        const double nrYawIncrement = -punchAnglesDiff.y;
+        // //No recoil calcs
+        // const FloatVector2D punchAnglesDiff = localPlayer->punchAnglesDiff
+        //     .multiply(100)
+        //     .divide(TOTAL_SMOOTH);
+        // const double nrPitchIncrement = punchAnglesDiff.x;
+        // const double nrYawIncrement = -punchAnglesDiff.y;
         //Aimbot calcs
         const FloatVector2D aimbotDelta = target->aimbotDesiredAnglesIncrement
             .multiply(100)
@@ -43,8 +43,8 @@ struct AimBot {
         const double aimYawIncrement = aimbotDelta.y * -1;
         const double aimPitchIncrement = aimbotDelta.x;
         //combine
-        const double totalPitchIncrement = aimPitchIncrement + nrPitchIncrement;
-        const double totalYawIncrement = aimYawIncrement + nrYawIncrement;
+        const double totalPitchIncrement = aimPitchIncrement;// + nrPitchIncrement;
+        const double totalYawIncrement = aimYawIncrement;// + nrYawIncrement;
         //turn into integers
         int totalPitchIncrementInt = roundHalfEven(atLeast_1_AwayFromZero(totalPitchIncrement));
         int totalYawIncrementInt = roundHalfEven(atLeast_1_AwayFromZero(totalYawIncrement));

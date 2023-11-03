@@ -20,7 +20,8 @@ int main() {
     for (int i = 0; i < 70; i++) humanPlayers->push_back(new Player(i, localPlayer));
     for (int i = 0; i < 15000; i++) dummyPlayers->push_back(new Player(i, localPlayer));
 
-    //create features        
+    //create features     
+    NoRecoil* noRecoil = new NoRecoil(cl, display, level, localPlayer);
     AimBot* aimBot = new AimBot(cl, display, level, localPlayer, players);
     TriggerBot* triggerBot = new TriggerBot(cl, display, level, localPlayer, players);
     Sense* sense = new Sense(cl, display, level, localPlayer, players);
@@ -62,7 +63,8 @@ int main() {
                     if (p->isValid()) players->push_back(p);
                 }
 
-            //run features                
+            //run features       
+            noRecoil->controlWeapon(counter);
             triggerBot->shootAtEnemy();
             aimBot->aimAssist(counter);
             sense->modifyHighlights();
