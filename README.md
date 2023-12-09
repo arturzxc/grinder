@@ -24,7 +24,7 @@ git clone https://github.com/arturzxc/grinder.git
 cd grinder
 ```
 
-### 3. Compile the program:
+### 3. Compile the program (The below is a single word command that you need to type into terminal and hit Enter):
 ```
 make
 ```
