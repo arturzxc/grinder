@@ -13,6 +13,13 @@ namespace mem {
         return pid;
     }
 
+    std::string convertPointerToHexString(long pointer) {
+        std::stringstream stream;
+        stream << "0x" << std::hex << pointer;
+        std::string result(stream.str());
+        return result;
+    }
+
     bool Read(long address, void* pBuff, size_t size) {
         if (size == 0)
             return false;
@@ -64,13 +71,12 @@ namespace mem {
     }
 
     template <class T>
-    T Read(long address) {
+    T Read(long address, std::string whatAreYouReading) {
         T buffer;
         bool success = Read(address, &buffer, sizeof(T));
         if (!success) {
             m_pid = 0;
-            throw std::invalid_argument(
-                "Failed to get " + std::to_string(sizeof(T)) + "at: " + std::to_string(address));
+            throw std::invalid_argument("Failed to read memory [" + whatAreYouReading + "] at address : " + convertPointerToHexString(address));
         }
         return buffer;
     }
@@ -81,22 +87,19 @@ namespace mem {
         if (!success) {
             m_pid = 0;
             throw std::invalid_argument(
-                "Failed to set " + std::to_string(sizeof(T)) + " at: " + std::to_string(address));
+                "Failed to write memory " + std::to_string(sizeof(T)) + " at: " + convertPointerToHexString(address));
         }
     }
 
-    std::string ReadString(long address, int size) {
+    std::string ReadString(long address, int size, std::string whatAreYouReading) {
         char buffer[size] = { 0 };
         bool success = Read(address, &buffer, size);
-        if (!success)
-            throw std::invalid_argument("Failed to read String at address: " + address);
+        if (!success) {
+            m_pid = 0;
+            throw std::invalid_argument("Failed to read memory string [" + whatAreYouReading + "] at address : " + convertPointerToHexString(address));
+        }
         return std::string(buffer);
     }
 
-    std::string convertPointerToHexString(long pointer) {
-        std::stringstream stream;
-        stream << "0x" << std::hex << pointer;
-        std::string result(stream.str());
-        return result;
-    }
+
 }

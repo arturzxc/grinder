@@ -29,29 +29,22 @@ struct AimBot {
         //calculate smoothing    
         float EXTRA_SMOOTH = cl->AIMBOT_SMOOTH_EXTRA_BY_DISTANCE / target->distanceToLocalPlayer;
         float TOTAL_SMOOTH = cl->AIMBOT_SMOOTH + EXTRA_SMOOTH;
-        // //No recoil calcs
-        // const FloatVector2D punchAnglesDiff = localPlayer->punchAnglesDiff
-        //     .multiply(100)
-        //     .divide(TOTAL_SMOOTH);
-        // const double nrPitchIncrement = punchAnglesDiff.x;
-        // const double nrYawIncrement = -punchAnglesDiff.y;
         //Aimbot calcs
         const FloatVector2D aimbotDelta = target->aimbotDesiredAnglesIncrement
             .multiply(100)
             .divide(TOTAL_SMOOTH);
-
         const double aimYawIncrement = aimbotDelta.y * -1;
         const double aimPitchIncrement = aimbotDelta.x;
         //combine
-        const double totalPitchIncrement = aimPitchIncrement;// + nrPitchIncrement;
-        const double totalYawIncrement = aimYawIncrement;// + nrYawIncrement;
+        const double totalPitchIncrement = aimPitchIncrement;
+        const double totalYawIncrement = aimYawIncrement;
         //turn into integers
         int totalPitchIncrementInt = roundHalfEven(atLeast_1_AwayFromZero(totalPitchIncrement));
         int totalYawIncrementInt = roundHalfEven(atLeast_1_AwayFromZero(totalYawIncrement));
         //deadzone - are we close enough yet?
         if (fabs(target->aimbotDesiredAnglesIncrement.x) < cl->AIMBOT_DEADZONE) totalPitchIncrementInt = 0;
         if (fabs(target->aimbotDesiredAnglesIncrement.y) < cl->AIMBOT_DEADZONE) totalYawIncrementInt = 0;
-        if (totalPitchIncrementInt == 0 && totalYawIncrementInt == 0)return;
+        if (totalPitchIncrementInt == 0 && totalYawIncrementInt == 0) return;
         //move mouse
         display->moveMouseRelative(totalPitchIncrementInt, totalYawIncrementInt);
     }
@@ -59,11 +52,36 @@ struct AimBot {
     bool active() {
         bool aimbotIsOn = cl->FEATURE_AIMBOT_ON;
         bool combatReady = localPlayer->isCombatReady();
+        int weaponId = localPlayer->weaponIndex;
+        bool weaponDiscarded = localPlayer->weaponDiscarded;
+
+        //only these weapons will use aimbot
+        bool weaponCanBeAimbotted = (
+            weaponId == WEAPON_R301 ||
+            weaponId == WEAPON_FLATLINE ||
+            weaponId == WEAPON_HAVOC ||
+            weaponId == WEAPON_SPITFIRE ||
+            weaponId == WEAPON_RAMPAGE ||
+            weaponId == WEAPON_HEMLOCK ||
+            weaponId == WEAPON_VOLT ||
+            weaponId == WEAPON_LSTAR ||
+            weaponId == WEAPON_DEVOTION ||
+            weaponId == WEAPON_PROWLER ||
+            weaponId == WEAPON_ALTERNATOR ||
+            weaponId == WEAPON_R99 ||
+            weaponId == WEAPON_CAR ||
+            weaponId == WEAPON_P2020 ||
+            weaponId == WEAPON_MOZAMBIQUE ||
+            weaponId == WEAPON_EVA8 ||
+            weaponId == WEAPON_RE45);
+
         bool activatedByAttackingAndIsAttacking = cl->AIMBOT_ACTIVATED_BY_ATTACK && localPlayer->inAttack;
         bool activatedByADSAndIsADSing = cl->AIMBOT_ACTIVATED_BY_ADS && localPlayer->inZoom;
         bool activatedByButtonAndButtonIsDown = cl->AIMBOT_ACTIVATED_BY_BUTTON != "" && display->keyDown(cl->AIMBOT_ACTIVATED_BY_BUTTON);
         bool active = aimbotIsOn
             && combatReady
+            && !weaponDiscarded
+            && weaponCanBeAimbotted
             && (activatedByAttackingAndIsAttacking
                 || activatedByADSAndIsADSing
                 || activatedByButtonAndButtonIsDown);
@@ -81,7 +99,7 @@ struct AimBot {
             if (fabs(p->aimbotDesiredAnglesIncrement.y) > cl->AIMBOT_FOV) continue;
             if (target == nullptr || p->aimbotScore > target->aimbotScore) {
                 target = p;
-                //                target->aimbotLocked = true;
+                target->aimbotLocked = true;
             }
         }
     }

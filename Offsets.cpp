@@ -4,13 +4,13 @@
 
 //core
 constexpr long OFF_REGION = 0x140000000;                      //[Static]->Region
-constexpr long OFF_LEVEL = 0x1690670;                         //[Miscellaneous]->LevelName
-constexpr long OFF_LOCAL_PLAYER = 0x2119848;                  //[Miscellaneous]->LocalPlayer
-constexpr long OFF_ENTITY_LIST = 0x1d6b5d8;                   //[Miscellaneous]->cl_entitylist
+constexpr long OFF_LEVEL = 0x16966f0;                         //[Miscellaneous]->LevelName
+constexpr long OFF_LOCAL_PLAYER = 0x211fac8;                  //[Miscellaneous]->LocalPlayer
+constexpr long OFF_ENTITY_LIST = 0x1d71858;                   //[Miscellaneous]->cl_entitylist
     
 //buttons
-constexpr long OFF_IN_ATTACK = 0x07383af0;                     //[Buttons]->in_attack
-constexpr long OFF_IN_JUMP = 0x07383bf0;                       //[Buttons]->in_jump
+constexpr long OFF_IN_ATTACK = 0x0738af90;                     //[Buttons]->in_attack
+constexpr long OFF_IN_JUMP = 0x0738b0a0;                       //[Buttons]->in_jump
     
 // player
 constexpr long OFF_ZOOMING = 0x1c01;                          //[RecvTable.DT_Player]->m_bZooming
@@ -29,11 +29,12 @@ constexpr long OFF_PUNCH_ANGLES = 0x2468;                     //[?]->m_currentFr
 //weapon
 constexpr long OFF_WEAPON_HANDLE = 0x1964;                    //[RecvTable.DT_Player]->m_latestPrimaryWeapons
 constexpr long OFF_WEAPON_INDEX = 0x17a8;                     //[RecvTable.DT_WeaponX]->m_weaponNameIndex
+constexpr long OFF_WEAPON_DISCARDED = 0x15ac;                 //[RecvTable.DT_WeaponX]->m_discarded
 //glow
 constexpr long OFF_GLOW_ENABLE = 0x294;                       //[DT_HighlightSettings].?
 constexpr long OFF_GLOW_THROUGH_WALL = 0x278;                 //[DT_HighlightSettings].?
 constexpr long OFF_GLOW_FIX = 0x270;
 constexpr long OFF_GLOW_HIGHLIGHT_ID = 0x298;                 //[DT_HighlightSettings].m_highlightServerActiveStates
-constexpr long OFF_GLOW_HIGHLIGHTS = 0xB5C5090;
+constexpr long OFF_GLOW_HIGHLIGHTS = 0xb5cc530;
 
 

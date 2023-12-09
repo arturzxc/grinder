@@ -5,7 +5,7 @@ struct TriggerBot {
     Level* level;
     LocalPlayer* localPlayer;
     std::vector<Player*>* players;
-    const float TB_MAX_RANGE_ZOOMED = util::metersToGameUnits(100);
+    const float TB_MAX_RANGE_ZOOMED = util::metersToGameUnits(150);
     const float TB_MAX_RANGE_HIPFRE = util::metersToGameUnits(10);
 
     TriggerBot(ConfigLoader* cl, XDisplay* display, Level* level, LocalPlayer* localPlayer, std::vector<Player*>* players) {

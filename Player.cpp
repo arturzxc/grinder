@@ -6,6 +6,7 @@ struct Player {
     std::string name;
     bool dead;
     bool knocked;
+    int ducking;
     int teamNumber;
     int currentHealth;
     int currentShields;
@@ -44,30 +45,30 @@ struct Player {
     }
 
     void readFromMemory() {
-        base = mem::Read<long>(OFF_REGION + OFF_ENTITY_LIST + ((index + 1) << 5));
+        base = mem::Read<long>(OFF_REGION + OFF_ENTITY_LIST + ((index + 1) << 5), "Player base");
         if (base == 0) return;
-        name = mem::ReadString(base + OFF_NAME, 1024);
-        teamNumber = mem::Read<int>(base + OFF_TEAM_NUMBER);
-        currentHealth = mem::Read<int>(base + OFF_CURRENT_HEALTH);
-        currentShields = mem::Read<int>(base + OFF_CURRENT_SHIELDS);
+        name = mem::ReadString(base + OFF_NAME, 1024, "Player name");
+        teamNumber = mem::Read<int>(base + OFF_TEAM_NUMBER, "Player teamNumber");
+        currentHealth = mem::Read<int>(base + OFF_CURRENT_HEALTH, "Player currentHealth");
+        currentShields = mem::Read<int>(base + OFF_CURRENT_SHIELDS, "Player currentShields");
         if (!isPlayer() && !isDummie()) { reset(); return; }
-        dead = (isDummie()) ? false : mem::Read<short>(base + OFF_LIFE_STATE) > 0;
-        knocked = (isDummie()) ? false : mem::Read<short>(base + OFF_BLEEDOUT_STATE) > 0;
+        dead = (isDummie()) ? false : mem::Read<short>(base + OFF_LIFE_STATE, "Player dead") > 0;
+        knocked = (isDummie()) ? false : mem::Read<short>(base + OFF_BLEEDOUT_STATE, "Player knocked") > 0;
 
-        localOrigin = mem::Read<FloatVector3D>(base + OFF_LOCAL_ORIGIN);
+        localOrigin = mem::Read<FloatVector3D>(base + OFF_LOCAL_ORIGIN, "Player localOrigin");
         FloatVector3D localOrigin_diff = localOrigin.subtract(localOrigin_prev).normalize().multiply(20);
         localOrigin_predicted = localOrigin.add(localOrigin_diff);
         localOrigin_prev = FloatVector3D(localOrigin.x, localOrigin.y, localOrigin.z);
 
-        glowEnable = mem::Read<int>(base + OFF_GLOW_ENABLE);
-        glowThroughWall = mem::Read<int>(base + OFF_GLOW_THROUGH_WALL);
-        highlightId = mem::Read<int>(base + OFF_GLOW_HIGHLIGHT_ID + 1);
+        glowEnable = mem::Read<int>(base + OFF_GLOW_ENABLE, "Player glowEnable");
+        glowThroughWall = mem::Read<int>(base + OFF_GLOW_THROUGH_WALL, "Playeasdasdr glowThroughWall");
+        highlightId = mem::Read<int>(base + OFF_GLOW_HIGHLIGHT_ID + 1, "Player highlightId");
 
-        lastTimeAimedAt = mem::Read<int>(base + OFF_LAST_AIMEDAT_TIME);
+        lastTimeAimedAt = mem::Read<int>(base + OFF_LAST_AIMEDAT_TIME, "Player lastTimeAimedAt");
         aimedAt = lastTimeAimedAtPrev < lastTimeAimedAt;
         lastTimeAimedAtPrev = lastTimeAimedAt;
 
-        lastTimeVisible = mem::Read<int>(base + OFF_LAST_VISIBLE_TIME);
+        lastTimeVisible = mem::Read<int>(base + OFF_LAST_VISIBLE_TIME, "Player lastTimeVisible");
         visible = isDummie() || aimedAt || lastTimeVisiblePrev < lastTimeVisible; //aimedAt is only true when looking at unobscured target. Helps the shit in-game vis check a bit.
         lastTimeVisiblePrev = lastTimeVisible;
 
@@ -86,6 +87,7 @@ struct Player {
                 aimbotScore = calcAimbotScore();
             }
         }
+
     }
 
     bool isValid() {
@@ -148,7 +150,8 @@ struct Player {
         if (local) return 0;
         const FloatVector3D shift = FloatVector3D(100000, 100000, 100000);
         const FloatVector3D originA = myLocalPlayer->localOrigin.add(shift);
-        const FloatVector3D originB = localOrigin_predicted.add(shift).subtract(FloatVector3D(0, 0, 10));
+        const float extraZ = (ducking != -1) ? 10 : 0;
+        const FloatVector3D originB = localOrigin_predicted.add(shift).subtract(FloatVector3D(0, 0, extraZ));
         const float deltaZ = originB.z - originA.z;
         const float pitchInRadians = std::atan2(-deltaZ, distance2DToLocalPlayer);
         const float degrees = pitchInRadians * (180.0f / M_PI);
