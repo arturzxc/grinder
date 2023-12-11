@@ -1,17 +1,21 @@
-## Intall build-essential (Mandatory. You only need to do this once) !!!
-```
-sudo apt-get install build-essential
-```
+<details>
+<summary>Debian based dependencies</summary>
 
-## Intall libx11-dev (Mandatory. You only need to do this once) !!!
-```
-sudo apt-get install libx11-dev
-```
+## Intall build-essential / libx11-dev / libxtst-dev (Mandatory. You only need to do this once) !!!
+`
+sudo apt-get install build-essential libx11-dev libxtst-dev
+`
+</details>
 
-## Intall libxtst-dev (Mandatory. You only need to do this once)!!!
-```
-sudo apt-get install libxtst-dev
-```
+<details>
+<summary>Arch based dependencies</summary>
+
+## Intall base-devel / libx11 / libxtst (Mandatory. You only need to do this once) !!!
+`
+sudo pacman -Sy base-devel libx11 libxtst
+`
+</details>
+
 
 
 ### 1. Download:
