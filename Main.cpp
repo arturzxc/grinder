@@ -1,25 +1,5 @@
 #include "includes.cpp"
 
-
-// int main() {
-
-//     printf("START!\n");
-
-//     XD::createRootWindow();
-
-//     for (int counter = 0; ; counter = ((counter >= 1000) ? 0 : counter + 1)) {
-//         XD::processEvents(counter);
-//         XD::repaint();
-//         std::this_thread::sleep_for(std::chrono::milliseconds(10));
-//     }
-
-//     printf("FUCKYEA!\n");
-
-
-
-//     return 0;
-// }
-
 int main() {
     //load config
     ConfigLoader* cl = new ConfigLoader();
