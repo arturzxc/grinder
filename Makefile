@@ -1,14 +1,3 @@
-# Makefile for a C++ program linked with X11 and Xtst libraries
-
-# Compiler
-CXX = g++
-
-# Source files
-SRCS = Main.cpp
-
-# Libraries to link
-LIBS = -lX11 -lXtst
-
 # Default target
 all: rebuild; 
 
@@ -18,7 +7,7 @@ clean:
 
 # Compilation and linking
 a.out: $(SRCS)
-	$(CXX) $^ -o $@ $(LIBS)
+	g++ Main.cpp -o a.out -lX11 -lXtst -lXcomposite
 
 
 # clean & build

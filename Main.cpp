@@ -1,5 +1,25 @@
 #include "includes.cpp"
 
+
+// int main() {
+
+//     printf("START!\n");
+
+//     XD::createRootWindow();
+
+//     for (int counter = 0; ; counter = ((counter >= 1000) ? 0 : counter + 1)) {
+//         XD::processEvents(counter);
+//         XD::repaint();
+//         std::this_thread::sleep_for(std::chrono::milliseconds(10));
+//     }
+
+//     printf("FUCKYEA!\n");
+
+
+
+//     return 0;
+// }
+
 int main() {
     //load config
     ConfigLoader* cl = new ConfigLoader();
@@ -25,10 +45,10 @@ int main() {
     AimBot* aimBot = new AimBot(cl, display, level, localPlayer, players);
     TriggerBot* triggerBot = new TriggerBot(cl, display, level, localPlayer, players);
     Sense* sense = new Sense(cl, display, level, localPlayer, players);
+    Radar* radar = new Radar(cl, display, level, localPlayer, players);
 
     //begin main loop
-    int counter = 0;
-    while (1) {
+    for (int counter = 0; ; counter = ((counter >= 1000) ? 0 : counter + 1)) {
         try {
             //record time so we know how long a single loop iteration takes
             long long startTime = util::currentEpochMillis();
@@ -69,6 +89,8 @@ int main() {
             aimBot->aimAssist(counter);
             sense->modifyHighlights();
             sense->glowPlayers();
+            radar->processEvents(counter);
+            radar->repaint();
 
             //check how fast we completed all the processing and if we still have time left to sleep
             int processingTime = static_cast<int>(util::currentEpochMillis() - startTime);
@@ -81,8 +103,6 @@ int main() {
                 printf("| LOOP[%04d] OK | Processing time: %02dms | Time left to sleep: %02dms | Level: %s |\n",
                     counter, processingTime, timeLeftToSleep, level->name.c_str());
 
-            //update counter
-            counter = (counter < 1000) ? ++counter : counter = 0;
         }
         catch (std::invalid_argument& e) {
             printf("!!!ERROR!!! %s SLEEPING 10 SECONDS AND TRYING AGAIN! \n", e.what());

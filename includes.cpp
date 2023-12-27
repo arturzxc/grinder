@@ -1,3 +1,4 @@
+//includes
 #include <sstream>
 #include <sys/uio.h>
 #include <math.h>
@@ -10,9 +11,6 @@
 #include <unordered_map>
 #include <chrono>
 #include <thread>
-#include <X11/Xlib.h>
-#include <X11/Xutil.h>
-#include <X11/extensions/XTest.h>
 #include <unordered_map>
 #include <random>
 #include <fstream>
@@ -21,7 +19,17 @@
 #include <cctype>
 #include <locale>
 #include <iterator>
+#include <X11/Xlib.h>
+#include <X11/Xutil.h>
+#include <X11/Xatom.h>
+#include <X11/extensions/XTest.h>
+#include <X11/extensions/Xrender.h>
+#include <X11/extensions/Xcomposite.h>
+#include <X11/extensions/XInput2.h>
+
+//mine
 #include "ConfigLoader.cpp"
+// #include "XD.cpp"
 #include "Offsets.cpp"
 #include "WeaponId.cpp"
 #include "Util.cpp"
@@ -38,3 +46,4 @@
 #include "TriggerBot.cpp"
 #include "AimBot.cpp"
 #include "NoRecoil.cpp"
+#include "Radar.cpp"

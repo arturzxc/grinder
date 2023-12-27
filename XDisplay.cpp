@@ -1,9 +1,7 @@
 #pragma once
 struct XDisplay {
-private:
     Display* display = XOpenDisplay(NULL);
 
-public:
     XDisplay() {
         display = XOpenDisplay(NULL);
         if (!display) throw std::invalid_argument("Could not open display");
@@ -47,4 +45,6 @@ public:
             return keyName.substr(3);
         return keyName;
     }
+
+
 };
