@@ -25,7 +25,7 @@ int main() {
     AimBot* aimBot = new AimBot(cl, display, level, localPlayer, players);
     TriggerBot* triggerBot = new TriggerBot(cl, display, level, localPlayer, players);
     Sense* sense = new Sense(cl, display, level, localPlayer, players);
-    Radar* radar = new Radar(cl, display, level, localPlayer, players);
+    // Radar* radar = new Radar(cl, display, level, localPlayer, players);
 
     //begin main loop
     for (int counter = 0; ; counter = ((counter >= 1000) ? 0 : counter + 1)) {
@@ -69,8 +69,8 @@ int main() {
             aimBot->aimAssist(counter);
             sense->modifyHighlights();
             sense->glowPlayers();
-            radar->processEvents(counter);
-            radar->repaint();
+            // radar->processEvents(counter);
+            // radar->repaint();
 
             //check how fast we completed all the processing and if we still have time left to sleep
             int processingTime = static_cast<int>(util::currentEpochMillis() - startTime);
