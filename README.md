@@ -47,4 +47,3 @@ sudo ./a.out
 ```
 Unlimited powaaaaaaaaaa!
 ```
-![alt text](https://cdn.vox-cdn.com/thumbor/PYVJRRXPhua4a3I2X3n49AIgPZw=/1400x1050/filters:format(jpeg)/cdn.vox-cdn.com/uploads/chorus_asset/file/19542877/star_wars6_movie_screencaps.com_13433.jpg)
