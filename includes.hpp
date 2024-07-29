@@ -1,4 +1,4 @@
-//includes
+//system libs
 #include <sstream>
 #include <sys/uio.h>
 #include <math.h>
@@ -27,23 +27,22 @@
 #include <X11/extensions/Xcomposite.h>
 #include <X11/extensions/XInput2.h>
 
-//mine
+//my stuff
 #include "ConfigLoader.cpp"
-// #include "XD.cpp"
 #include "Offsets.cpp"
 #include "WeaponId.cpp"
 #include "Util.cpp"
 #include "FloatVector2D.cpp"
 #include "FloatVector3D.cpp"
-#include "GlowMode.cpp"
+#include "Highlight.cpp"
 #include "Color.cpp"
 #include "Memory.cpp" 
 #include "XDisplay.cpp"
 #include "Level.cpp"
+#include "HighlightList.cpp"
 #include "LocalPlayer.cpp"
 #include "Player.cpp"
 #include "Sense.cpp"
 #include "TriggerBot.cpp"
 #include "AimBot.cpp"
 #include "NoRecoil.cpp"
-#include "Radar.cpp"

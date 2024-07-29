@@ -16,4 +16,10 @@ namespace util {
         std::uniform_real_distribution<float> dis(min, max);
         return dis(gen);
     }
+
+    std::string longToHexString(long num) {
+        std::ostringstream oss;
+        oss << "0x" << std::hex << std::uppercase << num;
+        return oss.str();
+    }
 };

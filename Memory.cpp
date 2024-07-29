@@ -13,6 +13,10 @@ namespace mem {
         return pid;
     }
 
+    bool Valid(long ptr) {
+        return ptr > 0x00000000 && ptr < 0xffffffff;
+    }
+
     std::string convertPointerToHexString(long pointer) {
         std::stringstream stream;
         stream << "0x" << std::hex << pointer;

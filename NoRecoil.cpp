@@ -14,7 +14,7 @@ struct NoRecoil {
         this->localPlayer = localPlayer;
     }
 
-    void controlWeapon(int counter) {
+    void noRecoil(int counter) {
         if (!cl->FEATURE_NORECOIL_ON)return;
         if (!localPlayer->isCombatReady()) return;
         if (!localPlayer->inAttack) return;

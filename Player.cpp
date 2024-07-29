@@ -12,7 +12,6 @@ struct Player {
     int currentShields;
     int glowEnable;
     int glowThroughWall;
-    int highlightId;
     FloatVector3D localOrigin_prev;
     FloatVector3D localOrigin;
     FloatVector3D localOrigin_predicted;
@@ -46,7 +45,7 @@ struct Player {
 
     void readFromMemory() {
         base = mem::Read<long>(OFF_REGION + OFF_ENTITY_LIST + ((index + 1) << 5), "Player base");
-        if (base == 0) return;
+        if (!mem::Valid(base))return;
         name = mem::ReadString(base + OFF_NAME, 1024, "Player name");
         teamNumber = mem::Read<int>(base + OFF_TEAM_NUMBER, "Player teamNumber");
         currentHealth = mem::Read<int>(base + OFF_CURRENT_HEALTH, "Player currentHealth");
@@ -60,9 +59,8 @@ struct Player {
         localOrigin_predicted = localOrigin.add(localOrigin_diff);
         localOrigin_prev = FloatVector3D(localOrigin.x, localOrigin.y, localOrigin.z);
 
-        glowEnable = mem::Read<int>(base + OFF_GLOW_ENABLE, "Player glowEnable");
+        glowEnable = mem::Read<int>(base + OFF_GLOW_HIGHLIGHT_ID, "Player glowEnable");
         glowThroughWall = mem::Read<int>(base + OFF_GLOW_THROUGH_WALL, "Playeasdasdr glowThroughWall");
-        highlightId = mem::Read<int>(base + OFF_GLOW_HIGHLIGHT_ID + 1, "Player highlightId");
 
         lastTimeAimedAt = mem::Read<int>(base + OFF_LAST_AIMEDAT_TIME, "Player lastTimeAimedAt");
         aimedAt = lastTimeAimedAtPrev < lastTimeAimedAt;
@@ -74,10 +72,7 @@ struct Player {
 
         if (myLocalPlayer->isValid()) {
             local = myLocalPlayer->base == base;
-            bool nonBR = false; //figure out later how to get game mode
-            friendly = (nonBR)
-                ? (myLocalPlayer->teamNumber % 2 == 0 && teamNumber % 2 == 0) || (myLocalPlayer->teamNumber % 2 != 0 && teamNumber % 2 != 0)
-                : myLocalPlayer->teamNumber == teamNumber;
+            friendly = myLocalPlayer->teamNumber == teamNumber;
             enemy = !friendly;
             distanceToLocalPlayer = myLocalPlayer->localOrigin.distance(localOrigin);
             distance2DToLocalPlayer = myLocalPlayer->localOrigin.to2D().distance(localOrigin.to2D());
@@ -112,34 +107,15 @@ struct Player {
         return teamNumber == 97;
     }
 
-    void glowFriendly() {
-        if (glowEnable != 1) mem::Write<int>(base + OFF_GLOW_ENABLE, 1);
-        if (glowThroughWall != 2) mem::Write<int>(base + OFF_GLOW_THROUGH_WALL, 2);
-        if (glowThroughWall != 2) mem::Write<int>(base + OFF_GLOW_FIX, 2);
-        int id = 95;
-        if (highlightId != id) mem::Write<int>(base + OFF_GLOW_HIGHLIGHT_ID + 1, id);
+    void setHighlightThroughWalls(bool glow) {
+        long ptrLong = base + OFF_GLOW_THROUGH_WALL;
+        mem::Write<int>(ptrLong, ((glow) ? 1 : 0));
     }
 
-    void glow() {
-        if (glowEnable != 1) mem::Write<int>(base + OFF_GLOW_ENABLE, 1);
-        if (glowThroughWall != 2) mem::Write<int>(base + OFF_GLOW_THROUGH_WALL, 2);
-        if (glowThroughWall != 2) mem::Write<int>(base + OFF_GLOW_FIX, 2);
-        int id = (visible) ? 0 : 1;
-        if (aimbotLocked) id = 2;
-        if (highlightId != id) mem::Write<int>(base + OFF_GLOW_HIGHLIGHT_ID + 1, id);
-    }
 
-    void glowShieldBased() {
-        if (glowEnable != 1) mem::Write<int>(base + OFF_GLOW_ENABLE, 1);
-        if (glowThroughWall != 2) mem::Write<int>(base + OFF_GLOW_THROUGH_WALL, 2);
-        if (glowThroughWall != 2) mem::Write<int>(base + OFF_GLOW_FIX, 2);
-        int id;
-        if (currentShields <= 0) id = 90;//no shields
-        else if (currentShields <= 50) id = 91;//white shields 
-        else if (currentShields <= 70) id = 92;//blue shields
-        else if (currentShields <= 100) id = 93;//purple shields / gold
-        else  id = 94;//red shields
-        if (highlightId != id) mem::Write<int>(base + OFF_GLOW_HIGHLIGHT_ID + 1, id);
+    void setHighlightIndex(int highlightIndex) {
+        long ptrLong = base + OFF_GLOW_HIGHLIGHT_ID;
+        mem::Write<int>(ptrLong, highlightIndex);
     }
 
     FloatVector2D calcDesiredAngles() {
@@ -195,5 +171,40 @@ struct Player {
 
     float calcAimbotScore() {
         return (1000 - (fabs(aimbotDesiredAnglesIncrement.x) + fabs(aimbotDesiredAnglesIncrement.y)));
+    }
+
+    void print() const {
+        printf("____________________________________________________________________________\n");
+        printf("Player[%d]____base: %s\n", index, util::longToHexString(base).c_str());
+        printf("Player[%d]____name: %s\n", index, name.c_str());
+        printf("Player[%d]____dead: %d\n", index, dead);
+        printf("Player[%d]____knocked: %d\n", index, knocked);
+        printf("Player[%d]____ducking: %d\n", index, ducking);
+        printf("Player[%d]____teamNumber: %d\n", index, teamNumber);
+        printf("Player[%d]____currentHealth: %d\n", index, currentHealth);
+        printf("Player[%d]____currentShields: %d\n", index, currentShields);
+        printf("Player[%d]____glowEnable: %d\n", index, glowEnable);
+        printf("Player[%d]____glowThroughWall: %d\n", index, glowThroughWall);
+        printf("Player[%d]____localOrigin_prev: %s\n", index, localOrigin_prev.toString().c_str());
+        printf("Player[%d]____localOrigin: %s\n", index, localOrigin.toString().c_str());
+        printf("Player[%d]____localOrigin_predicted: %s\n", index, localOrigin_predicted.toString().c_str());
+        printf("Player[%d]____local: %d\n", index, local);
+        printf("Player[%d]____friendly: %d\n", index, friendly);
+        printf("Player[%d]____enemy: %d\n", index, enemy);
+        printf("Player[%d]____lastTimeAimedAt: %d\n", index, lastTimeAimedAt);
+        printf("Player[%d]____lastTimeAimedAtPrev: %d\n", index, lastTimeAimedAtPrev);
+        printf("Player[%d]____aimedAt: %d\n", index, aimedAt);
+        printf("Player[%d]____lastTimeVisible: %d\n", index, lastTimeVisible);
+        printf("Player[%d]____lastTimeVisiblePrev: %d\n", index, lastTimeVisiblePrev);
+        printf("Player[%d]____visible: %d\n", index, visible);
+        printf("Player[%d]____distanceToLocalPlayer: %.2f\n", index, distanceToLocalPlayer);
+        printf("Player[%d]____distance2DToLocalPlayer: %.2f\n", index, distance2DToLocalPlayer);
+        printf("Player[%d]____aimbotLocked: %d\n", index, aimbotLocked);
+        printf("Player[%d]____aimbotDesiredAngles: %s\n", index, aimbotDesiredAngles.toString().c_str());
+        printf("Player[%d]____aimbotDesiredAnglesIncrement: %s\n", index, aimbotDesiredAnglesIncrement.toString().c_str());
+        printf("Player[%d]____aimbotDesiredAnglesSmoothed: %s\n", index, aimbotDesiredAnglesSmoothed.toString().c_str());
+        printf("Player[%d]____aimbotDesiredAnglesSmoothedNoRecoil: %s\n", index, aimbotDesiredAnglesSmoothedNoRecoil.toString().c_str());
+        printf("Player[%d]____aimbotScore: %.2f\n", index, aimbotScore);
+        printf("____________________________________________________________________________\n");
     }
 };

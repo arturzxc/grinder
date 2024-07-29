@@ -6,7 +6,7 @@ struct LocalPlayer {
     int teamNumber;
     bool inAttack;
     bool inZoom;
-    bool inJump;
+    long highlightSettingsPtr;
     FloatVector3D localOrigin;
     FloatVector2D viewAngles;
     FloatVector2D punchAngles;
@@ -15,19 +15,15 @@ struct LocalPlayer {
     int weaponIndex;
     bool weaponDiscarded;
 
-    void reset() {
-        base = 0;
-    }
-
     void readFromMemory() {
         base = mem::Read<long>(OFF_REGION + OFF_LOCAL_PLAYER, "LocalPlayer base");
-        if (base == 0) return;
+        if (!mem::Valid(base))return;
         dead = mem::Read<short>(base + OFF_LIFE_STATE, "LocalPlayer base") > 0;
         knocked = mem::Read<short>(base + OFF_BLEEDOUT_STATE, "LocalPlayer base") > 0;
         inZoom = mem::Read<short>(base + OFF_ZOOMING, "LocalPlayer inZoom") > 0;
         teamNumber = mem::Read<int>(base + OFF_TEAM_NUMBER, "LocalPlayer teamNumber");
         inAttack = mem::Read<bool>(OFF_REGION + OFF_IN_ATTACK, "LocalPlayer inAttack") > 0;
-        inJump = mem::Read<bool>(OFF_REGION + OFF_IN_JUMP, "LocalPlayer inJump") > 0;
+        highlightSettingsPtr = mem::Read<long>(OFF_REGION + OFF_GLOW_HIGHLIGHTS, "LocalPlayer HiglightsSettingPtr");
         localOrigin = mem::Read<FloatVector3D>(base + OFF_LOCAL_ORIGIN, "LocalPlayer localOrigin");
         viewAngles = mem::Read<FloatVector2D>(base + OFF_VIEW_ANGLES, "LocalPlayer viewAngles");
         punchAngles = mem::Read<FloatVector2D>(base + OFF_PUNCH_ANGLES, "LocalPlayer punchAngles");
@@ -43,7 +39,7 @@ struct LocalPlayer {
     }
 
     bool isValid() {
-        return base != 0;
+        return mem::Valid(base);
     }
 
     bool isCombatReady() {
@@ -53,7 +49,21 @@ struct LocalPlayer {
         return true;
     }
 
-    void lookAt(FloatVector2D angles) {
-        mem::Write<FloatVector2D>(base + OFF_VIEW_ANGLES, angles.clamp());
+    void print() const {
+        printf("________________________________________________________________________\n");
+        printf("LocalPlayer____Base: %s\n", util::longToHexString(base).c_str());
+        printf("LocalPlayer____Dead: %s\n", dead ? "true" : "false");
+        printf("LocalPlayer____Knocked: %s\n", knocked ? "true" : "false");
+        printf("LocalPlayer____Team Number: %d\n", teamNumber);
+        printf("LocalPlayer____In Attack: %s\n", inAttack ? "true" : "false");
+        printf("LocalPlayer____In Zoom: %s\n", inZoom ? "true" : "false");
+        printf("LocalPlayer____Local Origin: %s\n", localOrigin.toString().c_str());
+        printf("LocalPlayer____View Angles: %s\n", viewAngles.toString().c_str());
+        printf("LocalPlayer____Punch Angles: %s\n", punchAngles.toString().c_str());
+        printf("LocalPlayer____Punch Angles Prev: %s\n", punchAnglesPrev.toString().c_str());
+        printf("LocalPlayer____Punch Angles Diff: %s\n", punchAnglesDiff.toString().c_str());
+        printf("LocalPlayer____Weapon Index: %d\n", weaponIndex);
+        printf("LocalPlayer____Weapon Discarded: %s\n", weaponDiscarded ? "true" : "false");
+        printf("________________________________________________________________________\n");
     }
 };
